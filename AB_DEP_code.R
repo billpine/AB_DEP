@@ -1,7 +1,16 @@
 #Apalachicola Bay analyses of DEP data
 
 
-#NEERS 5007 A from https://dev.seacar.waterinstitute.usf.edu/programs/details/5007
+#The database and meta data are here 
+#https://dev.seacar.waterinstitute.usf.edu/programs/details/5007
+
+#To do integrate 4044A and 5007A 
+#Project 4044 is the NRDA project and it used limestone cultch
+#Project 5007 is the RESTORE project and it used shell cultch
+#Plot data for each size class over time (adult, seed, spat)
+#Plot biomass overtime (usually listed as total weight)
+#Will need to extract dates and then create periods
+#Because not all years are the same will likely need to use covariates to try and #explain difference in year such as river discharge
 
 
 library(readxl)
