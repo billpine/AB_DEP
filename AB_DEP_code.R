@@ -5,8 +5,8 @@
 #https://dev.seacar.waterinstitute.usf.edu/programs/details/5007
 
 #To do integrate 4044A and 5007A 
-#Project 4044 is the NRDA project and it used limestone cultch
-#Project 5007 is the RESTORE project and it used shell cultch
+#Project 4044 is the NRDA project and it used shell cultch
+#Project 5007 is the RESTORE project and it used limestone cultch
 #Plot data for each size class over time (adult, seed, spat)
 #Plot biomass overtime (usually listed as total weight)
 #Will need to extract dates and then create periods
@@ -118,21 +118,22 @@ min(d3$Spat)
 
 
 
-#count number of quadrats per year, month, site
+#count number of quadrats per period, site
 month <- d4 %>%
-  dplyr::group_by(Year, Month, Site) %>%
+  dplyr::group_by(Period, Site) %>%
   dplyr::summarise(count = n()) %>%
-  dplyr::arrange(Year, Month, Site)
-names(month) <- c("Year", "Month", "Station Name",
+  dplyr::arrange(Period, Site)
+names(month) <- c("Period", "Station Name",
                   "Number Quadrats")
 
 
-#just writing the table with number of quadrats by year, month, site to folder
+#just writing the table with number of quadrats by Period, site to folder
 #write.table(month, file = "num_quads_yr_mnth_station.txt", row.names = FALSE,
 #            col.names = TRUE,sep = ",")
 
 
-f1<-ggplot(d3, aes(Period, Legal, color=Site)) +
+
+f1<-ggplot(d4, aes(Period, Legal, color=Site)) +
   geom_point(size=4) +
   ggtitle("Legal by Period") +
   xlab("Period") +
@@ -140,8 +141,78 @@ f1<-ggplot(d3, aes(Period, Legal, color=Site)) +
   #stat_summary(fun = mean, geom = "point", size=1.5, aes(group= Site), color="gold") +
   #stat_summary(fun.data = "mean_cl_boot",aes(group= Site), size = 1.5, geom = "errorbar", width = 0.5, color="gold")
 
-f1
+f2
+
+f2<-ggplot(d4, aes(Period, Sublegal, color=Site)) +
+  geom_point(size=4) +
+  ggtitle("Sublegal by Period") +
+  xlab("Period") +
+  ylab("Number Sublegal") #+
+#stat_summary(fun = mean, geom = "point", size=1.5, aes(group= Site), color="gold") +
+#stat_summary(fun.data = "mean_cl_boot",aes(group= Site), size = 1.5, geom = "errorbar", width = 0.5, color="gold")
+
+f2
+
+#
+#sum live counts for each site by period
+sum_legal=aggregate(Legal~Site+Period+season,data=d4,sum)
+sum_sublegal=aggregate(Sublegal~Site+Period+season,data=d4,sum)
+sum_spat=aggregate(Spat~Site+Period+season,data=d4,sum)
+
+#count number quads by doing the length of transect, then rename
+count_quads=aggregate(Quadrat~Site+Period+season,data=d3,length)
+count_quads <- dplyr::rename(count_quads,Site=Site,Num_quads=Quadrat, Period=Period,season=season)
+
+
+#merge live count total data frame with the tran_length total data frame
+d5=merge(sum_legal,sum_sublegal,by=c("Site","Period","season"))
+d5.1=merge(d5,sum_spat,by=c("Site","Period","season"))
+d5.2=merge(d5.1,count_quads,by=c("Site","Period","season"))
+
+d6<-d5.2
+
+names(d6)
+
+#plot
+f3<-ggplot(d6, aes(x=Period, y= Legal)) +
+  geom_point(size=3.5, alpha =1) +
+  ggtitle("Legal oysters") +
+  #ylim(0,300)+
+  xlab("Period") +
+  ylab("Number legal oysters") +
+  facet_wrap(~Site)
+f3
+f3.1<-ggplot(d6, aes(x=Period, y= Sublegal)) +
+  geom_point(size=3.5, alpha =1) +
+  ggtitle("SubLegal oysters") +
+  #ylim(0,300)+
+  xlab("Period") +
+  ylab("Number Sublegal oysters") +
+  facet_wrap(~Site)
+f3.1
+
+f3.2<-ggplot(d6, aes(x=Period, y= Spat)) +
+  geom_point(size=3.5, alpha =1) +
+  ggtitle("SubLegal oysters") +
+  #ylim(0,300)+
+  xlab("Period") +
+  ylab("Number Spat oysters") +
+  facet_wrap(~Site)
+f3.2
 
 
 
+
+d6$StationName <- as.factor(d5$StationName)
+d6$season <- as.factor(d5$season)
+
+#fit basic NB GLM
+m1 <- glm.nb(Legal ~ Period + offset(log(Num_quads)), data = d6) 
+m2 <- glm.nb(Legal ~ Period + Site + offset(log(Num_quads)), data = d6) 
+m3 <- glm.nb(Legal ~ Period * Site + offset(log(Num_quads)), data = d6) 
+
+
+cand.set = list(m1,m2,m3)
+modnames = c("period", "period + site", "period * site",)
+aictab(cand.set, modnames, second.ord = FALSE) #model selection table with AIC
 
