@@ -1,0 +1,43 @@
+"Period","Station Name","Number Quadrats"
+7,"8 Mile",30
+7,"9 Mile B",5
+7,"Cabbage Top",15
+7,"Cat Point",45
+7,"Cat Point Spur",30
+7,"East Hole #1",60
+7,"East Hole #2",30
+7,"Hotel Bar 1",30
+7,"Hotel Bar 2",15
+7,"King 9 Mile",15
+7,"Monkey's Elbow",30
+7,"North Spur 2",30
+7,"Peanut Ridge",30
+7,"South Bulkhead",15
+9,"8 Mile",30
+9,"9 Mile B",25
+9,"Cabbage Top",15
+9,"Cat Point",45
+9,"Cat Point Spur",30
+9,"East Hole #1",60
+9,"East Hole #2",30
+9,"Hotel Bar 1",30
+9,"Hotel Bar 2",15
+9,"King 9 Mile",15
+9,"Monkey's Elbow",30
+9,"North Spur 2",30
+9,"Peanut Ridge",30
+9,"South Bulkhead",15
+12,"Cabbage Top",15
+12,"Hotel Bar 1",30
+12,"Hotel Bar 2",15
+12,"North Spur 2",30
+13,"8 Mile",30
+13,"9 Mile B",15
+13,"Cat Point",45
+13,"Cat Point Spur",30
+13,"East Hole #1",60
+13,"East Hole #2",30
+13,"King 9 Mile",15
+13,"Monkey's Elbow",30
+13,"Peanut Ridge",30
+13,"South Bulkhead",15
