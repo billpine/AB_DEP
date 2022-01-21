@@ -6,7 +6,7 @@
 
 #To do integrate 4044A and 5007A 
 #Project 4044 is the NRDA project and it used rock
-#Project 5007 is the RESTORE project and it used shell
+#Project 5007 is the RESTORE project and it used shell 50, 258 cubic yds shell
 #Plot data for each size class over time (adult, seed, spat)
 #Plot biomass overtime (usually listed as total weight)
 #Will need to extract dates and then create periods
