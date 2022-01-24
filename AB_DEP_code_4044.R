@@ -1,8 +1,12 @@
+##
+##THIS IS 4044A
+##
+
 #Apalachicola Bay analyses of DEP data
 
 
 #The database and meta data are here 
-#https://dev.seacar.waterinstitute.usf.edu/programs/details/5007
+#https://dev.seacar.waterinstitute.usf.edu/
 
 #To do integrate 4044A and 5007A 
 #Project 4044 is the NRDA project and it used rock
@@ -11,6 +15,8 @@
 #Plot biomass overtime (usually listed as total weight)
 #Will need to extract dates and then create periods
 #Because not all years are the same will likely need to use covariates to try and #explain difference in year such as river discharge
+
+#about line 112 I write a file that takes 4044 and exports it, that's the file i'll merge with 5007
 
 
 library(readxl)
@@ -27,25 +33,26 @@ library(ggeffects)
 library(cowplot)
 
 
-d1 <- read.csv("~/GitHub/AB_DEP/Data_5007A_Final_cleaned.csv")
+d1 <- read.csv("~/GitHub/AB_DEP/Data_4044A_Final_clean.csv")
 
 names(d1)
 head(d1)
 
 #subset the columns to the ones you want to work with
 d2 <- d1 %>% 
-  dplyr::select(Harvested, Site, Quadrat, Weight_kg, Total_Adults_75mm, 
-                Total_Seed_26_74mm, Total_Spat_0_25mm, Total_Live, full_year)
+  dplyr::select(Harvested, Bay, Site, Quadrat, Weight_kg, Adults_75mm, 
+                Seed_26_74mm, Spat_0_25mm, Live, Dead, Month, Day, Year, full_year)
 
 #rename headers  
 
-names(d2)[]<-c("Date", "Site", "Quadrat", "Weight", "Legal", "Sublegal", "Spat", "Total_Live", "Full_year")
+names(d2)[]<-c("Date","Bay", "Site", "Quadrat", "Weight", "Legal", "Sublegal", "Spat", "Total_Live", "Total_Dead","Month", "Day","Year", "Full_year")
 
+str(d2)
 
-d3 <- d2 %>%
-  mutate(Year = year(d2$Full_year),
-         Month = month(d2$Full_year),
-         Day = day(d2$Full_year))
+# d3 <- d2 %>%
+#   mutate(Year = year(d2$Full_year),
+#          Month = month(d2$Full_year),
+#          Day = day(d2$Full_year))
 
 
 #let's create periods of time as we done in Lone Cabbage and just
@@ -57,65 +64,95 @@ d3 <- d2 %>%
 #add period to split the year like we do with Lone Cabbage
 #So April through September is summer and October through March is winter
 
-unique(d3$Year)
+unique(d2$Year)
 
 
 
-d3$Period <- NA
+d2$Period <- NA
 firstyear <- 2015 
 #this is the first year of the FWC NFWF, so doing this to match the periods
-endyear <- max(d3$Year)
+endyear <- max(d2$Year)
 
 years <- sort(rep(firstyear:endyear, times = 1, each = 2))
 
 for(i in unique(years)){
   y <- i #year
   p <- which(years == i) #period number - 2010 = 1 and 2, 2011 = 3 and 4, and so forth.
-  for(j in 1:nrow(d3)){
-    if(d3$Year[j] == y & d3$Month[j] > 3 & d3$Month[j] < 10) d3$Period[j] = p[1] #year i months 4-9
-    if(d3$Year[j] == y & d3$Month[j] > 9) d3$Period[j] = p[2] #year i months 10-12
-    if(d3$Year[j] == y+1 & d3$Month[j] < 4) d3$Period[j] = p[2] #year i+1 months 1-3
+  for(j in 1:nrow(d2)){
+    if(d2$Year[j] == y & d2$Month[j] > 3 & d2$Month[j] < 10) d2$Period[j] = p[1] #year i months 4-9
+    if(d2$Year[j] == y & d2$Month[j] > 9) d2$Period[j] = p[2] #year i months 10-12
+    if(d2$Year[j] == y+1 & d2$Month[j] < 4) d2$Period[j] = p[2] #year i+1 months 1-3
   }
 }
 
-d3$season <- "Winter"
-d3$season[d3$Period == 1 | d3$Period == 3 | d3$Period == 5 | d3$Period == 7 | d3$Period == 9] <- "Summer"
+d2$season <- "Winter"
+d2$season[d2$Period == 1 | d2$Period == 3 | d2$Period == 5 | d2$Period == 7 | d2$Period == 9] <- "Summer"
 
-unique(d3$Period)
+unique(d2$Period)
 #periods 1, 3, 6, 7 only
 
 #ok what are our site names?
-unique(d3$Site)
-#lots of issues here
-#as an example there is "Cat Point " with a space after Point
-# and "Cat Point" with a space not after Point
+unique(d2$Site)
+#lots of sites
 
 ####
-#Fix a bunch of name errors
+#Fix some name errors or inconsistencies like removing extra space
+
+d3<-d2
 
 d3.1<-d3 %>%
-  mutate(Site = replace(Site,Site == "8 Mile ", "8 Mile"))
+  mutate(Site = replace(Site,Site == "Square Bar ", "Square Bar"))
 d3.2<-d3.1 %>%
-  mutate(Site = replace(Site,Site == "Cat Point ", "Cat Point"))
+  mutate(Site = replace(Site,Site == "Cabbage Top ", "Cabbage Top"))
 d3.3<-d3.2 %>%
-  mutate(Site = replace(Site,Site == "East Hole 1", "East Hole #1"))
+  mutate(Site = replace(Site,Site == "Goose Point ", "Goose Point"))
 d3.4<-d3.3 %>%
-  mutate(Site = replace(Site,Site == "East Hole 2", "East Hole #2"))
+  mutate(Site = replace(Site,Site == "Bayou Flats ", "Bayou Flats"))
+d3.5<-d3.4 %>%
+  mutate(Site = replace(Site,Site == "Hotel Bar ", "Hotel Bar"))
+d3.6<-d3.5 %>%
+  mutate(Site = replace(Site,Site == "Trout Bayou  #1", "Trout Bayou #1"))
+d3.7<-d3.6 %>%
+  mutate(Site = replace(Site,Site == "Normans Bar Middle ", "Normans Bar Middle"))
+d3.8<-d3.7 %>%
+  mutate(Site = replace(Site,Site == "Normans Bar Middle ", "Normans Bar Middle"))
+d3.9<-d3.8 %>%
+  mutate(Site = replace(Site,Site == "Doyle Bayou ", "Doyle Bayou"))
+d3.91<-d3.9 %>%
+  mutate(Site = replace(Site,Site == "Little Gully ", "Little Gully"))
+d3.92<-d3.91 %>%
+  mutate(Site = replace(Site,Site == "Redfish Creek 2 ", "Redfish Creek 2"))
 
-d4<-d3.4
+
+d4<-d3.92
 
 unique(d4$Site)
 
+#ok let's now write d4 to a file and then that will be the file
+#we merge with 4044
+
+write.table(d4, file = "4044_to_merge.csv", row.names = FALSE,col.names = TRUE,sep = ",")
+
+
+##just some summaries to see what is going on
+
+names(d4)
+str(d4)
+as.numeric()
+
+#change to numbers if needed
+d4 %>% mutate_if(is.integer,as.numeric) %>% str(d4)
+
 
 #max and mins
-max(d3$Legal)
-min(d3$Legal)
+max(d4$Adults_75mm, na.rm=T)
+min(d4$Adults_75mm, na.rm=T)
 
 max(d3$Sublegal)
 min(d3$Sublegal)
 
-max(d3$Spat)
-min(d3$Spat)
+max(d4$Spat_0_25mm, na.rm=T)
+min(d4$Spat_0_25mm, na.rm=T)
 
 
 
@@ -126,141 +163,3 @@ month <- d4 %>%
   dplyr::arrange(Period, Site)
 names(month) <- c("Period", "Station Name",
                   "Number Quadrats")
-
-
-#just writing the table with number of quadrats by Period, site to folder
-#write.table(month, file = "num_quads_yr_mnth_station.txt", row.names = FALSE,
-#            col.names = TRUE,sep = ",")
-
-
-report_data <- d4 %>%
-  dplyr::group_by(Period,Year, Month, Site) %>%
-  dplyr::summarise(count = n()) %>%
-  dplyr::arrange(Period,Year, Month, Site)
-names(report_data) <- c("Period","Year", "Month", "Site",
-                  "Number Quadrats")
-write.table(month, file = "num_quads_yr_mnth_site.txt", row.names = FALSE,col.names = TRUE,sep = ",")
-
-
-
-
-f1<-ggplot(d4, aes(Period, Legal, color=Site)) +
-  geom_point(size=4) +
-  ggtitle("Legal by Period") +
-  xlab("Period") +
-  ylab("Number legal") #+
-  #stat_summary(fun = mean, geom = "point", size=1.5, aes(group= Site), color="gold") +
-  #stat_summary(fun.data = "mean_cl_boot",aes(group= Site), size = 1.5, geom = "errorbar", width = 0.5, color="gold")
-f1
-
-f2<-ggplot(d4, aes(Period, Sublegal, color=Site)) +
-  geom_point(size=4) +
-  ggtitle("Sublegal by Period") +
-  xlab("Period") +
-  ylab("Number Sublegal") #+
-#stat_summary(fun = mean, geom = "point", size=1.5, aes(group= Site), color="gold") +
-#stat_summary(fun.data = "mean_cl_boot",aes(group= Site), size = 1.5, geom = "errorbar", width = 0.5, color="gold")
-
-f2
-
-#
-#sum live counts for each site by period
-sum_legal=aggregate(Legal~Site+Period+season,data=d4,sum)
-sum_sublegal=aggregate(Sublegal~Site+Period+season,data=d4,sum)
-sum_spat=aggregate(Spat~Site+Period+season,data=d4,sum)
-
-#count number quads by doing the length of transect, then rename
-count_quads=aggregate(Quadrat~Site+Period+season,data=d3,length)
-count_quads <- dplyr::rename(count_quads,Site=Site,Num_quads=Quadrat, Period=Period,season=season)
-
-
-#merge live count total data frame with the tran_length total data frame
-d5=merge(sum_legal,sum_sublegal,by=c("Site","Period","season"))
-d5.1=merge(d5,sum_spat,by=c("Site","Period","season"))
-d5.2=merge(d5.1,count_quads,by=c("Site","Period","season"))
-
-d6<-d5.2
-
-##add substrate type
-d6$Substrate<-"rock"
-
-names(d6)
-
-#plot
-f3<-ggplot(d6, aes(x=Period, y= Legal)) +
-  geom_point(size=3.5, alpha =1) +
-  ggtitle("Legal oysters") +
-  #ylim(0,300)+
-  xlab("Period") +
-  ylab("Number legal oysters") +
-  facet_wrap(~Site)
-f3
-f3.1<-ggplot(d6, aes(x=Period, y= Sublegal)) +
-  geom_point(size=3.5, alpha =1) +
-  ggtitle("SubLegal oysters") +
-  #ylim(0,300)+
-  xlab("Period") +
-  ylab("Number Sublegal oysters") +
-  facet_wrap(~Site)
-f3.1
-
-f3.2<-ggplot(d6, aes(x=Period, y= Spat)) +
-  geom_point(size=3.5, alpha =1) +
-  ggtitle("SubLegal oysters") +
-  #ylim(0,300)+
-  xlab("Period") +
-  ylab("Number Spat oysters") +
-  facet_wrap(~Site)
-f3.2
-
-##########
-###GLMs###
-##########
-
-d6$StationName <- as.factor(d5$StationName)
-d6$season <- as.factor(d5$season)
-
-#fit basic NB GLM
-m1 <- glm.nb(Legal ~ Period + offset(log(Num_quads)), data = d6) 
-m2 <- glm.nb(Legal ~ Period + Site + offset(log(Num_quads)), data = d6) 
-m3 <- glm.nb(Legal ~ Period * Site + offset(log(Num_quads)), data = d6,control = glm.control(maxit = 5000)) 
-
-
-cand.set = list(m1,m2,m3)
-modnames = c("period", "period + site", "period * site",)
-aictab(cand.set, modnames, second.ord = FALSE) #model selection table with AIC
-
-##############
-#summary stats
-##############
-
-###################
-#from oyster weekly report
-
-options(scipen = 2)
-sumstats = function(x){ 
-  y=na.omit(x)
-  bstrap <- c()
-  for (i in 1:1000){
-    bstrap <- c(bstrap, mean(sample(y,(length(y)),replace=T), na.rm = T))}
-  c(
-    Mean=mean(y), 
-    Median=median(y),
-    SD=sd(y), 
-    Var=var(y),
-    CV=sd(y)/mean(y),
-    SE=sd(y)/sqrt(length(y)),
-    L95SE=mean(y)-1.96*(sd(y)/sqrt(length(y))),
-    U95SE=mean(y)+1.96*(sd(y)/sqrt(length(y))),
-    BSMEAN = mean(bstrap),
-    L95BS = quantile(bstrap,.025),
-    U95BS= quantile(bstrap,.975))
-}
-
-a<-round(sumstats(d4$Spat[d4$Site == "Cat Point" & d4$Period == "7" ]),2)
-write.table(a, file = "hotel_p2.txt", row.names = TRUE,
-            col.names = TRUE,sep = ",")
-
-
-
-
