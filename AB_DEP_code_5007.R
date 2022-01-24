@@ -6,11 +6,13 @@
 
 #To do integrate 4044A and 5007A 
 #Project 4044 is the NRDA project and it used rock
-#Project 5007 is the RESTORE project and it used shell 50, 258 cubic yds shell
+#Project 5007 is the RESTORE project and it used shell
 #Plot data for each size class over time (adult, seed, spat)
 #Plot biomass overtime (usually listed as total weight)
 #Will need to extract dates and then create periods
 #Because not all years are the same will likely need to use covariates to try and #explain difference in year such as river discharge
+
+#about line 112 I write a file that takes 5007 and exports it, that's the file i'll merge with 4044
 
 
 library(readxl)
@@ -62,7 +64,8 @@ unique(d3$Year)
 
 
 d3$Period <- NA
-firstyear <- 2018
+firstyear <- 2015 
+#this is the first year of the FWC NFWF, so doing this to match the periods
 endyear <- max(d3$Year)
 
 years <- sort(rep(firstyear:endyear, times = 1, each = 2))
@@ -83,7 +86,7 @@ d3$season[d3$Period == 1 | d3$Period == 3 | d3$Period == 5 | d3$Period == 7 | d3
 unique(d3$Period)
 #periods 1, 3, 6, 7 only
 
-#ok what are out site names?
+#ok what are our site names?
 unique(d3$Site)
 #lots of issues here
 #as an example there is "Cat Point " with a space after Point
@@ -104,6 +107,13 @@ d3.4<-d3.3 %>%
 d4<-d3.4
 
 unique(d4$Site)
+
+#ok let's now write d4 to a file and then that will be the file
+#we merge with 4044
+
+write.table(d4, file = "5007_to_merge.csv", row.names = FALSE,col.names = TRUE,sep = ",")
+
+
 
 
 #max and mins
@@ -132,6 +142,16 @@ names(month) <- c("Period", "Station Name",
 #            col.names = TRUE,sep = ",")
 
 
+report_data <- d4 %>%
+  dplyr::group_by(Period,Year, Month, Site) %>%
+  dplyr::summarise(count = n()) %>%
+  dplyr::arrange(Period,Year, Month, Site)
+names(report_data) <- c("Period","Year", "Month", "Site",
+                  "Number Quadrats")
+write.table(month, file = "num_quads_yr_mnth_site.txt", row.names = FALSE,col.names = TRUE,sep = ",")
+
+
+
 
 f1<-ggplot(d4, aes(Period, Legal, color=Site)) +
   geom_point(size=4) +
@@ -140,8 +160,7 @@ f1<-ggplot(d4, aes(Period, Legal, color=Site)) +
   ylab("Number legal") #+
   #stat_summary(fun = mean, geom = "point", size=1.5, aes(group= Site), color="gold") +
   #stat_summary(fun.data = "mean_cl_boot",aes(group= Site), size = 1.5, geom = "errorbar", width = 0.5, color="gold")
-
-f2
+f1
 
 f2<-ggplot(d4, aes(Period, Sublegal, color=Site)) +
   geom_point(size=4) +
@@ -170,6 +189,9 @@ d5.1=merge(d5,sum_spat,by=c("Site","Period","season"))
 d5.2=merge(d5.1,count_quads,by=c("Site","Period","season"))
 
 d6<-d5.2
+
+##add substrate type
+d6$Substrate<-"rock"
 
 names(d6)
 
@@ -200,8 +222,9 @@ f3.2<-ggplot(d6, aes(x=Period, y= Spat)) +
   facet_wrap(~Site)
 f3.2
 
-
-
+##########
+###GLMs###
+##########
 
 d6$StationName <- as.factor(d5$StationName)
 d6$season <- as.factor(d5$season)
@@ -209,10 +232,44 @@ d6$season <- as.factor(d5$season)
 #fit basic NB GLM
 m1 <- glm.nb(Legal ~ Period + offset(log(Num_quads)), data = d6) 
 m2 <- glm.nb(Legal ~ Period + Site + offset(log(Num_quads)), data = d6) 
-m3 <- glm.nb(Legal ~ Period * Site + offset(log(Num_quads)), data = d6) 
+m3 <- glm.nb(Legal ~ Period * Site + offset(log(Num_quads)), data = d6,control = glm.control(maxit = 5000)) 
 
 
 cand.set = list(m1,m2,m3)
 modnames = c("period", "period + site", "period * site",)
 aictab(cand.set, modnames, second.ord = FALSE) #model selection table with AIC
+
+##############
+#summary stats
+##############
+
+###################
+#from oyster weekly report
+
+options(scipen = 2)
+sumstats = function(x){ 
+  y=na.omit(x)
+  bstrap <- c()
+  for (i in 1:1000){
+    bstrap <- c(bstrap, mean(sample(y,(length(y)),replace=T), na.rm = T))}
+  c(
+    Mean=mean(y), 
+    Median=median(y),
+    SD=sd(y), 
+    Var=var(y),
+    CV=sd(y)/mean(y),
+    SE=sd(y)/sqrt(length(y)),
+    L95SE=mean(y)-1.96*(sd(y)/sqrt(length(y))),
+    U95SE=mean(y)+1.96*(sd(y)/sqrt(length(y))),
+    BSMEAN = mean(bstrap),
+    L95BS = quantile(bstrap,.025),
+    U95BS= quantile(bstrap,.975))
+}
+
+a<-round(sumstats(d4$Spat[d4$Site == "Cat Point" & d4$Period == "7" ]),2)
+write.table(a, file = "hotel_p2.txt", row.names = TRUE,
+            col.names = TRUE,sep = ",")
+
+
+
 
