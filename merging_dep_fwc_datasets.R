@@ -1,3 +1,19 @@
+library(readxl)
+library(tidyverse)
+library(dplyr)
+library(Hmisc)
+library(MASS)
+library(sjPlot)
+library(reshape)
+library(ggplot2)
+library(lubridate)
+library(AICcmodavg)
+library(ggeffects)
+library(cowplot)
+
+
+
+
 #now we will start merging the data sets
 #first the two DEP
 #then the FWC
@@ -14,7 +30,7 @@ d1.1 <- dplyr::rename(d1,Date=Harvested, Weight=Weight_kg, Legal=Adults_75mm, Su
 
 #subset the columns to the ones you want to work with
 d1.2 <- d1.1 %>% 
-  dplyr::select(Site, Weight, Legal, Sublegal, Spat, Year, Month, Day, Period, season)
+  dplyr::select(Site, Quadrat, Weight, Legal, Sublegal, Spat, Year, Month, Day, Period, season)
 
 
 #now 5077
@@ -22,7 +38,7 @@ d1.2 <- d1.1 %>%
 d2 <- read.csv("~/GitHub/AB_DEP/5007_to_merge.csv")
 
 d2.1 <- d2 %>% 
-  dplyr::select(Site, Weight, Legal, Sublegal, Spat, Year, Month, Day, Period, season)
+  dplyr::select(Site, Quadrat, Weight, Legal, Sublegal, Spat, Year, Month, Day, Period, season)
 
 names(d2.1)
 
@@ -30,3 +46,15 @@ names(d2.1)
 #merge live count total data frame with the tran_length total data frame
 
 d3<-rbind(d1.2, d2.1)
+
+
+d4<-read.csv("~/GitHub/AB_DEP/FWC_to_merge.csv")
+
+names(d4)
+
+#some renaming so two DEP datasets match name columns
+d4.1 <- dplyr::rename(d4,Site=StationName, Weight=TotalVol,Cultch=Cultch,Spat=LiveSpat)
+
+#subset the columns to the ones you want to work with
+d4.2 <- d4.1 %>% 
+  dplyr::select(Site, Quadrat, Weight, Spat, Year, Month, Day, Period, season)
