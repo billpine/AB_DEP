@@ -22,6 +22,8 @@ library(cowplot)
 
 d1 <- read.csv("~/GitHub/AB_DEP/4044_to_merge.csv")
 
+d1$Bottom<-"Shell"
+
 names(d1)
 
 
@@ -30,15 +32,21 @@ d1.1 <- dplyr::rename(d1,Date=Harvested, Weight=Weight_kg, Legal=Adults_75mm, Su
 
 #subset the columns to the ones you want to work with
 d1.2 <- d1.1 %>% 
-  dplyr::select(Site, Quadrat, Weight, Legal, Sublegal, Spat, Year, Month, Day, Period, season)
+  dplyr::select(Site, Quadrat, Weight, Legal, Sublegal, Spat, Year, Month, Day, Period, season, Bottom)
+
+min(d1.2$Year)
 
 
 #now 5077
 
 d2 <- read.csv("~/GitHub/AB_DEP/5007_to_merge.csv")
 
+d2$Bottom<-"Rock"
+
+min(d2$Year)
+
 d2.1 <- d2 %>% 
-  dplyr::select(Site, Quadrat, Weight, Legal, Sublegal, Spat, Year, Month, Day, Period, season)
+  dplyr::select(Site, Quadrat, Weight, Legal, Sublegal, Spat, Year, Month, Day, Period, season, Bottom)
 
 names(d2.1)
 
@@ -48,7 +56,11 @@ names(d2.1)
 d3<-rbind(d1.2, d2.1)
 
 
+##bring in FWC
+
 d4<-read.csv("~/GitHub/AB_DEP/FWC_to_merge.csv")
+
+d4$Bottom<-"Shell"
 
 names(d4)
 
@@ -57,4 +69,18 @@ d4.1 <- dplyr::rename(d4,Site=StationName, Weight=TotalVol,Cultch=Cultch,Spat=Li
 
 #subset the columns to the ones you want to work with
 d4.2 <- d4.1 %>% 
-  dplyr::select(Site, Quadrat, Weight, Spat, Year, Month, Day, Period, season)
+  dplyr::select(Site, Quadrat, Weight, Spat, Year, Month, Day, Period, season, Bottom)
+
+d4.2$Legal<-NA
+d4.2$Sublegal<-NA
+
+str(d4.2)
+str(d3)
+
+
+d5<-rbind(d4.2, d3)
+
+
+write.table(d5$Site,sites.txt)
+
+write.table((unique(d5$Site)), file = "~/GitHub/AB_DEP/name_check.csv", row.names = FALSE,col.names = TRUE,sep = ",")
