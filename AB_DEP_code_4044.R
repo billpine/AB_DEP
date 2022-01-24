@@ -123,13 +123,19 @@ d3.91<-d3.9 %>%
 d3.92<-d3.91 %>%
   mutate(Site = replace(Site,Site == "Redfish Creek 2 ", "Redfish Creek 2"))
 
+d3.93<-d3.92 %>%
+  mutate(Bay = replace(Bay,Bay == "Apalachicola ", "Apalachicola"))
+d3.94<-d3.93 %>%
+  filter(d3.93$Bay =="Apalachicola")
+  
 
-d4<-d3.92
+
+d4<-d3.94
 
 unique(d4$Site)
 
 #ok let's now write d4 to a file and then that will be the file
-#we merge with 4044
+#we merge with the others
 
 write.table(d4, file = "4044_to_merge.csv", row.names = FALSE,col.names = TRUE,sep = ",")
 
