@@ -25,13 +25,14 @@ d1 <- read.csv("~/GitHub/AB_DEP/4044_to_merge.csv")
 d1$Bottom<-"Shell"
 
 names(d1)
+unique(d1$Bay)
 
 
-#some renaming so two DEP datasets match name columns
-d1.1 <- dplyr::rename(d1,Date=Harvested, Weight=Weight_kg, Legal=Adults_75mm, Sublegal= Seed_26_74mm, Spat=Spat_0_25mm)
+# #some renaming so two DEP datasets match name columns
+# d1.1 <- dplyr::rename(d1,Date=Harvested, Weight=Weight_kg, Legal=Adults_75mm, Sublegal= Seed_26_74mm, Spat=Spat_0_25mm)
 
 #subset the columns to the ones you want to work with
-d1.2 <- d1.1 %>% 
+d1.2 <- d1 %>% 
   dplyr::select(Site, Quadrat, Weight, Legal, Sublegal, Spat, Year, Month, Day, Period, season, Bottom)
 
 min(d1.2$Year)
@@ -81,6 +82,6 @@ str(d3)
 d5<-rbind(d4.2, d3)
 
 
-write.table(d5$Site,sites.txt)
+
 
 write.table((unique(d5$Site)), file = "~/GitHub/AB_DEP/name_check.csv", row.names = FALSE,col.names = TRUE,sep = ",")
