@@ -1,3 +1,6 @@
+#This is the file to merge the two DEP datasets with the
+##FWC data set and do a little more cleaning on these data sets
+
 library(readxl)
 library(tidyverse)
 library(dplyr)
@@ -83,8 +86,6 @@ str(d3)
 
 
 d5<-rbind(d4.2, d3)
-
-
 
 
 write.table((unique(d5$Site)), file = "~/GitHub/AB_DEP/name_check.csv", row.names = FALSE,col.names = TRUE,sep = ",")
