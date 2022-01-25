@@ -87,5 +87,13 @@ str(d3)
 
 d5<-rbind(d4.2, d3)
 
+d5 <- dplyr::rename(d5,Season=season)
 
-write.table((unique(d5$Site)), file = "~/GitHub/AB_DEP/name_check.csv", row.names = FALSE,col.names = TRUE,sep = ",")
+
+d5<-d5[,c("Year", "Month", "Day", "Site", "Period", "Season", "Bottom", "Cultch", "Quadrat", "Weight", "Spat", "Sublegal", "Legal")]
+
+# #name check file for FWC and DEP
+# write.table((unique(d5$Site)), file = "~/GitHub/AB_DEP/name_check.csv", row.names = FALSE,col.names = TRUE,sep = ",")
+
+#merged FWC and DEP
+write.table(d5, file = "~/GitHub/AB_DEP/20220125_merged_agency_data.csv", row.names = FALSE,col.names = TRUE,sep = ",")
