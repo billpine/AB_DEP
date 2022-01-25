@@ -23,6 +23,7 @@ library(cowplot)
 d1 <- read.csv("~/GitHub/AB_DEP/4044_to_merge.csv")
 
 d1$Bottom<-"Shell"
+d1$Cultch<-300
 
 names(d1)
 unique(d1$Bay)
@@ -33,7 +34,7 @@ unique(d1$Bay)
 
 #subset the columns to the ones you want to work with
 d1.2 <- d1 %>% 
-  dplyr::select(Site, Quadrat, Weight, Legal, Sublegal, Spat, Year, Month, Day, Period, season, Bottom)
+  dplyr::select(Site, Quadrat, Weight, Legal, Sublegal, Spat, Year, Month, Day, Period, season, Bottom, Cultch)
 
 min(d1.2$Year)
 
@@ -43,11 +44,12 @@ min(d1.2$Year)
 d2 <- read.csv("~/GitHub/AB_DEP/5007_to_merge.csv")
 
 d2$Bottom<-"Rock"
+d2$Cultch<-300
 
 min(d2$Year)
 
 d2.1 <- d2 %>% 
-  dplyr::select(Site, Quadrat, Weight, Legal, Sublegal, Spat, Year, Month, Day, Period, season, Bottom)
+  dplyr::select(Site, Quadrat, Weight, Legal, Sublegal, Spat, Year, Month, Day, Period, season, Bottom, Cultch)
 
 names(d2.1)
 
@@ -63,6 +65,7 @@ d4<-read.csv("~/GitHub/AB_DEP/FWC_to_merge.csv")
 
 d4$Bottom<-"Shell"
 
+
 names(d4)
 
 #some renaming so two DEP datasets match name columns
@@ -70,7 +73,7 @@ d4.1 <- dplyr::rename(d4,Site=StationName, Weight=TotalVol,Cultch=Cultch,Spat=Li
 
 #subset the columns to the ones you want to work with
 d4.2 <- d4.1 %>% 
-  dplyr::select(Site, Quadrat, Weight, Spat, Year, Month, Day, Period, season, Bottom)
+  dplyr::select(Site, Quadrat, Weight, Spat, Year, Month, Day, Period, season, Bottom, Cultch)
 
 d4.2$Legal<-NA
 d4.2$Sublegal<-NA
