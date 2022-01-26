@@ -3,7 +3,6 @@
 #Bill Pine
 #January 2022
 
-
 library(readxl)
 library(tidyverse)
 library(dplyr)
@@ -31,10 +30,9 @@ d2$Legal[d2$Legal < -1] <- NA
 quad_sum <- d2 %>%
   dplyr::group_by(Year, Month, Period, Site) %>%
   dplyr::summarise(count = n()) %>%
-  dplyr::arrange(Year, Month, Period, Site)
-names(quad_sum) <- c("Year", "Month","Period", "Site",
+  dplyr::arrange(Project, Year, Month, Period, Site)
+names(quad_sum) <- c("Project", "Year", "Month","Period", "Site",
                   "Number Quadrats")
-
 
 #just writing the table with number of quadrats by year, month, station to folder
 #write.table(month, file = "quad_count_yr_mnth_station.txt", row.names = FALSE,
@@ -47,10 +45,8 @@ spat_sum <- d2 %>%
   dplyr::summarise(sum=sum(Spat,na.rm=TRUE)) %>%
   dplyr::arrange(Project, Year, Month, Period, Site)
 
-  names(quad_sum) <- c("Year", "Month","Period", "Site",
+  names(spat_sum) <- c("Project", "Year", "Month","Period", "Site",
                      "Number Live Spat")
-
-
 
 # #OK parking the summary stats function here
 # options(scipen = 2)
@@ -83,18 +79,19 @@ spat_sum <- d2 %>%
 #             col.names = TRUE,sep = ",")
 # ###
 
-
 #sum live counts for each transect
 count_spat=aggregate(Spat~Site+Period+Season,data=d2,sum)
 count_spat <- dplyr::rename(count_spat,Site=Site,Period=Period, Season=Season,Sum_spat=Spat)
 
+count_legal=aggregate(Legal~Site+Period+Season,data=d2,sum)
+count_legal <- dplyr::rename(count_legal,Site=Site,Period=Period, Season=Season,Sum_legal=Legal)
+
 #count number quads by doing the length of transect, then rename
 count_quads=aggregate(Spat~Site+Period+Season,data=d2,length)
-count_quads <- dplyr::rename(count_quads,Site=Site,Period=Period, Season=Season,Num_quads=Spat)
+count_quads_spat <- dplyr::rename(count_quads,Site=Site,Period=Period, Season=Season,Num_quads=Spat)
 
-
-#merge live count total data frame with the tran_length total data frame
-d3=merge(count_spat,count_quads,by=c("Site", "Period", "Season"))
+#merge spat live count total data frame with the tran_length total data frame
+d3=merge(count_spat,count_quads_spat,by=c("Site", "Period", "Season"))
 
 #calculate CPUE. Just for fun to plot
 d3$CPUE<-d3$Sum_spat/d3$Num_quads
