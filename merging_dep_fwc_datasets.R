@@ -123,37 +123,74 @@ unique(d5$Year)
 
 ##bring in FWC
 
-d4<-read.csv("~/GitHub/AB_DEP/FWC_to_merge.csv")
+d6<-read.csv("~/Git/AB_DEP/FWC_to_merge.csv")
+d6 <- dplyr::rename(d6,Season=season)
 
-d4$Bottom<-"Shell"
+
+d6$Bottom<-"Shell"
+d6$Project<-"NFWF_1"
 
 
-names(d4)
+names(d6)
 
 #some renaming 
-d4.1 <- dplyr::rename(d4,Site=StationName, Weight=TotalVol,Cultch=Cultch,Spat=LiveSpat)
+d6.1 <- dplyr::rename(d6,Site=StationName, Weight=TotalVol,Cultch=Cultch,Spat=LiveSpat)
 
 #subset the columns to the ones you want to work with
-d4.2 <- d4.1 %>% 
-  dplyr::select(Site, Quadrat, Weight, Spat, Year, Month, Day, Period, season, Bottom, Cultch)
+d6.2 <- d6.1 %>% 
+  dplyr::select(Site, Quadrat, Weight, Spat, Year, Month, Day, Period, Season, Bottom, Cultch, Project)
 
-d4.2$Legal<-NA
-d4.2$Sublegal<-NA
+d6.2$Legal<-NA
+d6.2$Sublegal<-NA
 
-str(d4.2)
-str(d3)
+str(d6.2)
+str(d5)
 
 #merge fwc and dep
 
-d5<-rbind(d4.2, d3)
+d7<-rbind(d6.2, d5)
 
-d5 <- dplyr::rename(d5,Season=season)
+#Put columns in order
+d7<-d7[,c("Project","Year", "Month", "Day", "Site", "Period", "Season", "Bottom", "Cultch", "Quadrat", "Weight", "Spat", "Sublegal", "Legal")]
+
+#ok what are our site names?
+unique(d7$Site)
+#lots of sites
+
+####
+#Fix some name errors or inconsistencies like removing extra space
 
 
-d5<-d5[,c("Year", "Month", "Day", "Site", "Period", "Season", "Bottom", "Cultch", "Quadrat", "Weight", "Spat", "Sublegal", "Legal")]
 
-# #name check file for FWC and DEP
-# write.table((unique(d5$Site)), file = "~/GitHub/AB_DEP/name_check.csv", row.names = FALSE,col.names = TRUE,sep = ",")
+d7.1<-d7 %>%
+  mutate(Site = replace(Site,Site == "Redfish Creek #1", "Redfish Creek 1"))
+d7.2<-d7.1 %>%
+  mutate(Site = replace(Site,Site == "Redfish Creek #2", "Redfish Creek 2"))
+d7.3<-d7.2 %>%
+  mutate(Site = replace(Site,Site == "Norman's Bar Middle", "Normans Bar Middle"))
+d7.4<-d7.3 %>%
+  mutate(Site = replace(Site,Site == "Norman's Bar North", "Normans Bar North"))
+d7.5<-d7.4 %>%
+  mutate(Site = replace(Site,Site == "East Hole #2", "East Hole 2"))
+d7.6<-d7.5 %>%
+  mutate(Site = replace(Site,Site == "East Hole #1", "East Hole 1"))
+d7.7<-d7.6 %>%
+  mutate(Site = replace(Site,Site == "NFWF Hotel Bar", "Hotel Bar"))
+d7.8<-d7.7 %>%
+  mutate(Site = replace(Site,Site == "NFWF Dry Bar", "Dry Bar"))
+d7.9<-d7.8 %>%
+  mutate(Site = replace(Site,Site == "NFWF Bulkhead", "Bulkhead"))
+d7.10<-d7.9 %>%
+  mutate(Site = replace(Site,Site == "Monkey's Elbow", "Monkeys Elbow"))
+d7.11<-d7.10 %>%
+  mutate(Site = replace(Site,Site == "Cabbage Lumps ", "Cabbage Lumps"))
+
+
+
+#name check file for FWC and DEP
+write.table((unique(d7.11$Site)), file = "~/Git/AB_DEP/name_check.csv", row.names = FALSE,col.names = TRUE,sep = ",")
+
+
 
 #merged FWC and DEP
-write.table(d5, file = "~/GitHub/AB_DEP/20220125_merged_agency_data.csv", row.names = FALSE,col.names = TRUE,sep = ",")
+#write.table(d7, file = "~/Git/AB_DEP/20220125_merged_agency_data.csv", row.names = FALSE,col.names = TRUE,sep = ",")
