@@ -121,33 +121,33 @@ unique(d3$Site)
 
 write.table(d3, file = "4044_yr2021_to_merge.csv", row.names = FALSE,col.names = TRUE,sep = ",")
 
-
-##just some summaries to see what is going on
-
-names(d4)
-str(d4)
-as.numeric()
-
-#change to numbers if needed
-d4 %>% mutate_if(is.integer,as.numeric) %>% str(d4)
-
-
-#max and mins
-max(d4$Adults_75mm, na.rm=T)
-min(d4$Adults_75mm, na.rm=T)
-
-max(d3$Sublegal)
-min(d3$Sublegal)
-
-max(d4$Spat_0_25mm, na.rm=T)
-min(d4$Spat_0_25mm, na.rm=T)
-
-
-
-#count number of quadrats per period, site
-month <- d4 %>%
-  dplyr::group_by(Period, Site) %>%
-  dplyr::summarise(count = n()) %>%
-  dplyr::arrange(Period, Site)
-names(month) <- c("Period", "Station Name",
-                  "Number Quadrats")
+# 
+# ##just some summaries to see what is going on
+# 
+# names(d3)
+# str(d3)
+# as.numeric()
+# 
+# #change to numbers if needed
+# d3 %>% mutate_if(is.integer,as.numeric) %>% str(d3)
+# 
+# 
+# #max and mins
+# max(d4$Adults_75mm, na.rm=T)
+# min(d4$Adults_75mm, na.rm=T)
+# 
+# max(d3$Sublegal)
+# min(d3$Sublegal)
+# 
+# max(d4$Spat_0_25mm, na.rm=T)
+# min(d4$Spat_0_25mm, na.rm=T)
+# 
+# 
+# 
+# #count number of quadrats per period, site
+# month <- d4 %>%
+#   dplyr::group_by(Period, Site) %>%
+#   dplyr::summarise(count = n()) %>%
+#   dplyr::arrange(Period, Site)
+# names(month) <- c("Period", "Station Name",
+#                   "Number Quadrats")
