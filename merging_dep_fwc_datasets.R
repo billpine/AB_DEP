@@ -193,4 +193,4 @@ write.table((unique(d7.11$Site)), file = "~/Git/AB_DEP/name_check.csv", row.name
 
 
 #merged FWC and DEP
-#write.table(d7, file = "~/Git/AB_DEP/20220125_merged_agency_data.csv", row.names = FALSE,col.names = TRUE,sep = ",")
+write.table(d7.11, file = "~/Git/AB_DEP/20220126_merged_agency_data.csv", row.names = FALSE,col.names = TRUE,sep = ",")
