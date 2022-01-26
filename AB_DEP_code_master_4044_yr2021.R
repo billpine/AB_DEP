@@ -1,6 +1,6 @@
 ##
 ##THIS IS the DEP project 4044 master data file
-##I received this from DEP after I cleaned and standardized
+##I received this from DEP jan 25, 2022 after I cleaned and standardized
 #the 4044 and 5007 files from the SECAR database
 #so now I"m going to clean just 2021 from the master file
 #because that year is not in SECAR
@@ -116,7 +116,7 @@ unique(d3$Site)
 #ok let's now write d4 to a file and then that will be the file
 #we merge with the others
 
-write.table(d4, file = "4044_2021_to_merge.csv", row.names = FALSE,col.names = TRUE,sep = ",")
+write.table(d3, file = "4044_yr2021_to_merge.csv", row.names = FALSE,col.names = TRUE,sep = ",")
 
 
 ##just some summaries to see what is going on
