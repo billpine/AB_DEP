@@ -39,13 +39,16 @@ d1$Day<-format(d1$Date,format="%d")
 
 names(d1)
 
+names(d1)[12] <- "Weight_kg"
 names(d1)[13] <- "Adults"
 names(d1)[14] <- "Seed"
 names(d1)[15] <- "Spat"
 
+
+
 #subset the columns to the ones you want to work with
 d2 <- d1 %>% 
-  dplyr::select("Harvested","Bay","Site","Quadrat","Weight (kg)","Adults"
+  dplyr::select("Bay","Site","Quadrat","Weight_kg","Adults"
                 ,"Seed","Spat","Total Live",
                 "Total Dead","Month","Day","Year","Date")
 
