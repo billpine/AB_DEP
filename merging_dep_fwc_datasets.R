@@ -1,6 +1,7 @@
 #This is the file to merge the two DEP datasets with the
 ##FWC data set and do a little more cleaning on these data sets
 
+
 library(readxl)
 library(tidyverse)
 library(dplyr)
@@ -23,10 +24,14 @@ library(cowplot)
 
 #start with 4044
 
-d1 <- read.csv("~/GitHub/AB_DEP/4044_to_merge.csv")
+d1 <- read.csv("~/Git/AB_DEP/4044_to_merge.csv")
+
 
 d1$Bottom<-"Shell"
-d1$Cultch<-300
+d1$Cultch<-200 #from jonathan and reports
+d1$Project<-"NRDA_4044"
+
+d1 <- dplyr::rename(d1,Season=season)
 
 names(d1)
 unique(d1$Bay)
@@ -37,29 +42,83 @@ unique(d1$Bay)
 
 #subset the columns to the ones you want to work with
 d1.2 <- d1 %>% 
-  dplyr::select(Site, Quadrat, Weight, Legal, Sublegal, Spat, Year, Month, Day, Period, season, Bottom, Cultch)
+  dplyr::select(Site, Quadrat, Weight, Legal, Sublegal, Spat, Year, Month, Day, Period, Season, Bottom, Cultch, Project)
 
 min(d1.2$Year)
 
 
 #now 5077
 
-d2 <- read.csv("~/GitHub/AB_DEP/5007_to_merge.csv")
+d2 <- read.csv("~/Git/AB_DEP/5007_to_merge.csv")
 
 d2$Bottom<-"Rock"
 d2$Cultch<-300
+d2$Project<-"NRDA_5007"
+
+d2 <- dplyr::rename(d2,Season=season)
 
 min(d2$Year)
 
 d2.1 <- d2 %>% 
-  dplyr::select(Site, Quadrat, Weight, Legal, Sublegal, Spat, Year, Month, Day, Period, season, Bottom, Cultch)
+  dplyr::select(Site, Quadrat, Weight, Legal, Sublegal, Spat, Year, Month, Day, Period, Season, Bottom, Cultch, Project)
 
 names(d2.1)
 
 
-#merge live count total data frame with the tran_length total data frame
+#merge 4044 and 5007
 
 d3<-rbind(d1.2, d2.1)
+
+
+
+#jonathan with dep provided a "master" spreadsheet for the dep nrda project
+#this duplicates the data from the dep server I've already cleaned
+#EXCEPT for the last year (2021,sheet 7) of his files so
+#now I'm going to bring in the master dep file but
+#only work with sheet 7
+
+#now need to merge d4 which is project 4044 year = 2021
+# to the other years of 4044 and project 5077
+
+
+d4 <- read.csv("~/Git/AB_DEP/4044_yr2021_to_merge.csv")
+
+d4$Bottom<-"Shell"
+d4$Cultch<-200
+d4$Project<-"NRDA_4044"
+
+
+names(d3)
+names(d4)
+
+#more cleaning is needed
+
+
+#ok reduce number of columns in d4
+#subset the columns to the ones you want to work with
+d4.1 <- d4 %>% 
+  dplyr::select("Site","Quadrat","Weight_kg","Adults"
+                ,"Seed","Spat","Month","Day","Year","Period",
+                "Season","Bottom","Cultch","Project")
+str(d3)
+str(d4.1)
+
+#work on some more column names
+names(d4.1)
+
+
+names(d4.1)[3] <- "Weight"
+names(d4.1)[4] <- "Legal"
+names(d4.1)[5] <- "Sublegal"
+names(d4.1)[6] <- "Spat"
+
+names(d4.1)
+names(d3)
+
+#merge the dep files together
+
+d5<-rbind(d3, d4.1)
+unique(d5$Year)
 
 
 ##bring in FWC
@@ -71,7 +130,7 @@ d4$Bottom<-"Shell"
 
 names(d4)
 
-#some renaming so two DEP datasets match name columns
+#some renaming 
 d4.1 <- dplyr::rename(d4,Site=StationName, Weight=TotalVol,Cultch=Cultch,Spat=LiveSpat)
 
 #subset the columns to the ones you want to work with
@@ -84,6 +143,7 @@ d4.2$Sublegal<-NA
 str(d4.2)
 str(d3)
 
+#merge fwc and dep
 
 d5<-rbind(d4.2, d3)
 
