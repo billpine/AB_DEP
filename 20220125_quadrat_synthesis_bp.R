@@ -27,16 +27,16 @@ d2$Legal[d2$Legal < -1] <- NA
 
 #make summary table of number of quadrats each month and period
 
-quad_sum <- d2 %>%
+quad_sum<- d2 %>%
   dplyr::group_by(Year, Month, Period, Site) %>%
-  dplyr::summarise(count = n()) %>%
+  dplyr::summarise(count = count(Quadrat,na.rm=TRUE)) %>%
   dplyr::arrange(Project, Year, Month, Period, Site)
-names(quad_sum) <- c("Project", "Year", "Month","Period", "Site",
+names(z) <- c("Project", "Year", "Month","Period", "Site",
                   "Number Quadrats")
 
 #just writing the table with number of quadrats by year, month, station to folder
-#write.table(month, file = "quad_count_yr_mnth_station.txt", row.names = FALSE,
-#            col.names = TRUE,sep = ",")
+write.table(quad_sum, file = "quad_count_yr_mnth_station.txt", row.names = FALSE,
+            col.names = TRUE,sep = ",")
 
 ##summary number of oyster spat counted each month
 #by Project, Year, Month, Period, Site
@@ -48,6 +48,10 @@ spat_sum <- d2 %>%
   names(spat_sum) <- c("Project", "Year", "Month","Period", "Site",
                      "Number Live Spat")
 
+  write.table(spat_sum, file = "spat_count_yr_mnth_station.txt", row.names = FALSE,
+              col.names = TRUE,sep = ",")
+  
+  
 # #OK parking the summary stats function here
 # options(scipen = 2)
 # sumstats = function(x){ 
