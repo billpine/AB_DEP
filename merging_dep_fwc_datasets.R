@@ -140,14 +140,14 @@ names(d6)
 
 #some renaming 
 #Spat is TotalSpat from FWC-NFWF
-d6.1 <- dplyr::rename(d6,Site=StationName, Weight=TotalVol,Cultch=Cultch,Spat=TotalSpat)
+d6.1 <- dplyr::rename(d6,Site=StationName, Weight=TotalVol,Cultch=Cultch,Spat=TotalSpat, Sublegal=TotalSeed, Legal=TotalLegal)
 
 #subset the columns to the ones you want to work with
 d6.2 <- d6.1 %>% 
-  dplyr::select(Site, Quadrat, Weight, Spat, Year, Month, Day, Period, Season, Bottom, Cultch, Project)
+  dplyr::select(Site, Quadrat, Weight, Spat, Sublegal, Legal, Year, Month, Day, Period, Season, Bottom, Cultch, Project)
 
-d6.2$Legal<-NA
-d6.2$Sublegal<-NA
+#d6.2$Legal<-NA
+#d6.2$Sublegal<-NA
 
 str(d6.2)
 str(d5)
