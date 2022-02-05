@@ -28,14 +28,15 @@ d2$Legal[d2$Legal < -1] <- NA
 #make summary table of number of quadrats each month and period
 
 quad_sum<- d2 %>%
-  dplyr::group_by(Year, Month, Period, Site) %>%
-  dplyr::summarise(count = count(Quadrat,na.rm=TRUE)) %>%
-  dplyr::arrange(Project, Year, Month, Period, Site)
-names(z) <- c("Project", "Year", "Month","Period", "Site",
-                  "Number Quadrats")
+  dplyr::group_by(Project, Year, Month, Period, Site) %>%
+  dplyr::count(Project, Year, Month, Period, Site) %>%
+  #dplyr::summarise(summarise(count = n()),na.rm=TRUE) %>%
+  dplyr::relocate(Project, Year, Month, Period, Site)
+names(quad_sum) <- c("Project", "Year", "Month","Period", "Site",
+                  "Number_Quadrats")
 
 #just writing the table with number of quadrats by year, month, station to folder
-write.table(quad_sum, file = "quad_count_yr_mnth_station.txt", row.names = FALSE,
+write.table(quad_sum, file = "quad_count_project_yr_mnth_station.txt", row.names = FALSE,
             col.names = TRUE,sep = ",")
 
 ##summary number of oyster spat counted each month

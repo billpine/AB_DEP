@@ -124,8 +124,13 @@ unique(d5$Year)
 ##bring in FWC
 
 d6<-read.csv("~/Git/AB_DEP/FWC_to_merge.csv")
-d6 <- dplyr::rename(d6,Season=season)
+names(d6)
 
+#d6 <- dplyr::rename(d6,Season=season)
+
+#remember TotalSpat in FWC file has been converted based on Matt Davis's
+#recommendations by multipling the total number of oysters counted
+#by the proportion of oysters < 26 mm
 
 d6$Bottom<-"Shell"
 d6$Project<-"NFWF_1"
@@ -134,7 +139,8 @@ d6$Project<-"NFWF_1"
 names(d6)
 
 #some renaming 
-d6.1 <- dplyr::rename(d6,Site=StationName, Weight=TotalVol,Cultch=Cultch,Spat=LiveSpat)
+#Spat is TotalSpat from FWC-NFWF
+d6.1 <- dplyr::rename(d6,Site=StationName, Weight=TotalVol,Cultch=Cultch,Spat=TotalSpat)
 
 #subset the columns to the ones you want to work with
 d6.2 <- d6.1 %>% 
@@ -185,10 +191,10 @@ d7.10<-d7.9 %>%
 d7.11<-d7.10 %>%
   mutate(Site = replace(Site,Site == "Cabbage Lumps ", "Cabbage Lumps"))
 
-
+unique(d7.11$Site)
 
 #name check file for FWC and DEP
-write.table((unique(d7.11$Site)), file = "~/Git/AB_DEP/name_check.csv", row.names = FALSE,col.names = TRUE,sep = ",")
+#write.table((unique(d7.11$Site)), file = "~/Git/AB_DEP/name_check.csv", row.names = FALSE,col.names = TRUE,sep = ",")
 
 
 
