@@ -1,0 +1,163 @@
+"Project","Year","Month","Period","Site","Number Live Spat"
+"NFWF_1",2015,10,2,"Bulkhead",48468
+"NFWF_1",2015,10,2,"Dry Bar",22715
+"NFWF_1",2015,10,2,"Hotel Bar",56686
+"NFWF_1",2016,1,2,"Bulkhead",20850
+"NFWF_1",2016,2,2,"Dry Bar",7715
+"NFWF_1",2016,2,2,"Hotel Bar",21773
+"NFWF_1",2016,4,3,"Bulkhead",2827
+"NFWF_1",2016,5,3,"Dry Bar",578
+"NFWF_1",2016,5,3,"Hotel Bar",6925
+"NFWF_1",2016,7,3,"Bulkhead",1592
+"NFWF_1",2016,7,3,"Dry Bar",1484
+"NFWF_1",2016,8,3,"Hotel Bar",2891
+"NFWF_1",2016,10,4,"Bulkhead",15352
+"NFWF_1",2016,10,4,"Dry Bar",2531
+"NFWF_1",2016,10,4,"Hotel Bar",24014
+"NFWF_1",2017,1,4,"Bulkhead",20749
+"NFWF_1",2017,1,4,"Dry Bar",1101
+"NFWF_1",2017,1,4,"Hotel Bar",10965
+"NFWF_1",2017,2,4,"Bulkhead",280
+"NFWF_1",2017,2,4,"Hotel Bar",800
+"NFWF_1",2017,4,5,"Bulkhead",10399
+"NFWF_1",2017,4,5,"Dry Bar",403
+"NFWF_1",2017,4,5,"Hotel Bar",6304
+"NFWF_1",2017,7,5,"Bulkhead",5940
+"NFWF_1",2017,7,5,"Hotel Bar",3327
+"NFWF_1",2017,8,5,"Dry Bar",24
+"NFWF_1",2017,10,6,"Bulkhead",8871
+"NFWF_1",2017,10,6,"Hotel Bar",8950
+"NFWF_1",2017,11,6,"Dry Bar",1551
+"NFWF_1",2018,1,6,"Bulkhead",16280
+"NFWF_1",2018,2,6,"Dry Bar",727
+"NFWF_1",2018,2,6,"Hotel Bar",4555
+"NFWF_1",2018,4,7,"Dry Bar",133
+"NFWF_1",2018,4,7,"Hotel Bar",2242
+"NFWF_1",2018,5,7,"Bulkhead",5741
+"NFWF_1",2018,7,7,"Bulkhead",3347
+"NFWF_1",2018,7,7,"Hotel Bar",249
+"NFWF_1",2018,8,7,"Dry Bar",40
+"NFWF_1",2018,11,8,"Dry Bar",165
+"NFWF_1",2018,11,8,"Hotel Bar",1435
+"NFWF_1",2018,12,8,"Bulkhead",1494
+"NFWF_1",2019,1,8,"Bulkhead",256
+"NFWF_1",2019,1,8,"Dry Bar",31
+"NFWF_1",2019,1,8,"Hotel Bar",1483
+"NFWF_1",2019,4,9,"Dry Bar",4
+"NFWF_1",2019,4,9,"Hotel Bar",61
+"NFWF_1",2019,5,9,"Bulkhead",143
+"NFWF_1",2019,8,9,"Hotel Bar",160
+"NFWF_1",2019,9,9,"Bulkhead",1152
+"NFWF_1",2019,9,9,"Dry Bar",133
+"NRDA_4044",2016,6,3,"Dry Bar",32
+"NRDA_4044",2017,4,5,"Cat Point",466
+"NRDA_4044",2017,4,5,"Eleven Mile North",0
+"NRDA_4044",2017,4,5,"Eleven Mile South",2
+"NRDA_4044",2017,4,5,"Hotel Bar",1971
+"NRDA_4044",2017,4,5,"Normans Bar Middle",316
+"NRDA_4044",2017,5,5,"Green Point",3
+"NRDA_4044",2017,5,5,"Normans Bar North",109
+"NRDA_4044",2017,5,5,"North Spur",2
+"NRDA_4044",2017,6,5,"Cabbage Lumps",76
+"NRDA_4044",2017,6,5,"Cabbage Top",33
+"NRDA_4044",2017,6,5,"Dry Bar",334
+"NRDA_4044",2017,6,5,"Lighthouse",1022
+"NRDA_4044",2017,6,5,"Little Gully",37
+"NRDA_4044",2017,6,5,"Normans Bar Middle",258
+"NRDA_4044",2017,7,5,"Bayou Flats",0
+"NRDA_4044",2017,7,5,"Redfish Creek 1",172
+"NRDA_4044",2017,7,5,"Redfish Creek 2",83
+"NRDA_4044",2017,11,6,"Cat Point",1519
+"NRDA_4044",2017,11,6,"Hotel Bar",2250
+"NRDA_4044",2017,12,6,"Cabbage Lumps",157
+"NRDA_4044",2017,12,6,"Green Point",37
+"NRDA_4044",2017,12,6,"North Spur",12
+"NRDA_4044",2018,2,6,"Dry Bar",40
+"NRDA_4044",2018,3,6,"Bayou Flats",0
+"NRDA_4044",2018,3,6,"Eleven Mile North",0
+"NRDA_4044",2018,3,6,"Eleven Mile South",2
+"NRDA_4044",2018,3,6,"Hotel Bar",472
+"NRDA_4044",2018,3,6,"Lighthouse Bar",2483
+"NRDA_4044",2018,3,6,"Normans Bar Middle",266
+"NRDA_4044",2018,3,6,"Normans Bar North",561
+"NRDA_4044",2018,3,6,"Redfish Creek 1",40
+"NRDA_4044",2018,3,6,"Redfish Creek 2",128
+"NRDA_4044",2018,4,7,"Cabbage Top",25
+"NRDA_4044",2018,4,7,"Dry Bar",7
+"NRDA_4044",2018,4,7,"Little Gully",7
+"NRDA_4044",2019,9,9,"Cabbage Lumps",8
+"NRDA_4044",2019,9,9,"Cabbage Top",6
+"NRDA_4044",2019,9,9,"Green Point",0
+"NRDA_4044",2019,9,9,"North Spur",0
+"NRDA_4044",2019,10,10,"Dry Bar",54
+"NRDA_4044",2019,10,10,"Hotel Bar",257
+"NRDA_4044",2019,10,10,"Redfish Creek 2",192
+"NRDA_4044",2019,11,10,"Bayou Flats",57
+"NRDA_4044",2019,11,10,"Eleven Mile North",28
+"NRDA_4044",2019,11,10,"Eleven Mile South",79
+"NRDA_4044",2019,11,10,"Lighthouse Bar",91
+"NRDA_4044",2019,11,10,"Normans Bar Middle",22
+"NRDA_4044",2019,11,10,"Normans Bar North",528
+"NRDA_4044",2019,11,10,"Redfish Creek 1",217
+"NRDA_4044",2019,12,10,"Cat Point",73
+"NRDA_4044",2019,12,10,"Little Gully",54
+"NRDA_4044",2021,7,12,"Bayou Flats",16
+"NRDA_4044",2021,7,12,"Cabbage Lumps",17
+"NRDA_4044",2021,7,12,"Eleven Mile North",5
+"NRDA_4044",2021,7,12,"Eleven Mile South",19
+"NRDA_4044",2021,7,12,"Redfish Creek 1",31
+"NRDA_4044",2021,7,12,"Redfish Creek 2",19
+"NRDA_4044",2021,9,12,"Cabbage Top",24
+"NRDA_4044",2021,9,12,"Dry Bar",239
+"NRDA_4044",2021,9,12,"Green Point",120
+"NRDA_4044",2021,9,12,"Hotel Bar",211
+"NRDA_4044",2021,9,12,"Lighthouse Bar",329
+"NRDA_4044",2021,9,12,"Little Gully",443
+"NRDA_4044",2021,9,12,"North Spur",106
+"NRDA_4044",2021,12,12,"Cat Point",373
+"NRDA_4044",2021,12,12,"Dry Bar",5
+"NRDA_4044",2021,12,12,"Normans Bar Middle",453
+"NRDA_4044",2021,12,12,"Normans Bar North",319
+"NRDA_5007",2018,6,7,"8 Mile",0
+"NRDA_5007",2018,6,7,"9 Mile B",29
+"NRDA_5007",2018,6,7,"Cabbage Top",201
+"NRDA_5007",2018,6,7,"Hotel Bar 1",2687
+"NRDA_5007",2018,6,7,"Hotel Bar 2",1296
+"NRDA_5007",2018,6,7,"King 9 Mile",0
+"NRDA_5007",2018,6,7,"North Spur 2",1247
+"NRDA_5007",2018,8,7,"Cat Point",978
+"NRDA_5007",2018,8,7,"Cat Point Spur",2486
+"NRDA_5007",2018,8,7,"East Hole 2",2218
+"NRDA_5007",2018,8,7,"Monkeys Elbow",1037
+"NRDA_5007",2018,8,7,"Peanut Ridge",707
+"NRDA_5007",2018,9,7,"East Hole 1",3068
+"NRDA_5007",2018,9,7,"South Bulkhead",619
+"NRDA_5007",2019,6,9,"9 Mile B",0
+"NRDA_5007",2019,6,9,"East Hole 2",571
+"NRDA_5007",2019,6,9,"Hotel Bar 1",1334
+"NRDA_5007",2019,6,9,"Hotel Bar 2",520
+"NRDA_5007",2019,6,9,"South Bulkhead",749
+"NRDA_5007",2019,7,9,"8 Mile",28
+"NRDA_5007",2019,7,9,"9 Mile B",0
+"NRDA_5007",2019,7,9,"Cabbage Top",167
+"NRDA_5007",2019,7,9,"East Hole 1",1956
+"NRDA_5007",2019,7,9,"King 9 Mile",19
+"NRDA_5007",2019,7,9,"North Spur 2",146
+"NRDA_5007",2019,8,9,"Cat Point",1933
+"NRDA_5007",2019,8,9,"Cat Point Spur",2176
+"NRDA_5007",2019,8,9,"Monkeys Elbow",1409
+"NRDA_5007",2019,8,9,"Peanut Ridge",1471
+"NRDA_5007",2020,12,12,"Cabbage Top",454
+"NRDA_5007",2020,12,12,"North Spur 2",445
+"NRDA_5007",2021,1,12,"Hotel Bar 1",3061
+"NRDA_5007",2021,1,12,"Hotel Bar 2",1071
+"NRDA_5007",2021,4,13,"8 Mile",68
+"NRDA_5007",2021,4,13,"9 Mile B",0
+"NRDA_5007",2021,4,13,"Cat Point",1159
+"NRDA_5007",2021,4,13,"East Hole 2",612
+"NRDA_5007",2021,4,13,"King 9 Mile",39
+"NRDA_5007",2021,6,13,"Cat Point Spur",912
+"NRDA_5007",2021,6,13,"East Hole 1",871
+"NRDA_5007",2021,6,13,"Monkeys Elbow",128
+"NRDA_5007",2021,6,13,"Peanut Ridge",563
+"NRDA_5007",2021,6,13,"South Bulkhead",114
