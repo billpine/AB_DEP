@@ -161,12 +161,15 @@ f5<-ggplot(d3, aes(Period, CPUE_Spat)) +
   ylab("Spat") +
   facet_wrap(~Site)
 
+  ggsave("spat.pdf", width = 10, height = 10)
+
 f5.1<-ggplot(d3, aes(Period, CPUE_Sublegal)) +
   geom_point(size=4) +
   ggtitle("Sublegal CPUE by Period") +
   xlab("Period") +
   ylab("Sublegal") +
   facet_wrap(~Site)
+ggsave("sublegal.pdf", width = 10, height = 10)
 
 f5.2<-ggplot(d3, aes(Period, CPUE_Legal)) +
   geom_point(size=4) +
@@ -174,6 +177,7 @@ f5.2<-ggplot(d3, aes(Period, CPUE_Legal)) +
   xlab("Period") +
   ylab("Legal") +
   facet_wrap(~Site)
+ggsave("legal.pdf", width = 10, height = 10)
 
 
 ###
