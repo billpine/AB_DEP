@@ -1,7 +1,7 @@
 #Apalachicola oyster data from two DEP files and 1 FWC file 
 #data from quadrats
 #Bill Pine
-#January 2022
+#January and February 2022
 
 library(readxl)
 library(tidyverse)
@@ -88,6 +88,9 @@ spat_sum <- d2 %>%
 count_spat=aggregate(Spat~Site+Period+Season,data=d2,sum)
 count_spat <- dplyr::rename(count_spat,Site=Site,Period=Period, Season=Season,Sum_spat=Spat)
 
+count_sublegal=aggregate(Sublegal~Site+Period+Season,data=d2,sum)
+count_sublegal <- dplyr::rename(count_sublegal,Site=Site,Period=Period, Season=Season,Sum_sublegal=Sublegal)
+
 count_legal=aggregate(Legal~Site+Period+Season,data=d2,sum)
 count_legal <- dplyr::rename(count_legal,Site=Site,Period=Period, Season=Season,Sum_legal=Legal)
 
@@ -97,49 +100,82 @@ count_quads_spat <- dplyr::rename(count_quads,Site=Site,Period=Period, Season=Se
 
 #merge spat live count total data frame with the tran_length total data frame
 d3=merge(count_spat,count_quads_spat,by=c("Site", "Period", "Season"))
+d3.1=merge(d3,count_sublegal,by=c("Site", "Period", "Season"))
+d3.2=merge(d3.1,count_legal,by=c("Site", "Period", "Season"))
+
+d3<-d3.2
 
 #calculate CPUE. Just for fun to plot
-d3$CPUE<-d3$Sum_spat/d3$Num_quads
+d3$CPUE_Spat<-d3$Sum_spat/d3$Num_quads
+d3$CPUE_Sublegal<-d3$Sum_sublegal/d3$Num_quads
+d3$CPUE_Legal<-d3$Sum_legal/d3$Num_quads
 
-plot(d3$Period,d3$CPUE)
 
-dis_quant1 <- subset(dis_quant, dis_quant$quantile != '0')
+plot(d3$Period,d3$CPUE_Spat)
+plot(d3$Period,d3$CPUE_Sublegal)
+plot(d3$Period,d3$CPUE_Legal)
 
 CPUE_Cat<-subset(d3,d3$Site =="Cat Point")
 CPUE_Hotel<-subset(d3,d3$Site =="Hotel Bar")
 CPUE_Dry<-subset(d3,d3$Site =="Dry Bar")
 CPUE_Bulkhead<-subset(d3,d3$Site =="Bulkhead")
 
-f1<-ggplot(CPUE_Cat, aes(Period, CPUE)) +
+f1<-ggplot(CPUE_Cat, aes(Period, CPUE_Legal)) +
   geom_point(size=4) +
-  ggtitle("Cat Point") +
-  xlim(0,15)+
+  ggtitle("Cat Point Legal") +
+  xlim(0,14)+
   xlab("Period") +
-  ylab("Spat CPUE")
+  ylab("CPUE Legal")
 
-f2<-ggplot(CPUE_Hotel, aes(Period, CPUE)) +
+f2<-ggplot(CPUE_Hotel, aes(Period, CPUE_Legal)) +
   geom_point(size=4) +
-  ggtitle("Hotel Bar") +
-  xlim(0,15)+
+  ggtitle("Hotel Bar Legal") +
+  xlim(0,14)+
   xlab("Period") +
-  ylab("Spat CPUE")
+  ylab("CPUE Legal")
 
-f3<-ggplot(CPUE_Dry, aes(Period, CPUE)) +
+f3<-ggplot(CPUE_Dry, aes(Period, CPUE_Legal)) +
   geom_point(size=4) +
-  xlim(0,15)+
-  ggtitle("Dry Bar") +
+  xlim(0,14)+
+  ggtitle("Dry Bar Legal") +
   xlab("Period") +
-  ylab("Spat CPUE")
+  ylab("CPUE Legal")
 
-f4<-ggplot(CPUE_Bulkhead, aes(Period, CPUE)) +
+f4<-ggplot(CPUE_Bulkhead, aes(Period, CPUE_Legal)) +
   geom_point(size=4) +
-  xlim(0,15)+
+  xlim(0,14)+
   ggtitle("Bulkhead") +
   xlab("Period") +
-  ylab("Spat CPUE")
+  ylab("CPUE Legal")
 
 
 plot_grid(f1,f2,f3,f4)
+
+
+
+     
+f5<-ggplot(d3, aes(Period, CPUE_Spat)) +
+  geom_point(size=4) +
+  ggtitle("Spat CPUE by Period") +
+  xlab("Period") +
+  ylab("Spat") +
+  facet_wrap(~Site)
+
+f5.1<-ggplot(d3, aes(Period, CPUE_Sublegal)) +
+  geom_point(size=4) +
+  ggtitle("Sublegal CPUE by Period") +
+  xlab("Period") +
+  ylab("Sublegal") +
+  facet_wrap(~Site)
+
+f5.2<-ggplot(d3, aes(Period, CPUE_Legal)) +
+  geom_point(size=4) +
+  ggtitle("Legal CPUE by Period") +
+  xlab("Period") +
+  ylab("Legal") +
+  facet_wrap(~Site)
+
+
 ###
 
 #everything below is just on the bench and does not work
