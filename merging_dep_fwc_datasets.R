@@ -115,7 +115,14 @@ names(d4.1)[6] <- "Spat"
 names(d4.1)
 names(d3)
 
-#merge the dep files together
+#first lets send 4044 year 2021 to DEP folder to 
+#merge with the 3 bays file, this will be all 
+#3 bays all years for 4044
+
+write.table(d4.1, file = "~/Git/AB_DEP/DEP_Apalach_4044_yr2021.csv", row.names = FALSE,col.names = TRUE,sep = ",")
+
+
+#merge the dep files together for the two main studies 4044 and 5007
 
 d5<-rbind(d3, d4.1)
 unique(d5$Year)
