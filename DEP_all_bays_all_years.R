@@ -136,3 +136,5 @@ f3<-ggplot(d3, aes(Period, CPUE_Legal)) +
   facet_wrap(~Bay)
 
 plot_grid(f1,f2,f3)
+
+ggsave("dep_allbays.pdf", width = 10, height = 10)
