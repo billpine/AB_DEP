@@ -180,7 +180,110 @@ f5.2<-ggplot(d3, aes(Period, CPUE_Legal)) +
 ggsave("legal.pdf", width = 10, height = 10)
 
 
-###
+####now let's go back and see if this matters by study
+
+#sum live counts for each transect
+count_spat2=aggregate(Spat~Project+Period,data=d2,sum)
+count_spat2 <- dplyr::rename(count_spat2,Project=Project,Period=Period,Sum_spat=Spat)
+
+count_sublegal2=aggregate(Sublegal~Project+Period,data=d2,sum)
+count_sublegal2 <- dplyr::rename(count_sublegal2,Project=Project,Period=Period,Sum_sublegal=Sublegal)
+
+count_legal2=aggregate(Legal~Project+Period,data=d2,sum)
+count_legal2 <- dplyr::rename(count_legal2,Project=Project,Period=Period,Sum_legal=Legal)
+
+#count number quads by doing the length of transect, then rename
+count_quads2=aggregate(Spat~Project+Period,data=d2,length)
+count_quads_spat2 <- dplyr::rename(count_quads2,Project=Project,Period=Period,Num_quads=Spat)
+
+#merge spat live count total data frame with the tran_length total data frame
+dp3=merge(count_spat2,count_quads_spat2,by=c("Project","Period"))
+dp3.1=merge(dp3,count_sublegal2,by=c("Project", "Period"))
+dp3.2=merge(dp3.1,count_legal2,by=c("Project", "Period"))
+
+names(dp3.2)
+
+
+#calculate CPUE. Just for fun to plot
+dp3.2$CPUE_Spat<-dp3.2$Sum_spat/dp3.2$Num_quads
+dp3.2$CPUE_Sublegal<-dp3.2$Sum_sublegal/dp3.2$Num_quads
+dp3.2$CPUE_Legal<-dp3.2$Sum_legal/dp3.2$Num_quads
+
+
+plot(dp3.2$Period,dp3.2$CPUE_Spat)
+plot(dp3.2$Period,dp3.2$CPUE_Sublegal)
+plot(dp3.2$Period,dp3.2$CPUE_Legal)
+
+# CPUE_Cat<-subset(dp3.2,dp3.2$Site =="Cat Point")
+# CPUE_Hotel<-subset(dp3.2,dp3.2$Site =="Hotel Bar")
+# CPUE_Dry<-subset(dp3.2,dp3.2$Site =="Dry Bar")
+# CPUE_Bulkhead<-subset(dp3.2,dp3.2$Site =="Bulkhead")
+# 
+# f1<-ggplot(CPUE_Cat, aes(Period, CPUE_Legal)) +
+#   geom_point(size=4) +
+#   ggtitle("Cat Point Legal") +
+#   xlim(0,14)+
+#   xlab("Period") +
+#   ylab("CPUE Legal")
+# 
+# f2<-ggplot(CPUE_Hotel, aes(Period, CPUE_Legal)) +
+#   geom_point(size=4) +
+#   ggtitle("Hotel Bar Legal") +
+#   xlim(0,14)+
+#   xlab("Period") +
+#   ylab("CPUE Legal")
+# 
+# f3<-ggplot(CPUE_Dry, aes(Period, CPUE_Legal)) +
+#   geom_point(size=4) +
+#   xlim(0,14)+
+#   ggtitle("Dry Bar Legal") +
+#   xlab("Period") +
+#   ylab("CPUE Legal")
+# 
+# f4<-ggplot(CPUE_Bulkhead, aes(Period, CPUE_Legal)) +
+#   geom_point(size=4) +
+#   xlim(0,14)+
+#   ggtitle("Bulkhead") +
+#   xlab("Period") +
+#   ylab("CPUE Legal")
+# 
+# 
+# plot_grid(f1,f2,f3,f4)
+
+
+#ok this is a key plot below. Suggests
+#that spat differ by study
+
+#but problem is DEP is not sampled until 2 years after
+#cultch put out.
+
+spat_study<-ggplot(dp3.2, aes(Period, CPUE_Spat)) +
+  geom_point(size=4) +
+  ggtitle("Spat CPUE by Period") +
+  xlab("Period") +
+  ylab("Spat") +
+  facet_wrap(~Project)
+
+ggsave("spat_study.pdf", width = 10, height = 10)
+
+sub_study<-ggplot(dp3.2, aes(Period, CPUE_Sublegal)) +
+  geom_point(size=4) +
+  ggtitle("Sublegal CPUE by Period") +
+  xlab("Period") +
+  ylab("Sublegal") +
+  facet_wrap(~Project)
+ggsave("sub_study.pdf", width = 10, height = 10)
+
+legal_study<-ggplot(dp3.2, aes(Period, CPUE_Legal)) +
+  geom_point(size=4) +
+  ggtitle("Legal CPUE by Period") +
+  xlab("Period") +
+  ylab("Legal") +
+  facet_wrap(~Project)
+ggsave("legal_study.pdf", width = 10, height = 10)
+
+
+
 
 #everything below is just on the bench and does not work
 
