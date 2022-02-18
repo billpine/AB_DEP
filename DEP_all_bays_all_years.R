@@ -17,6 +17,10 @@ library(AICcmodavg)
 library(ggeffects)
 library(cowplot)
 
+library(tidyr)
+
+
+
 names(d1)
 head(d1)
 
@@ -59,11 +63,17 @@ str(d3)
 #merge these files together
 d4<-rbind(d2, d3)
 
+#now remove the 3 or 4 NA's from Pensacola (lost samples?)
+d4 <- filter(d4, Legal != "NA")
+
 names(d4)
 #check bays
 unique(d4$Bay)
 #check sites
 unique(d4$Site)
+
+#just check to see if other NAs
+which(is.na(d4$SubLegal), arr.ind=TRUE)
 
 min(d4$Legal)
 min(d4$Sublegal)
@@ -78,57 +88,59 @@ quad_sum<- d4 %>%
   dplyr::relocate(Period, Bay)
 names(quad_sum) <- c("Period", "Bay",
                      "Number_Quadrats")
+# 
+# ##summary number of oyster spat counted each period
+# spat_sum <- d4 %>%
+#   dplyr::group_by(Bay, Period) %>%
+#   dplyr::summarise(sum=sum(Spat,na.rm=TRUE)) %>%
+#   dplyr::arrange(Bay, Period)
+# 
+# names(spat_sum) <- c("Bay","Period",
+#                      "Number Live Spat")
 
-##summary number of oyster spat counted each period
-spat_sum <- d4 %>%
-  dplyr::group_by(Bay, Period) %>%
-  dplyr::summarise(sum=sum(Spat,na.rm=TRUE)) %>%
-  dplyr::arrange(Bay, Period)
 
-names(spat_sum) <- c("Bay","Period",
-                     "Number Live Spat")
 
 #sum live counts for each transect
 count_spat=aggregate(Spat~Bay+Period,data=d4,sum)
 count_spat <- dplyr::rename(count_spat,Bay=Bay,Period=Period,Sum_spat=Spat)
 
-count_sublegal=aggregate(Sublegal~Bay+Period,data=d2,sum)
+count_sublegal=aggregate(Sublegal~Bay+Period,data=d4,sum)
 count_sublegal <- dplyr::rename(count_sublegal,Bay=Bay,Period=Period,Sum_sublegal=Sublegal)
 
-count_legal=aggregate(Legal~Bay+Period,data=d2,sum)
+count_legal=aggregate(Legal~Bay+Period,data=d4,sum)
 count_legal <- dplyr::rename(count_legal,Bay=Bay,Period=Period,Sum_legal=Legal)
 
 #count number quads by doing the length of transect, then rename
-count_quads=aggregate(Spat~Bay+Period,data=d2,length)
+count_quads=aggregate(Spat~Bay+Period,data=d4,length)
 count_quads_spat <- dplyr::rename(count_quads,Bay=Bay,Period=Period,Num_quads=Spat)
 
 #merge spat live count total data frame with the tran_length total data frame
-d3=merge(count_spat,count_quads_spat,by=c("Bay", "Period"))
-d3.1=merge(d3,count_sublegal,by=c("Bay", "Period"))
-d3.2=merge(d3.1,count_legal,by=c("Bay", "Period"))
+d5=merge(count_spat,count_quads_spat,by=c("Bay", "Period"))
+d5.1=merge(d5,count_sublegal,by=c("Bay", "Period"))
+d5.2=merge(d5.1,count_legal,by=c("Bay", "Period"))
 
-d3<-d3.2
+d6<-d5.2
 
 #calculate CPUE. Just for fun to plot
-d3$CPUE_Spat<-d3$Sum_spat/d3$Num_quads
-d3$CPUE_Sublegal<-d3$Sum_sublegal/d3$Num_quads
-d3$CPUE_Legal<-d3$Sum_legal/d3$Num_quads
+d6$CPUE_Spat<-d6$Sum_spat/d6$Num_quads
+d6$CPUE_Sublegal<-d6$Sum_sublegal/d6$Num_quads
+d6$CPUE_Legal<-d6$Sum_legal/d6$Num_quads
 
-f1<-ggplot(d3, aes(Period, CPUE_Spat)) +
+f1<-ggplot(d6, aes(Period, CPUE_Spat)) +
   geom_point(size=4) +
   ggtitle("Spat CPUE by Period") +
   xlab("Period") +
   ylab("Spat") +
   facet_wrap(~Bay)
 
-f2<-ggplot(d3, aes(Period, CPUE_Sublegal)) +
+f2<-ggplot(d6, aes(Period, CPUE_Sublegal)) +
   geom_point(size=4) +
   ggtitle("Sublegal CPUE by Period") +
   xlab("Period") +
   ylab("Sublegal") +
   facet_wrap(~Bay)
 
-f3<-ggplot(d3, aes(Period, CPUE_Legal)) +
+f3<-ggplot(d6, aes(Period, CPUE_Legal)) +
   geom_point(size=4) +
   ggtitle("Legal CPUE by Period") +
   xlab("Period") +
