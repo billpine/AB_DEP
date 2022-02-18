@@ -150,3 +150,81 @@ f3<-ggplot(d6, aes(Period, CPUE_Legal)) +
 plot_grid(f1,f2,f3)
 
 ggsave("dep_allbays.pdf", width = 10, height = 10)
+#############
+
+#plots of total counts and then GLMs
+f4<-ggplot(d6, aes(Period, Sum_spat)) +
+  geom_point(size=4) +
+  ggtitle("Spat Sum by Period") +
+  xlab("Period") +
+  ylab("Spat") +
+  facet_wrap(~Bay)
+
+f5<-ggplot(d6, aes(Period, Sum_sublegal)) +
+  geom_point(size=4) +
+  ggtitle("Sublegal Sum by Period") +
+  xlab("Period") +
+  ylab("Sublegal") +
+  facet_wrap(~Bay)
+
+f6<-ggplot(d6, aes(Period, Sum_legal)) +
+  geom_point(size=4) +
+  ggtitle("Legal Sum by Period") +
+  xlab("Period") +
+  ylab("Legal") +
+  facet_wrap(~Bay)
+
+plot_grid(f4,f5,f6)
+
+mean(d6$Sum_spat)
+var(d6$Sum_spat)
+
+mean(d6$Sum_sublegal)
+var(d6$Sum_sublegal)
+
+mean(d6$Sum_legal)
+var(d6$Sum_legal)
+
+names(d6)
+
+qqnorm(d6$Sum_spat)
+qqnorm(d6$Sum_sublegal)
+qqnorm(d6$Sum_legal)
+
+library(vcd)
+spat.lambda<-fitdistr(d6$Sum_spat,"normal")
+gf.spat<-goodfit(d6$Sum_spat, type= "poisson", method="MinChisq")
+
+d6$Bay <- as.factor(d6$Bay)
+
+#fit basic NB GLM
+m1 <- glm.nb(Sum_spat ~ Bay + offset(log(Num_quads)), data = d6) 
+m2 <- glm.nb(Sum_spat ~ Bay + Period + offset(log(Num_quads)), data = d6) 
+m3 <- glm.nb(Sum_spat ~ Bay * Period + offset(log(Num_quads)), data = d6) 
+
+cand.set = list(m1,m2,m3)
+modnames = c("bay", "bay+period", "bay*period")
+aictab(cand.set, modnames, second.ord = FALSE) #model selection table with AIC
+
+summary(m1)
+
+m1.1 <- glm.nb(Sum_sublegal ~ Bay + offset(log(Num_quads)), data = d6) 
+m2.1 <- glm.nb(Sum_sublegal ~ Bay + Period + offset(log(Num_quads)), data = d6) 
+m3.1 <- glm.nb(Sum_sublegal ~ Bay * Period + offset(log(Num_quads)), data = d6) 
+
+cand.set = list(m1.1,m2.1,m3.1)
+modnames = c("bay", "bay+period", "bay*period")
+aictab(cand.set, modnames, second.ord = FALSE) #model selection table with AIC
+
+summary(m1.1)
+
+#legals
+m1.2 <- glm.nb(Sum_legal ~ Bay + offset(log(Num_quads)), data = d6) 
+m2.2 <- glm.nb(Sum_legal ~ Bay + Period + offset(log(Num_quads)), data = d6) 
+m3.2 <- glm.nb(Sum_legal ~ Bay * Period + offset(log(Num_quads)), data = d6) 
+
+cand.set = list(m1.2,m2.2,m3.2)
+modnames = c("bay", "bay+period", "bay*period")
+aictab(cand.set, modnames, second.ord = FALSE) #model selection table with AIC
+
+summary(m1.2)
