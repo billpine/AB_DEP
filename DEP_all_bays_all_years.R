@@ -243,3 +243,8 @@ aictab(cand.set3, modnames3, second.ord = FALSE) #model selection table with AIC
 summary(m2.2)
 
 control = glm.control(maxit = 500)
+
+#plot ideas
+https://cran.r-project.org/web/packages/ggiraphExtra/vignettes/ggPredict.html
+#https://mran.microsoft.com/snapshot/2017-04-22/web/packages/sjPlot/vignettes/sjpglm.html
+https://www.middleprofessor.com/files/applied-biostatistics_bookdown/_book/plotting-functions-ggplotsci.html#estimate-response-and-effects-with-emmeans
