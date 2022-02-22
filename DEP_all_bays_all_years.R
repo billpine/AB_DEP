@@ -379,6 +379,8 @@ r0<-ggplot(d9, aes(Period, Sum_spat)) +
 
 #fit basic NB GLM Random
 
+###SPAT ONLY###
+
 library(lme4) #mixed effect models
 library(MASS) #negative binomial models
 
@@ -425,7 +427,8 @@ pm1 = ggplot(app_pred, aes(x, predicted))+
   ylab("Live oyster count per quad") +
   xlab ("Period")+
   ggtitle("Apalachicola Spat by Period") +
-  geom_point(data = d9[d9$Bay == "Apalachicola",], mapping = aes(Period, Sum_spat), size = 2)
+  geom_point(data = d9[d9$Bay == "Apalachicola",], mapping = aes(Period, Sum_spat), size = 2)+
+  scale_x_continuous(breaks=seq(3,12,1))
 
   
 pm2 = ggplot(pen_pred, aes(x, predicted))+
@@ -461,7 +464,8 @@ pm <- plot_grid(
 )
 
 
-#for plotting could scale y axis better but that would cause 1 point for St. Andrews to be lost
+#for plotting could scale y axis better but that would 
+#cause 1 point for St. Andrews to be lost
   
 
   
