@@ -1,4 +1,7 @@
 #Apalachicola oyster data from two DEP files and 1 FWC file 
+
+###REMEMBER THESE ARE ONLY APALACHICOLA DATA
+
 #data from quadrats
 #Bill Pine
 #January and February 2022
@@ -376,8 +379,14 @@ rr <- "http://www.math.mcmaster.ca/bolker/R"
 install.packages(c("glmmADMB","coefplot2"),type="source",
                  repos=rr)
 
+library(glmmADMB)
+
 r3 <- glmmadmb(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp3.2, family="nbinom") #converge
 summary(r3)
+
+summary(r3)
+
+r3_CIboot <- confint(r3,method="boot",quiet=TRUE)
 
 #so this converges and estimates make sense.
 
@@ -398,12 +407,18 @@ pred_r3 <- ggpredict(r3, c("Period", "Project"))
 plot(pred_r3, facet=TRUE, colors=c("red","black","blue"))
 
 ########################################################
-##ok need to come back here, use the DEP_all_bays example
-##to do the extraction, and then the plotting
+
 ########################################################
 
 #now subset the predicted for each project
+
+unique(pred_r3$group)
+
 nfwf_pred<- subset(pred_r3, pred_r3$group == "NFWF_1")
+DEP_4044<- subset(pred_r3, pred_r3$group == "NRDA_4044")
+DEP_5007<- subset(pred_r3, pred_r3$group == "NRDA_5007")
+
+
 
 #this seems to work but throws error
 
@@ -413,20 +428,31 @@ pm1 = ggplot(nfwf_pred, aes(x, predicted))+
   xlab ("Period")+
   ggtitle("NFWF Apalachicola Spat by Period") +
   geom_point(data = dp3.2[dp3.2$Project == "NFWF_1",], mapping = aes(Period, Sum_spat), size = 2)+
-  scale_x_continuous(breaks=seq(3,12,1))
+  scale_x_continuous(breaks=seq(1,13,1))
+#+
+#  scale_y_continuous(breaks=seq(0,100000,1000))
+
+pm2 = ggplot(DEP_4044, aes(x, predicted))+
+  geom_line(size=2)+
+  ylab("Live oyster count per quad") +
+  xlab ("Period")+
+  ggtitle("DEP 4044 Spat by Period") +
+  geom_point(data = dp3.2[dp3.2$Project == "NRDA_4044",], mapping = aes(Period, Sum_spat), size = 2)+
+  scale_x_continuous(breaks=seq(1,13,1))
 
 
+pm3 = ggplot(DEP_5007, aes(x, predicted))+
+  geom_line(size=2)+
+  ylab("Live oyster count per quad") +
+  xlab ("Period")+
+  ggtitle("DEP 5007 Spat by Period") +
+  geom_point(data = dp3.2[dp3.2$Project == "NRDA_5007",], mapping = aes(Period, Sum_spat), size = 2)+
+  scale_x_continuous(breaks=seq(1,13,1))
 
-
-pen_pred <- subset(pred_r2, pred_r2$group == "Pensacola")
-sa_pred <- subset(pred_r2, pred_r2$group == "St. Andrews")
-
-
+plot_grid(pm1,pm2,pm3)
 
 
 #everything below is just on the bench and does not work
-
-
 # 
 # #some box plots
 # 
