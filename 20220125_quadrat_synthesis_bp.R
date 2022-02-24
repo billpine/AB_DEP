@@ -18,6 +18,9 @@ library(cowplot)
 
 d1 <- read.csv("~/Git/AB_DEP/20220126_merged_agency_data.csv")
 
+#the FWC data have been modified per Matt at FWC to
+#do the proportions based on size for the number per size category
+
 #switch -999 to NA instead of removing
 d2 <- d1
 d2$Spat[d2$Spat < -1] <- NA
@@ -183,23 +186,23 @@ ggsave("legal.pdf", width = 10, height = 10)
 ####now let's go back and see if this matters by study
 
 #sum live counts for each transect
-count_spat2=aggregate(Spat~Project+Period,data=d2,sum)
-count_spat2 <- dplyr::rename(count_spat2,Project=Project,Period=Period,Sum_spat=Spat)
+count_spat2=aggregate(Spat~Project+Period+Site,data=d2,sum)
+count_spat2 <- dplyr::rename(count_spat2,Project=Project,Period=Period,Site=Site,Sum_spat=Spat)
 
-count_sublegal2=aggregate(Sublegal~Project+Period,data=d2,sum)
-count_sublegal2 <- dplyr::rename(count_sublegal2,Project=Project,Period=Period,Sum_sublegal=Sublegal)
+count_sublegal2=aggregate(Sublegal~Project+Period+Site,data=d2,sum)
+count_sublegal2 <- dplyr::rename(count_sublegal2,Project=Project,Period=Period,Site=Site,Sum_sublegal=Sublegal)
 
-count_legal2=aggregate(Legal~Project+Period,data=d2,sum)
-count_legal2 <- dplyr::rename(count_legal2,Project=Project,Period=Period,Sum_legal=Legal)
+count_legal2=aggregate(Legal~Project+Period+Site,data=d2,sum)
+count_legal2 <- dplyr::rename(count_legal2,Project=Project,Period=Period,Site=Site,Sum_legal=Legal)
 
 #count number quads by doing the length of transect, then rename
-count_quads2=aggregate(Spat~Project+Period,data=d2,length)
-count_quads_spat2 <- dplyr::rename(count_quads2,Project=Project,Period=Period,Num_quads=Spat)
+count_quads2=aggregate(Spat~Project+Period+Site,data=d2,length)
+count_quads_spat2 <- dplyr::rename(count_quads2,Project=Project,Period=Period,Site=Site,Num_quads=Spat)
 
 #merge spat live count total data frame with the tran_length total data frame
-dp3=merge(count_spat2,count_quads_spat2,by=c("Project","Period"))
-dp3.1=merge(dp3,count_sublegal2,by=c("Project", "Period"))
-dp3.2=merge(dp3.1,count_legal2,by=c("Project", "Period"))
+dp3=merge(count_spat2,count_quads_spat2,by=c("Project","Period","Site"))
+dp3.1=merge(dp3,count_sublegal2,by=c("Project", "Period","Site"))
+dp3.2=merge(dp3.1,count_legal2,by=c("Project", "Period","Site"))
 
 names(dp3.2)
 
@@ -254,7 +257,7 @@ plot(dp3.2$Period,dp3.2$CPUE_Legal)
 #ok this is a key plot below. Suggests
 #that spat differ by study
 
-#but problem is DEP is not sampled until 2 years after
+#but one problem is DEP is not sampled until 2 years after
 #cultch put out.
 
 spat_study<-ggplot(dp3.2, aes(Period, CPUE_Spat)) +
@@ -266,7 +269,7 @@ spat_study<-ggplot(dp3.2, aes(Period, CPUE_Spat)) +
 
 ggsave("spat_study.pdf", width = 10, height = 10)
 
-sub_study<-ggplot(dp3.2, aes(Period, CPUE_Sublegal)) +
+sub_study<-ggplot(dp3.2, aes(Period, CPUE_Sublegal,color=Study)) +
   geom_point(size=4) +
   ggtitle("Sublegal CPUE by Period") +
   xlab("Period") +
@@ -281,6 +284,92 @@ legal_study<-ggplot(dp3.2, aes(Period, CPUE_Legal)) +
   ylab("Legal") +
   facet_wrap(~Project)
 ggsave("legal_study.pdf", width = 10, height = 10)
+
+################
+################
+#moving on to GLM
+
+#> names(dp3.2)
+#[1] "Project"      "Period"       "Site"         "Sum_spat"    
+#[5] "Num_quads"    "Sum_sublegal" "Sum_legal"
+
+qqnorm(dp3.2$Sum_spat)
+qqnorm(dp3.2$Sum_sublegal)
+qqnorm(dp3.2$Sum_legal)
+
+#yes overdispersed
+
+#some GLMs
+
+#single plot, sum spat
+#this is the raw data, then you will fit nb.glm to these data 
+#and use sampling site
+#as random effect
+
+
+#this is by site and study
+r0<-ggplot(dp3.2, aes(Period, Sum_spat,color=Project)) +
+  geom_point(size=4) +
+  ggtitle("Spat per Period by Site") +
+  xlab("Period") +
+  ylab("Total Spat")+
+  facet_wrap(~Site)
+
+#this is by study
+r1<-ggplot(dp3, aes(Period, Sum_spat)) +
+  geom_point(size=4) +
+  ggtitle("Spat per Period by Study") +
+  xlab("Period") +
+  ylab("Total Spat")+
+  facet_wrap(~Project)
+
+
+
+#fit basic NB GLM Random
+
+names(dp3)
+#"Project"   "Period"    "Sum_spat"  "Num_quads"
+
+
+###SPAT ONLY###
+
+
+##OK using site as random effect
+##could bring study back in, that would control for large FWC counts
+
+
+
+
+library(lme4) #mixed effect models
+library(MASS) #negative binomial models
+
+#make site factor for random effect
+d3$Site<-as.factor(d3$Site)
+
+
+#scale sum spat
+
+d3$Spat_scale<-scale(d3$Sum_spat)
+
+#no offset, station name as random
+r1 <- glmer.nb(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = d3,
+               control=glmerControl(optimizer="bobyqa",optCtrl=list(maxfun=2e5))) #no converge
+#r2 <- glmer.nb(Sum_spat ~ Period + Bay + (1|Site) + offset(log(Num_quads)), data = d3) #converge
+
+#https://rstudio-pubs-static.s3.amazonaws.com/33653_57fc7b8e5d484c909b615d8633c01d51.html
+
+
+summary(r2)
+
+
+
+
+
+
+
+
+
+
 
 
 
