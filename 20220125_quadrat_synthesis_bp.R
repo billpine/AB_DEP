@@ -16,7 +16,9 @@ library(AICcmodavg)
 library(ggeffects)
 library(cowplot)
 
-d1 <- read.csv("~/Git/AB_DEP/20220126_merged_agency_data.csv")
+d1 <- read.csv("~/GitHub/AB_DEP/20220126_merged_agency_data.csv")
+
+
 
 #the FWC data have been modified per Matt at FWC to
 #do the proportions based on size for the number per size category
@@ -262,7 +264,7 @@ plot(dp3.2$Period,dp3.2$CPUE_Legal)
 
 spat_study<-ggplot(dp3.2, aes(Period, CPUE_Spat)) +
   geom_point(size=4) +
-  ggtitle("Spat CPUE by Period") +
+  ggtitle("Sum Spat by Period") +
   xlab("Period") +
   ylab("Spat") +
   facet_wrap(~Project)
@@ -290,14 +292,16 @@ ggsave("legal_study.pdf", width = 10, height = 10)
 #moving on to GLM
 
 #> names(dp3.2)
-#[1] "Project"      "Period"       "Site"         "Sum_spat"    
-#[5] "Num_quads"    "Sum_sublegal" "Sum_legal"
+#[1] "Project"       "Period"        "Site"          "Sum_spat"      "Num_quads"    
+#[6] "Sum_sublegal"  "Sum_legal"     "CPUE_Spat"     "CPUE_Sublegal" "CPUE_Legal" 
 
 qqnorm(dp3.2$Sum_spat)
 qqnorm(dp3.2$Sum_sublegal)
 qqnorm(dp3.2$Sum_legal)
 
 #yes overdispersed
+
+#move back to counts not CPUE
 
 #some GLMs
 
@@ -316,62 +320,73 @@ r0<-ggplot(dp3.2, aes(Period, Sum_spat,color=Project)) +
   facet_wrap(~Site)
 
 #this is by study
-r1<-ggplot(dp3, aes(Period, Sum_spat)) +
-  geom_point(size=4) +
+r1<-ggplot(data = dp3.2[dp3.2$Project=="NFWF_1",], aes(Period, Sum_spat)) +
+  geom_point(size=3) +
+  geom_point(data = dp3.2[dp3.2$Project=="NRDA_4044",], mapping = aes(Period, Sum_spat, color="red"), size = 3)+
+  geom_point(data = dp3.2[dp3.2$Project=="NRDA_5007",], mapping = aes(Period, Sum_spat, color="blue"), size = 3)+
   ggtitle("Spat per Period by Study") +
+  scale_y_log10()+
   xlab("Period") +
-  ylab("Total Spat")+
-  facet_wrap(~Project)
+  ylab("Total Spat")
+  #facet_wrap(~Project)
 
-
+#see gopher tortoise example https://ms.mcmaster.ca/~bolker/R/misc/foxchapter/bolker_chap.html
 
 #fit basic NB GLM Random
 
-names(dp3)
-#"Project"   "Period"    "Sum_spat"  "Num_quads"
+names(dp3.2)
+#[1] "Project"       "Period"        "Site"          "Sum_spat"      "Num_quads"    
+#[6] "Sum_sublegal"  "Sum_legal"     "CPUE_Spat"     "CPUE_Sublegal" "CPUE_Legal" 
 
 
 ###SPAT ONLY###
 
+r1 <- glmer.nb(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp3.2,
+               control=glmerControl(optimizer="bobyqa",optCtrl=list(maxfun=2e10))) #no converge
+
+#did not converge
 
 ##OK using site as random effect
-##could bring study back in, that would control for large FWC counts
-
-
+##could bring study back in, that would may control for large FWC counts
 
 
 library(lme4) #mixed effect models
 library(MASS) #negative binomial models
 
 #make site factor for random effect
-d3$Site<-as.factor(d3$Site)
+dp3.2$Site<-as.factor(dp3.2$Site)
 
-
-#scale sum spat
-
-d3$Spat_scale<-scale(d3$Sum_spat)
 
 #no offset, station name as random
-r1 <- glmer.nb(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = d3,
-               control=glmerControl(optimizer="bobyqa",optCtrl=list(maxfun=2e5))) #no converge
-#r2 <- glmer.nb(Sum_spat ~ Period + Bay + (1|Site) + offset(log(Num_quads)), data = d3) #converge
+r1 <- glmer.nb(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp3.2,
+               control=glmerControl(optimizer="bobyqa",optCtrl=list(maxfun=2e10))) #no converge
+r2 <- glmer.nb(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = dp3.2) #no converge
+
+summary(r2)
+
+#neither converge, move to glmmADMB
 
 #https://rstudio-pubs-static.s3.amazonaws.com/33653_57fc7b8e5d484c909b615d8633c01d51.html
 
 
-summary(r2)
+#https://ms.mcmaster.ca/~bolker/R/misc/foxchapter/bolker_chap.html
+#http://bbolker.github.io/mixedmodels-misc/glmmFAQ.html
+
+rr <- "http://www.math.mcmaster.ca/bolker/R"
+install.packages(c("glmmADMB","coefplot2"),type="source",
+                 repos=rr)
+
+r3 <- glmmadmb(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp3.2, family="nbinom") #converge
+summary(r3)
+
+#so this converges and estiamtes make sense.
+
+#prediction could be done from gopher turtle example
+#https://ms.mcmaster.ca/~bolker/R/misc/foxchapter/bolker_chap.html
 
 
-
-
-
-
-
-
-
-
-
-
+r4 <- glmmadmb(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = dp3.2, family="nbinom") #converge
+summary(r4)
 
 
 #everything below is just on the bench and does not work
