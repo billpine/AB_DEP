@@ -379,7 +379,7 @@ install.packages(c("glmmADMB","coefplot2"),type="source",
 r3 <- glmmadmb(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp3.2, family="nbinom") #converge
 summary(r3)
 
-#so this converges and estiamtes make sense.
+#so this converges and estimates make sense.
 
 #prediction could be done from gopher turtle example
 #https://ms.mcmaster.ca/~bolker/R/misc/foxchapter/bolker_chap.html
@@ -397,16 +397,30 @@ pred_r3 <- ggpredict(r3, c("Period", "Project"))
 
 plot(pred_r3, facet=TRUE, colors=c("red","black","blue"))
 
-
+########################################################
 ##ok need to come back here, use the DEP_all_bays example
 ##to do the extraction, and then the plotting
-
+########################################################
 
 #now subset the predicted for each project
-nfwf_pred <- subset(pred_r3, pred_r3$group == "NFWF_1")
+nfwf_pred<- subset(pred_r3, pred_r3$group == "NFWF_1")
+
+#this seems to work but throws error
+
+pm1 = ggplot(nfwf_pred, aes(x, predicted))+
+  geom_line(size=2)+
+  ylab("Live oyster count per quad") +
+  xlab ("Period")+
+  ggtitle("NFWF Apalachicola Spat by Period") +
+  geom_point(data = dp3.2[dp3.2$Project == "NFWF_1",], mapping = aes(Period, Sum_spat), size = 2)+
+  scale_x_continuous(breaks=seq(3,12,1))
+
+
+
 
 pen_pred <- subset(pred_r2, pred_r2$group == "Pensacola")
 sa_pred <- subset(pred_r2, pred_r2$group == "St. Andrews")
+
 
 
 
