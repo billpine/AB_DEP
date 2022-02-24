@@ -389,6 +389,27 @@ r4 <- glmmadmb(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = dp3
 summary(r4)
 
 
+library(ggeffects)
+
+ggpredict(r3)
+
+pred_r3 <- ggpredict(r3, c("Period", "Project"))
+
+plot(pred_r3, facet=TRUE, colors=c("red","black","blue"))
+
+
+##ok need to come back here, use the DEP_all_bays example
+##to do the extraction, and then the plotting
+
+
+#now subset the predicted for each project
+nfwf_pred <- subset(pred_r3, pred_r3$group == "NFWF_1")
+
+pen_pred <- subset(pred_r2, pred_r2$group == "Pensacola")
+sa_pred <- subset(pred_r2, pred_r2$group == "St. Andrews")
+
+
+
 #everything below is just on the bench and does not work
 
 
