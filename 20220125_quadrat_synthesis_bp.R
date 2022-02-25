@@ -484,6 +484,8 @@ library(bbmle)
 tmb1 <- glmmTMB(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp3.2, family="nbinom2") #converge
 summary(tmb1)
 
+testci<-confint(tmb1)
+
 #NB2 formulation
 tmb2 <- glmmTMB(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp3.2, family="nbinom1") #converge
 summary(tmb2)
@@ -515,9 +517,10 @@ pr1 = ggplot(nfwf_pred, aes(x, predicted))+
   geom_line(size=2)+
   ylab("Live oyster count per quad") +
   xlab ("Period")+
-  ggtitle("NFWF Apalachicola Spat by Period") +
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
+    ggtitle("NFWF Apalachicola Spat by Period") +
   geom_point(data = dp3.2[dp3.2$Project == "NFWF_1",], mapping = aes(Period, Sum_spat), size = 2)+
-  scale_x_continuous(breaks=seq(1,13,1))
+  scale_x_continuous(breaks=seq(1,14,1))
 #+
 #  scale_y_continuous(breaks=seq(0,100000,1000))
 
@@ -525,25 +528,24 @@ pr2 = ggplot(DEP_4044, aes(x, predicted))+
   geom_line(size=2)+
   ylab("Live oyster count per quad") +
   xlab ("Period")+
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
   ggtitle("DEP 4044 Spat by Period") +
   geom_point(data = dp3.2[dp3.2$Project == "NRDA_4044",], mapping = aes(Period, Sum_spat), size = 2)+
-  scale_x_continuous(breaks=seq(1,13,1))
+  scale_x_continuous(breaks=seq(1,14,1))
 
 
 pr3 = ggplot(DEP_5007, aes(x, predicted))+
   geom_line(size=2)+
   ylab("Live oyster count per quad") +
   xlab ("Period")+
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
   ggtitle("DEP 5007 Spat by Period") +
   geom_point(data = dp3.2[dp3.2$Project == "NRDA_5007",], mapping = aes(Period, Sum_spat), size = 2)+
-  scale_x_continuous(breaks=seq(1,13,1))
+  scale_x_continuous(breaks=seq(1,14,1))
 
 plot_grid(pr1,pr2,pr3)
 
 
-library(sjPlot)
-
-plot_model(tmb1, type = "pred", terms = c("Period", "Project"), show.data = T, title = "Recruits ~ Period", axis.title = c("Period", "Recruit Count"))
 
 
 
