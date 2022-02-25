@@ -33,6 +33,16 @@ d2$Weight[d2$Weight < -1] <- NA
 d2$Sublegal[d2$Sublegal < -1] <- NA
 d2$Legal[d2$Legal < -1] <- NA
 
+data_sum<- d2 %>%
+  dplyr::group_by(Project, Year, Period, Season) %>%
+  dplyr::count(Project, Year, Period, Season) %>%
+  #dplyr::summarise(summarise(count = n()),na.rm=TRUE) %>%
+  dplyr::relocate(Project, Year, Month, Period, Site)
+names(quad_sum) <- c("Project", "Year", "Month","Period", "Site",
+                     "Number_Quadrats")
+
+
+
 #make summary table of number of quadrats each month and period
 
 quad_sum<- d2 %>%
@@ -322,7 +332,7 @@ r0<-ggplot(dp3.2, aes(Period, Sum_spat,color=Project)) +
   ylab("Total Spat")+
   facet_wrap(~Site)
 
-#this is by study
+#this is by study on one plot on log scale
 r1<-ggplot(data = dp3.2[dp3.2$Project=="NFWF_1",], aes(Period, Sum_spat)) +
   geom_point(size=3) +
   geom_point(data = dp3.2[dp3.2$Project=="NRDA_4044",], mapping = aes(Period, Sum_spat, color="red"), size = 3)+
@@ -332,6 +342,17 @@ r1<-ggplot(data = dp3.2[dp3.2$Project=="NFWF_1",], aes(Period, Sum_spat)) +
   xlab("Period") +
   ylab("Total Spat")
   #facet_wrap(~Project)
+
+#this is by study on one plot not on log scale
+r2<-ggplot(data = dp3.2[dp3.2$Project=="NFWF_1",], aes(Period, Sum_spat)) +
+  geom_point(size=3) +
+  geom_point(data = dp3.2[dp3.2$Project=="NRDA_4044",], mapping = aes(Period, Sum_spat, color="red"), size = 3)+
+  geom_point(data = dp3.2[dp3.2$Project=="NRDA_5007",], mapping = aes(Period, Sum_spat, color="blue"), size = 3)+
+  ggtitle("Spat per Period by Study") +
+  xlab("Period") +
+  ylab("Total Spat")
+#facet_wrap(~Project)
+
 
 #see gopher tortoise example https://ms.mcmaster.ca/~bolker/R/misc/foxchapter/bolker_chap.html
 
@@ -481,7 +502,7 @@ ggpredict(tmb1)
 
 pred_tmb1 <- ggpredict(tmb1, c("Period", "Project"))
 
-plot(pred_tmb1, facet=TRUE, colors=c("red","black","blue"))
+plot(pred_tmb1, facet=TRUE, colors=c("red","black","blue"), add.data=TRUE)
 #neat that works
 
 nfwf_pred<- subset(pred_tmb1, pred_tmb1$group == "NFWF_1")
@@ -518,6 +539,11 @@ pr3 = ggplot(DEP_5007, aes(x, predicted))+
   scale_x_continuous(breaks=seq(1,13,1))
 
 plot_grid(pr1,pr2,pr3)
+
+
+library(sjPlot)
+
+plot_model(tmb1, type = "pred", terms = c("Period", "Project"), show.data = T, title = "Recruits ~ Period", axis.title = c("Period", "Recruit Count"))
 
 
 
