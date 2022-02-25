@@ -38,6 +38,12 @@ d1$Month<-format(d1$Date,format="%m")
 d1$Day<-format(d1$Date,format="%d")
 
 names(d1)
+str(d1)
+
+as.numeric(d1$Year)
+as.numeric(d1$Month)
+as.numeric(d1$Day)
+
 
 names(d1)[12] <- "Weight_kg"
 names(d1)[13] <- "Adults"
@@ -51,6 +57,11 @@ d2 <- d1 %>%
   dplyr::select("Bay","Site","Quadrat","Weight_kg","Adults"
                 ,"Seed","Spat","Total Live",
                 "Total Dead","Month","Day","Year","Date")
+
+
+d2$Year<-as.numeric(d2$Year)
+d2$Month<-as.numeric(d2$Month)
+d2$Day<-as.numeric(d2$Day)
 
 names(d2)
 
@@ -69,6 +80,7 @@ str(d2)
 names(d2)
 
 unique(d2$Year)
+unique(d2$Month)
 
 
 
@@ -90,7 +102,7 @@ for(i in unique(years)){
 }
 
 d2$Season <- "Winter"
-d2$Season[d2$Period == 1 | d2$Period == 3 | d2$Period == 5 | d2$Period == 7 | d2$Period == 9] <- "Summer"
+d2$Season[d2$Period == 1 | d2$Period == 3 | d2$Period == 5 | d2$Period == 7 | d2$Period == 9| d2$Period == 11| d2$Period == 13] <- "Summer"
 
 unique(d2$Period)
 #periods 1, 3, 6, 7 only
