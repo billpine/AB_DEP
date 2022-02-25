@@ -19,7 +19,7 @@ library(AICcmodavg)
 library(ggeffects)
 library(cowplot)
 
-d1 <- read.csv("~/GitHub/AB_DEP/20220126_merged_agency_data.csv")
+d1 <- read.csv("~/Git/AB_DEP/20220126_merged_agency_data.csv")
 
 
 
@@ -44,8 +44,8 @@ names(quad_sum) <- c("Project", "Year", "Month","Period", "Site",
                   "Number_Quadrats")
 
 #just writing the table with number of quadrats by year, month, station to folder
-write.table(quad_sum, file = "quad_count_project_yr_mnth_station.txt", row.names = FALSE,
-            col.names = TRUE,sep = ",")
+#write.table(quad_sum, file = "quad_count_project_yr_mnth_station.txt", row.names = FALSE,
+#            col.names = TRUE,sep = ",")
 
 ##summary number of oyster spat counted each month
 #by Project, Year, Month, Period, Site
@@ -57,8 +57,8 @@ spat_sum <- d2 %>%
   names(spat_sum) <- c("Project", "Year", "Month","Period", "Site",
                      "Number Live Spat")
 
-  write.table(spat_sum, file = "spat_count_yr_mnth_station.txt", row.names = FALSE,
-              col.names = TRUE,sep = ",")
+#  write.table(spat_sum, file = "spat_count_yr_mnth_station.txt", row.names = FALSE,
+#              col.names = TRUE,sep = ",")
   
   
 # #OK parking the summary stats function here
@@ -169,7 +169,7 @@ f5<-ggplot(d3, aes(Period, CPUE_Spat)) +
   ylab("Spat") +
   facet_wrap(~Site)
 
-  ggsave("spat.pdf", width = 10, height = 10)
+#  ggsave("spat.pdf", width = 10, height = 10)
 
 f5.1<-ggplot(d3, aes(Period, CPUE_Sublegal)) +
   geom_point(size=4) +
@@ -267,9 +267,9 @@ plot(dp3.2$Period,dp3.2$CPUE_Legal)
 
 spat_study<-ggplot(dp3.2, aes(Period, CPUE_Spat)) +
   geom_point(size=4) +
-  ggtitle("Sum Spat by Period") +
+  ggtitle("CPUE Spat by Period") +
   xlab("Period") +
-  ylab("Spat") +
+  ylab("CPUE Spat") +
   facet_wrap(~Project)
 
 ggsave("spat_study.pdf", width = 10, height = 10)
@@ -278,7 +278,7 @@ sub_study<-ggplot(dp3.2, aes(Period, CPUE_Sublegal,color=Study)) +
   geom_point(size=4) +
   ggtitle("Sublegal CPUE by Period") +
   xlab("Period") +
-  ylab("Sublegal") +
+  ylab("Sublegal CPUE") +
   facet_wrap(~Project)
 ggsave("sub_study.pdf", width = 10, height = 10)
 
@@ -286,7 +286,7 @@ legal_study<-ggplot(dp3.2, aes(Period, CPUE_Legal)) +
   geom_point(size=4) +
   ggtitle("Legal CPUE by Period") +
   xlab("Period") +
-  ylab("Legal") +
+  ylab("Legal CPUE") +
   facet_wrap(~Project)
 ggsave("legal_study.pdf", width = 10, height = 10)
 
@@ -337,6 +337,10 @@ r1<-ggplot(data = dp3.2[dp3.2$Project=="NFWF_1",], aes(Period, Sum_spat)) +
 
 #fit basic NB GLM Random
 
+library(lme4) #mixed effect models
+library(MASS) #negative binomial models
+
+
 names(dp3.2)
 #[1] "Project"       "Period"        "Site"          "Sum_spat"      "Num_quads"    
 #[6] "Sum_sublegal"  "Sum_legal"     "CPUE_Spat"     "CPUE_Sublegal" "CPUE_Legal" 
@@ -344,23 +348,20 @@ names(dp3.2)
 
 ###SPAT ONLY###
 
-r1 <- glmer.nb(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp3.2,
+r01 <- glmer.nb(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp3.2,
                control=glmerControl(optimizer="bobyqa",optCtrl=list(maxfun=2e10))) #no converge
 
+summary(r01)
 #did not converge
 
 ##OK using site as random effect
 ##could bring study back in, that would may control for large FWC counts
 
-
-library(lme4) #mixed effect models
-library(MASS) #negative binomial models
-
 #make site factor for random effect
 dp3.2$Site<-as.factor(dp3.2$Site)
 
 
-#no offset, station name as random
+#station name as random
 r1 <- glmer.nb(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp3.2,
                control=glmerControl(optimizer="bobyqa",optCtrl=list(maxfun=2e10))) #no converge
 r2 <- glmer.nb(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = dp3.2) #no converge
@@ -451,6 +452,76 @@ pm3 = ggplot(DEP_5007, aes(x, predicted))+
 
 plot_grid(pm1,pm2,pm3)
 
+
+
+######
+#glmmTMB
+
+library(glmmTMB)
+library(bbmle)
+
+tmb1 <- glmmTMB(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp3.2, family="nbinom2") #converge
+summary(tmb1)
+
+#NB2 formulation
+tmb2 <- glmmTMB(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp3.2, family="nbinom1") #converge
+summary(tmb2)
+
+#zero inflated poisson
+tmb3<- glmmTMB(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp3.2, ziformula=~1, family="poisson") #converge
+summary(tmb3)
+
+AICtab(tmb1,tmb2,tmb3)
+
+#tmb1 better fit
+
+library(ggeffects)
+
+ggpredict(tmb1)
+
+pred_tmb1 <- ggpredict(tmb1, c("Period", "Project"))
+
+plot(pred_tmb1, facet=TRUE, colors=c("red","black","blue"))
+#neat that works
+
+nfwf_pred<- subset(pred_tmb1, pred_tmb1$group == "NFWF_1")
+DEP_4044<- subset(pred_tmb1, pred_tmb1$group == "NRDA_4044")
+DEP_5007<- subset(pred_tmb1, pred_tmb1$group == "NRDA_5007")
+
+
+
+pr1 = ggplot(nfwf_pred, aes(x, predicted))+
+  geom_line(size=2)+
+  ylab("Live oyster count per quad") +
+  xlab ("Period")+
+  ggtitle("NFWF Apalachicola Spat by Period") +
+  geom_point(data = dp3.2[dp3.2$Project == "NFWF_1",], mapping = aes(Period, Sum_spat), size = 2)+
+  scale_x_continuous(breaks=seq(1,13,1))
+#+
+#  scale_y_continuous(breaks=seq(0,100000,1000))
+
+pr2 = ggplot(DEP_4044, aes(x, predicted))+
+  geom_line(size=2)+
+  ylab("Live oyster count per quad") +
+  xlab ("Period")+
+  ggtitle("DEP 4044 Spat by Period") +
+  geom_point(data = dp3.2[dp3.2$Project == "NRDA_4044",], mapping = aes(Period, Sum_spat), size = 2)+
+  scale_x_continuous(breaks=seq(1,13,1))
+
+
+pr3 = ggplot(DEP_5007, aes(x, predicted))+
+  geom_line(size=2)+
+  ylab("Live oyster count per quad") +
+  xlab ("Period")+
+  ggtitle("DEP 5007 Spat by Period") +
+  geom_point(data = dp3.2[dp3.2$Project == "NRDA_5007",], mapping = aes(Period, Sum_spat), size = 2)+
+  scale_x_continuous(breaks=seq(1,13,1))
+
+plot_grid(pr1,pr2,pr3)
+
+
+
+########################
 
 #everything below is just on the bench and does not work
 # 
