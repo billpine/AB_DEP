@@ -34,11 +34,11 @@ d2$Sublegal[d2$Sublegal < -1] <- NA
 d2$Legal[d2$Legal < -1] <- NA
 
 data_sum<- d2 %>%
-  dplyr::group_by(Project, Year, Period, Season) %>%
-  dplyr::count(Project, Year, Period, Season) %>%
+  dplyr::group_by(Project, Year, Month, Period, Site) %>%
+  dplyr::count(Project, Year,Month, Period, Site) %>%
   #dplyr::summarise(summarise(count = n()),na.rm=TRUE) %>%
   dplyr::relocate(Project, Year, Month, Period, Site)
-names(quad_sum) <- c("Project", "Year", "Month","Period", "Site",
+names(data_sum) <- c("Project", "Year", "Month","Period", "Site",
                      "Number_Quadrats")
 
 
@@ -173,7 +173,7 @@ plot_grid(f1,f2,f3,f4)
 
      
 f5<-ggplot(d3, aes(Period, CPUE_Spat)) +
-  geom_point(size=4) +
+  geom_point(size=2) +
   ggtitle("Spat CPUE by Period") +
   xlab("Period") +
   ylab("Spat") +
@@ -182,7 +182,7 @@ f5<-ggplot(d3, aes(Period, CPUE_Spat)) +
 #  ggsave("spat.pdf", width = 10, height = 10)
 
 f5.1<-ggplot(d3, aes(Period, CPUE_Sublegal)) +
-  geom_point(size=4) +
+  geom_point(size=2) +
   ggtitle("Sublegal CPUE by Period") +
   xlab("Period") +
   ylab("Sublegal") +
@@ -190,7 +190,7 @@ f5.1<-ggplot(d3, aes(Period, CPUE_Sublegal)) +
 ggsave("sublegal.pdf", width = 10, height = 10)
 
 f5.2<-ggplot(d3, aes(Period, CPUE_Legal)) +
-  geom_point(size=4) +
+  geom_point(size=2) +
   ggtitle("Legal CPUE by Period") +
   xlab("Period") +
   ylab("Legal") +
@@ -276,7 +276,7 @@ plot(dp3.2$Period,dp3.2$CPUE_Legal)
 #cultch put out.
 
 spat_study<-ggplot(dp3.2, aes(Period, CPUE_Spat)) +
-  geom_point(size=4) +
+  geom_point(size=2) +
   ggtitle("CPUE Spat by Period") +
   xlab("Period") +
   ylab("CPUE Spat") +
@@ -285,7 +285,7 @@ spat_study<-ggplot(dp3.2, aes(Period, CPUE_Spat)) +
 ggsave("spat_study.pdf", width = 10, height = 10)
 
 sub_study<-ggplot(dp3.2, aes(Period, CPUE_Sublegal,color=Study)) +
-  geom_point(size=4) +
+  geom_point(size=2) +
   ggtitle("Sublegal CPUE by Period") +
   xlab("Period") +
   ylab("Sublegal CPUE") +
@@ -293,7 +293,7 @@ sub_study<-ggplot(dp3.2, aes(Period, CPUE_Sublegal,color=Study)) +
 ggsave("sub_study.pdf", width = 10, height = 10)
 
 legal_study<-ggplot(dp3.2, aes(Period, CPUE_Legal)) +
-  geom_point(size=4) +
+  geom_point(size=2) +
   ggtitle("Legal CPUE by Period") +
   xlab("Period") +
   ylab("Legal CPUE") +
@@ -307,6 +307,11 @@ ggsave("legal_study.pdf", width = 10, height = 10)
 #> names(dp3.2)
 #[1] "Project"       "Period"        "Site"          "Sum_spat"      "Num_quads"    
 #[6] "Sum_sublegal"  "Sum_legal"     "CPUE_Spat"     "CPUE_Sublegal" "CPUE_Legal" 
+
+#bring in discharge number days below 12k CFS
+dis <- read.csv("~/Git/AB_DEP/below_12_threshold.csv")
+
+x<-merge(dp3.2,dis, by=c("Period"))
 
 qqnorm(dp3.2$Sum_spat)
 qqnorm(dp3.2$Sum_sublegal)
@@ -481,30 +486,63 @@ plot_grid(pm1,pm2,pm3)
 library(glmmTMB)
 library(bbmle)
 
-tmb1 <- glmmTMB(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp3.2, family="nbinom2") #converge
+#bring in discharge number days below 12k CFS
+Lowdays <- read.csv("~/Git/AB_DEP/below_12_threshold.csv")
+dp4<-merge(dp3.2,dis, by=c("Period"))
+
+names(dp4)
+
+names(dp4)[names(dp4) == 'Discharge'] <- 'Lowdays'
+
+tmb1 <- glmmTMB(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
 summary(tmb1)
 
 testci<-confint(tmb1)
 
 #NB2 formulation
-tmb2 <- glmmTMB(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp3.2, family="nbinom1") #converge
+tmb2 <- glmmTMB(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom1") #converge
 summary(tmb2)
 
 #zero inflated poisson
-tmb3<- glmmTMB(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp3.2, ziformula=~1, family="poisson") #converge
+tmb3<- glmmTMB(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp4, ziformula=~1, family="poisson") #converge
 summary(tmb3)
 
 AICtab(tmb1,tmb2,tmb3)
 
-#tmb1 better fit
+#tmb1 better fit to handle the family
+
+
+#now compare multiple models from same family
+#add discharge
+
+tmb4 <- glmmTMB(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
+summary(tmb4)
+
+tmb5 <- glmmTMB(Sum_spat ~ Period + Project + Lowdays + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
+summary(tmb5)
+
+
+AICtab(tmb1,tmb4,tmb5)
+
+#So with or w/0 dischage not distinguishable with AIC
+#but dischage is negative sign and significant
+
+plot(dp4$Sum_spat~dp4$Lowdays)
+
+
 
 library(ggeffects)
 
 ggpredict(tmb1)
-
 pred_tmb1 <- ggpredict(tmb1, c("Period", "Project"))
-
 plot(pred_tmb1, facet=TRUE, colors=c("red","black","blue"), add.data=TRUE)
+
+#below needs help
+x<-ggpredict(tmb5)
+pred_tmb5 <- ggpredict(tmb5, c("Period", "Project" ))
+plot(pred_tmb5, facet=TRUE, colors=c("red","black","blue"), add.data=TRUE)
+
+
 #neat that works
 
 nfwf_pred<- subset(pred_tmb1, pred_tmb1$group == "NFWF_1")
