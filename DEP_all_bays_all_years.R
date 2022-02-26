@@ -466,10 +466,65 @@ pm <- plot_grid(
 
 #for plotting could scale y axis better but that would 
 #cause 1 point for St. Andrews to be lost
+
+###############
+##TMB##########
+###############
+
+
+
+library(glmmTMB)
+library(bbmle)
+
+names(d9)
+
+tmb0 <- glmmTMB(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = d9, family="nbinom2") #converge
+summary(tmb0)
+
+tmb1 <- glmmTMB(Sum_spat ~ Period + Bay + (1|Site) + offset(log(Num_quads)), data = d9, family="nbinom2") #converge
+summary(tmb1)
+
+testci<-confint(tmb1)
+
+#NB2 formulation
+tmb2 <- glmmTMB(Sum_spat ~ Period + Bay + (1|Site) + offset(log(Num_quads)), data = d9, family="nbinom1") #converge
+summary(tmb2)
+
+#zero inflated poisson
+tmb3<- glmmTMB(Sum_spat ~ Period + Bay + (1|Site) + offset(log(Num_quads)), data = d9, ziformula=~1, family="poisson") #converge
+summary(tmb3)
+
+#Period*Bay
+tmb4 <- glmmTMB(Sum_spat ~ Period*Bay + (1|Site) + offset(log(Num_quads)), data = d9, family="nbinom2") #converge
+summary(tmb4)
+
+#which is best "family"
+AICtab(tmb1,tmb2,tmb3)
+
+#tmb1 better fit of base models, tmb1 and tmb4 no difference
+#really should just compare the tmb1,2,3 here to determine which family
+#then using a common family, compare different models
+
+#now different models
+AICtab(tmb0,tmb1,tmb4)
+
+#no improvement with interaction term
+
+#need to check this, but I think below is just plotting with a common slope
+#b/c no interaction term
+
+library(ggeffects)
+
+ggpredict(tmb1)
+
+pred_tmb1 <- ggpredict(tmb1, c("Period", "Bay"))
+
+plot(pred_tmb1, facet=TRUE, colors=c("red","black","blue"), add.data=TRUE)
+#neat that works
   
 
-  
-  
+#so think about whether separate slopes is needed (go over w/ Jennifer)
+#to help interpret mgmt
   
 # 
 # #plot ideas
