@@ -48,3 +48,10 @@ aboveThreshold <- aggregate(Discharge ~ Period, data = dis, FUN = above)
 
 belowThreshold
 aboveThreshold
+
+write.table(belowThreshold,file="below_12_threshold.csv",row.names=TRUE, col.names=TRUE, sep=",")
+
+
+
+idperiod <- aggregate(Discharge ~ Period, data = dis, FUN = mean)
+
