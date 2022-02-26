@@ -360,37 +360,44 @@ r2<-ggplot(data = dp3.2[dp3.2$Project=="NFWF_1",], aes(Period, Sum_spat)) +
 #facet_wrap(~Project)
 
 
+##################################### 
+# #fit basic NB GLM w/ random effects
+##################################### 
+
+#Effects are fixed if they are interesting in themselves 
+#or random if there is interest in the underlying population. Searle, Casella and McCulloch [(1992), Section 1.4] 
+#https://bbolker.github.io/mixedmodels-misc/glmmFAQ.html#model-definition
+
+
 #see gopher tortoise example https://ms.mcmaster.ca/~bolker/R/misc/foxchapter/bolker_chap.html
 
-#fit basic NB GLM Random
-
-library(lme4) #mixed effect models
-library(MASS) #negative binomial models
-
-names(dp3.2)
-#[1] "Project"       "Period"        "Site"          "Sum_spat"      "Num_quads"    
-#[6] "Sum_sublegal"  "Sum_legal"     "CPUE_Spat"     "CPUE_Sublegal" "CPUE_Legal" 
-
-###SPAT ONLY###
-
-r01 <- glmer.nb(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp3.2,
-               control=glmerControl(optimizer="bobyqa",optCtrl=list(maxfun=2e10))) #no converge
-
-summary(r01)
-#did not converge
-
-##OK using site as random effect
-##could bring study back in, that would may control for large FWC counts
-
-#make site factor for random effect
-dp3.2$Site<-as.factor(dp3.2$Site)
-
-#station name as random
-r1 <- glmer.nb(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp3.2,
-               control=glmerControl(optimizer="bobyqa",optCtrl=list(maxfun=2e10))) #no converge
-r2 <- glmer.nb(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = dp3.2) #no converge
-
-summary(r2)
+# library(lme4) #mixed effect models
+# library(MASS) #negative binomial models
+# 
+# names(dp3.2)
+# #[1] "Project"       "Period"        "Site"          "Sum_spat"      "Num_quads"    
+# #[6] "Sum_sublegal"  "Sum_legal"     "CPUE_Spat"     "CPUE_Sublegal" "CPUE_Legal" 
+# 
+# ###SPAT ONLY###
+# 
+# r01 <- glmer.nb(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp3.2,
+#                control=glmerControl(optimizer="bobyqa",optCtrl=list(maxfun=2e10))) #no converge
+# 
+# summary(r01)
+# #did not converge
+# 
+# ##OK using site as random effect
+# ##could bring study back in, that would may control for large FWC counts
+# 
+# #make site factor for random effect
+# dp3.2$Site<-as.factor(dp3.2$Site)
+# 
+# #station name as random
+# r1 <- glmer.nb(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp3.2,
+#                control=glmerControl(optimizer="bobyqa",optCtrl=list(maxfun=2e10))) #no converge
+# r2 <- glmer.nb(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = dp3.2) #no converge
+# 
+# summary(r2)
 
 #neither converge, move to glmmADMB
 
@@ -443,8 +450,6 @@ nfwf_pred<- subset(pred_r3, pred_r3$group == "NFWF_1")
 DEP_4044<- subset(pred_r3, pred_r3$group == "NRDA_4044")
 DEP_5007<- subset(pred_r3, pred_r3$group == "NRDA_5007")
 
-
-
 #this seems to work but throws error
 
 pm1 = ggplot(nfwf_pred, aes(x, predicted))+
@@ -477,22 +482,36 @@ pm3 = ggplot(DEP_5007, aes(x, predicted))+
 plot_grid(pm1,pm2,pm3)
 
 
+
 ######################
 ######
-#glmmTMB
+#glmmTMB approach
+######
 ######################
 
 library(glmmTMB)
 library(bbmle)
 
-#bring in discharge number days below 12k CFS
+#bring in a measure of discharge
+#it isn't really discharge as CFS, it is number of days
+#in a period below 12000 CFS @ JWLD
+
 Lowdays <- read.csv("~/Git/AB_DEP/below_12_threshold.csv")
 dp4<-merge(dp3.2,Lowdays, by=c("Period"))
 
-names(dp4)
+#plot(dp4$Sum_spat~dp4$Lowdays)
 
-#it isn't really discharge, it is number of days
-#in a period below 12000 CFS @ JWLD
+#####################
+#Show this to FWC/FSU
+#####################
+
+z1<- ggplot(dp4, aes(x=Lowdays, y=Sum_spat))+
+  geom_point(size=3)+
+  ylab("Live oyster spat count") +
+  xlab ("Days discharge < 12000 CFS")+
+  ggtitle("Live oyster spat count and days river < 12000 CFS") 
+
+names(dp4)
 
 names(dp4)[names(dp4) == 'Discharge'] <- 'Lowdays'
 
@@ -501,6 +520,7 @@ names(dp4)[names(dp4) == 'Discharge'] <- 'Lowdays'
 tmb1 <- glmmTMB(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
 summary(tmb1)
 
+#here is a way to generate CI on parameters
 testci<-confint(tmb1)
 
 #same model using
@@ -520,10 +540,13 @@ AICtab(tmb1,tmb2,tmb3)
 
 ################
 #now compare multiple models from same family
-#add discharge
+#and add discharge
+################
 
 #do we really care about project? At the highest level no
 #these sites nearly all received cultch
+#we could look more closely at project later since they are different materials (?)
+
 tmb4 <- glmmTMB(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
 summary(tmb4)
 #and what the model above tells us is that over time spat counts are declining
@@ -547,7 +570,7 @@ summary(tmb7)
 #
 
 
-AICtab(tmb1,tmb4,tmb5,tmb6)
+AICtab(tmb1,tmb4,tmb5,tmb6,tmb7)
 #This suggests project is really important from AIC
 #but is it what we are interested in right now?
 #maybe if we dig into what we can learn from each project
@@ -557,7 +580,7 @@ AICtab(tmb4,tmb5)
 #suggests including number of lowdays is important
 
 
-plot(dp4$Sum_spat~dp4$Lowdays)
+
 
 
 library(ggeffects)
@@ -568,8 +591,7 @@ ggpredict(tmb1)
 pred_tmb1 <- ggpredict(tmb1, c("Period", "Project"))
 plot(pred_tmb1, facet=TRUE, colors=c("red","black","blue"), add.data=TRUE)
 
-
-#this is just lowdays
+#this is just lowdays (not significant on its own)
 ggpredict(tmb7)
 pred_tmb7 <- ggpredict(tmb7, c("Lowdays"))
 plot(pred_tmb7, colors=c("blue"), add.data=TRUE)
@@ -627,7 +649,8 @@ pr3 = ggplot(DEP_5007, aes(x, predicted))+
 plot_grid(pr1,pr2,pr3)
 
 ############
-#now Jennifer style but just period
+#now Jennifer style but just period. this is what
+#is out there
 
 p_pr1 = ggplot(pred_tmb4, aes(x, predicted))+
   geom_line(size=2)+
@@ -637,6 +660,8 @@ p_pr1 = ggplot(pred_tmb4, aes(x, predicted))+
   geom_point(data = dp4, mapping = aes(Period, Sum_spat), size = 2)+
   ggtitle("Spat by Period") +
   scale_x_continuous(breaks=seq(1,14,1))
+#+
+#  scale_y_log10()
 #+
 #  scale_y_continuous(breaks=seq(0,100000,1000))
 
