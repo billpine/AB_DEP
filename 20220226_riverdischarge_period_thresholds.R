@@ -41,7 +41,7 @@ above <- function(x){
   length(x[x>12000])
 }
 
-
+##
 #gives us a table of the number of days within the period where discharge falls above or below the set threshold
 belowThreshold <- aggregate(Discharge ~ Period, data = dis, FUN = below)
 aboveThreshold <- aggregate(Discharge ~ Period, data = dis, FUN = above)
