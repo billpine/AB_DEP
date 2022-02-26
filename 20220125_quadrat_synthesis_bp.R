@@ -568,6 +568,10 @@ tmb7 <- glmmTMB(Sum_spat ~ Lowdays + (1|Site) + offset(log(Num_quads)), data = d
 summary(tmb7)
 #interesting just low days not significant
 #
+####Project is driving so much because the NFWF project
+####is the only one with data during period of high counts
+####DEP project was in the water, but monitoring wasn't done
+####for several periods after building project
 
 
 AICtab(tmb1,tmb4,tmb5,tmb6,tmb7)
