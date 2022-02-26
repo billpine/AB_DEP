@@ -138,6 +138,9 @@ CPUE_Hotel<-subset(d3,d3$Site =="Hotel Bar")
 CPUE_Dry<-subset(d3,d3$Site =="Dry Bar")
 CPUE_Bulkhead<-subset(d3,d3$Site =="Bulkhead")
 
+windows(record=TRUE)
+
+
 f1<-ggplot(CPUE_Cat, aes(Period, CPUE_Legal)) +
   geom_point(size=4) +
   ggtitle("Cat Point Legal") +
@@ -167,10 +170,10 @@ f4<-ggplot(CPUE_Bulkhead, aes(Period, CPUE_Legal)) +
   ylab("CPUE Legal")
 
 
-plot_grid(f1,f2,f3,f4)
+#plot_grid(f1,f2,f3,f4)
 
 
-
+##maybe start here with FWC/FSU
      
 f5<-ggplot(d3, aes(Period, CPUE_Spat)) +
   geom_point(size=2) +
@@ -187,7 +190,7 @@ f5.1<-ggplot(d3, aes(Period, CPUE_Sublegal)) +
   xlab("Period") +
   ylab("Sublegal") +
   facet_wrap(~Site)
-ggsave("sublegal.pdf", width = 10, height = 10)
+#ggsave("sublegal.pdf", width = 10, height = 10)
 
 f5.2<-ggplot(d3, aes(Period, CPUE_Legal)) +
   geom_point(size=2) +
@@ -195,7 +198,7 @@ f5.2<-ggplot(d3, aes(Period, CPUE_Legal)) +
   xlab("Period") +
   ylab("Legal") +
   facet_wrap(~Site)
-ggsave("legal.pdf", width = 10, height = 10)
+#ggsave("legal.pdf", width = 10, height = 10)
 
 
 ####now let's go back and see if this matters by study
@@ -282,7 +285,7 @@ spat_study<-ggplot(dp3.2, aes(Period, CPUE_Spat)) +
   ylab("CPUE Spat") +
   facet_wrap(~Project)
 
-ggsave("spat_study.pdf", width = 10, height = 10)
+#ggsave("spat_study.pdf", width = 10, height = 10)
 
 sub_study<-ggplot(dp3.2, aes(Period, CPUE_Sublegal,color=Study)) +
   geom_point(size=2) +
@@ -290,7 +293,7 @@ sub_study<-ggplot(dp3.2, aes(Period, CPUE_Sublegal,color=Study)) +
   xlab("Period") +
   ylab("Sublegal CPUE") +
   facet_wrap(~Project)
-ggsave("sub_study.pdf", width = 10, height = 10)
+#ggsave("sub_study.pdf", width = 10, height = 10)
 
 legal_study<-ggplot(dp3.2, aes(Period, CPUE_Legal)) +
   geom_point(size=2) +
@@ -298,7 +301,7 @@ legal_study<-ggplot(dp3.2, aes(Period, CPUE_Legal)) +
   xlab("Period") +
   ylab("Legal CPUE") +
   facet_wrap(~Project)
-ggsave("legal_study.pdf", width = 10, height = 10)
+#ggsave("legal_study.pdf", width = 10, height = 10)
 
 ################
 ################
@@ -308,10 +311,7 @@ ggsave("legal_study.pdf", width = 10, height = 10)
 #[1] "Project"       "Period"        "Site"          "Sum_spat"      "Num_quads"    
 #[6] "Sum_sublegal"  "Sum_legal"     "CPUE_Spat"     "CPUE_Sublegal" "CPUE_Legal" 
 
-#bring in discharge number days below 12k CFS
-dis <- read.csv("~/Git/AB_DEP/below_12_threshold.csv")
 
-x<-merge(dp3.2,dis, by=c("Period"))
 
 qqnorm(dp3.2$Sum_spat)
 qqnorm(dp3.2$Sum_sublegal)
@@ -328,6 +328,7 @@ qqnorm(dp3.2$Sum_legal)
 #and use sampling site
 #as random effect
 
+##below key to show FWC-FSU
 
 #this is by site and study
 r0<-ggplot(dp3.2, aes(Period, Sum_spat,color=Project)) +
@@ -366,11 +367,9 @@ r2<-ggplot(data = dp3.2[dp3.2$Project=="NFWF_1",], aes(Period, Sum_spat)) +
 library(lme4) #mixed effect models
 library(MASS) #negative binomial models
 
-
 names(dp3.2)
 #[1] "Project"       "Period"        "Site"          "Sum_spat"      "Num_quads"    
 #[6] "Sum_sublegal"  "Sum_legal"     "CPUE_Spat"     "CPUE_Sublegal" "CPUE_Legal" 
-
 
 ###SPAT ONLY###
 
@@ -385,7 +384,6 @@ summary(r01)
 
 #make site factor for random effect
 dp3.2$Site<-as.factor(dp3.2$Site)
-
 
 #station name as random
 r1 <- glmer.nb(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp3.2,
@@ -479,30 +477,38 @@ pm3 = ggplot(DEP_5007, aes(x, predicted))+
 plot_grid(pm1,pm2,pm3)
 
 
-
+######################
 ######
 #glmmTMB
+######################
 
 library(glmmTMB)
 library(bbmle)
 
 #bring in discharge number days below 12k CFS
 Lowdays <- read.csv("~/Git/AB_DEP/below_12_threshold.csv")
-dp4<-merge(dp3.2,dis, by=c("Period"))
+dp4<-merge(dp3.2,Lowdays, by=c("Period"))
 
 names(dp4)
 
+#it isn't really discharge, it is number of days
+#in a period below 12000 CFS @ JWLD
+
 names(dp4)[names(dp4) == 'Discharge'] <- 'Lowdays'
 
+#this model is asking how period and project influence counts
+#using NB2 formulation (most common)
 tmb1 <- glmmTMB(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
 summary(tmb1)
 
 testci<-confint(tmb1)
 
-#NB2 formulation
+#same model using
+#NB1 formulation
 tmb2 <- glmmTMB(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom1") #converge
 summary(tmb2)
 
+#same model using ZIP
 #zero inflated poisson
 tmb3<- glmmTMB(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp4, ziformula=~1, family="poisson") #converge
 summary(tmb3)
@@ -510,40 +516,77 @@ summary(tmb3)
 AICtab(tmb1,tmb2,tmb3)
 
 #tmb1 better fit to handle the family
+#So NB2. But not a fan of using AIC like this
 
-
+################
 #now compare multiple models from same family
 #add discharge
 
+#do we really care about project? At the highest level no
+#these sites nearly all received cultch
 tmb4 <- glmmTMB(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
 summary(tmb4)
+#and what the model above tells us is that over time spat counts are declining
 
-tmb5 <- glmmTMB(Sum_spat ~ Period + Project + Lowdays + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
+#now is that influenced by the number of low days?
+#more low days would be drier conditions
+
+tmb5 <- glmmTMB(Sum_spat ~ Period + Lowdays + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
 summary(tmb5)
+#and low days is significant and negative, so as 
+#you have low days (drier conditions) that has a negative
+#effect on number of spat
+
+tmb6 <- glmmTMB(Sum_spat ~ Period + Lowdays + Project + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
+summary(tmb6)
+
+#just low days
+tmb7 <- glmmTMB(Sum_spat ~ Lowdays + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
+summary(tmb7)
+#interesting just low days not significant
+#
 
 
-AICtab(tmb1,tmb4,tmb5)
+AICtab(tmb1,tmb4,tmb5,tmb6)
+#This suggests project is really important from AIC
+#but is it what we are interested in right now?
+#maybe if we dig into what we can learn from each project
 
-#So with or w/0 dischage not distinguishable with AIC
-#but dischage is negative sign and significant
+#just comparing models w/o project terms
+AICtab(tmb4,tmb5)
+#suggests including number of lowdays is important
+
 
 plot(dp4$Sum_spat~dp4$Lowdays)
 
 
-
 library(ggeffects)
 
+#make plots by study and period of obs and pred
+#but with common slope
 ggpredict(tmb1)
 pred_tmb1 <- ggpredict(tmb1, c("Period", "Project"))
 plot(pred_tmb1, facet=TRUE, colors=c("red","black","blue"), add.data=TRUE)
 
-#below needs help
-x<-ggpredict(tmb5)
-pred_tmb5 <- ggpredict(tmb5, c("Period", "Project" ))
-plot(pred_tmb5, facet=TRUE, colors=c("red","black","blue"), add.data=TRUE)
+
+#this is just lowdays
+ggpredict(tmb7)
+pred_tmb7 <- ggpredict(tmb7, c("Lowdays"))
+plot(pred_tmb7, colors=c("blue"), add.data=TRUE)
+
+#this is just period
+
+ggpredict(tmb4)
+pred_tmb4 <- ggpredict(tmb4, c("Period"))
+plot(pred_tmb4, colors=c("green"), add.data=TRUE)
+
+
+#plot(pred_tmb5, facet=TRUE, colors=c("red","black","blue"), add.data=TRUE)
 
 
 #neat that works
+
+#now make the Jennifer style plot with group and period
 
 nfwf_pred<- subset(pred_tmb1, pred_tmb1$group == "NFWF_1")
 DEP_4044<- subset(pred_tmb1, pred_tmb1$group == "NRDA_4044")
@@ -582,6 +625,20 @@ pr3 = ggplot(DEP_5007, aes(x, predicted))+
   scale_x_continuous(breaks=seq(1,14,1))
 
 plot_grid(pr1,pr2,pr3)
+
+############
+#now Jennifer style but just period
+
+p_pr1 = ggplot(pred_tmb4, aes(x, predicted))+
+  geom_line(size=2)+
+  ylab("Live oyster count per quad") +
+  xlab ("Period")+
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
+  geom_point(data = dp4, mapping = aes(Period, Sum_spat), size = 2)+
+  ggtitle("Spat by Period") +
+  scale_x_continuous(breaks=seq(1,14,1))
+#+
+#  scale_y_continuous(breaks=seq(0,100000,1000))
 
 
 
