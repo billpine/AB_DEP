@@ -520,6 +520,9 @@ names(dp4)[names(dp4) == 'Discharge'] <- 'Lowdays'
 tmb1 <- glmmTMB(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
 summary(tmb1)
 
+#tmb1.1 <- glmmTMB(Sum_spat ~ Period + Project + Period*Project + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
+#summary(tmb1.1)
+
 #here is a way to generate CI on parameters
 testci<-confint(tmb1)
 
@@ -582,10 +585,6 @@ AICtab(tmb1,tmb4,tmb5,tmb6,tmb7)
 #just comparing models w/o project terms
 AICtab(tmb4,tmb5)
 #suggests including number of lowdays is important
-
-
-
-
 
 library(ggeffects)
 
