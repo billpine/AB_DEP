@@ -528,7 +528,6 @@ summary(tmb1)
 #so the NFWF project is intercept 4.67 and the 4044 is 1.8 less than than NFWF
 #and then 5007 is 0.3 less than NFWF
 
-
 #tmb1.1 <- glmmTMB(Sum_spat ~ Period + Project + Period*Project + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
 #summary(tmb1.1)
 
