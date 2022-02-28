@@ -390,7 +390,7 @@ r2<-ggplot(data = dp3.2[dp3.2$Project=="NFWF_1",], aes(Period, Sum_spat)) +
 # ##could bring study back in, that would may control for large FWC counts
 # 
 # #make site factor for random effect
-# dp3.2$Site<-as.factor(dp3.2$Site)
+dp3.2$Site<-as.factor(dp3.2$Site)
 # 
 # #station name as random
 # r1 <- glmer.nb(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp3.2,
@@ -498,6 +498,11 @@ library(bbmle)
 
 Lowdays <- read.csv("~/Git/AB_DEP/below_12_threshold.csv")
 dp4<-merge(dp3.2,Lowdays, by=c("Period"))
+for(i in 1:nrow(dp4))
+{dp4$lag1[i] <- Lowdays$Discharge[Lowdays$Period == (dp4$Period[i]-1)]}
+
+names(dp4)
+
 
 #plot(dp4$Sum_spat~dp4$Lowdays)
 
@@ -519,6 +524,10 @@ names(dp4)[names(dp4) == 'Discharge'] <- 'Lowdays'
 #using NB2 formulation (most common)
 tmb1 <- glmmTMB(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
 summary(tmb1)
+
+#so the NFWF project is intercept 4.67 and the 4044 is 1.8 less than than NFWF
+#and then 5007 is 0.3 less than NFWF
+
 
 #tmb1.1 <- glmmTMB(Sum_spat ~ Period + Project + Period*Project + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
 #summary(tmb1.1)
@@ -563,12 +572,14 @@ summary(tmb5)
 #you have low days (drier conditions) that has a negative
 #effect on number of spat
 
-tmb6 <- glmmTMB(Sum_spat ~ Period + Lowdays + Project + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
-summary(tmb6)
+#now with lag of 1 period on lowdays
+tmb5.1 <- glmmTMB(Sum_spat ~ Period + lag1 + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
+summary(tmb5.1)
+#lag 1 not significant and AIC suggests no lag better fit also
 
 #just low days
-tmb7 <- glmmTMB(Sum_spat ~ Lowdays + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
-summary(tmb7)
+tmb6 <- glmmTMB(Sum_spat ~ Lowdays + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
+summary(tmb6)
 #interesting just low days not significant
 #
 ####Project is driving so much because the NFWF project
@@ -577,7 +588,7 @@ summary(tmb7)
 ####for several periods after building project
 
 
-AICtab(tmb1,tmb4,tmb5,tmb6,tmb7)
+AICtab(tmb1,tmb4,tmb5,tmb5.1,tmb6)
 #This suggests project is really important from AIC
 #but is it what we are interested in right now?
 #maybe if we dig into what we can learn from each project
@@ -595,8 +606,8 @@ pred_tmb1 <- ggpredict(tmb1, c("Period", "Project"))
 plot(pred_tmb1, facet=TRUE, colors=c("red","black","blue"), add.data=TRUE)
 
 #this is just lowdays (not significant on its own)
-ggpredict(tmb7)
-pred_tmb7 <- ggpredict(tmb7, c("Lowdays"))
+ggpredict(tmb6)
+pred_tmb6 <- ggpredict(tmb6, c("Lowdays"))
 plot(pred_tmb7, colors=c("blue"), add.data=TRUE)
 
 #this is just period
@@ -616,8 +627,6 @@ plot(pred_tmb4, colors=c("green"), add.data=TRUE)
 nfwf_pred<- subset(pred_tmb1, pred_tmb1$group == "NFWF_1")
 DEP_4044<- subset(pred_tmb1, pred_tmb1$group == "NRDA_4044")
 DEP_5007<- subset(pred_tmb1, pred_tmb1$group == "NRDA_5007")
-
-
 
 pr1 = ggplot(nfwf_pred, aes(x, predicted))+
   geom_line(size=2)+
