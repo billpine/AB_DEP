@@ -510,6 +510,8 @@ names(dp4)
 #Show this to FWC/FSU
 #####################
 
+names(dp4)[names(dp4) == 'Discharge'] <- 'Lowdays'
+
 z1<- ggplot(dp4, aes(x=Lowdays, y=Sum_spat))+
   geom_point(size=3)+
   ylab("Live oyster spat count") +
@@ -518,7 +520,7 @@ z1<- ggplot(dp4, aes(x=Lowdays, y=Sum_spat))+
 
 names(dp4)
 
-names(dp4)[names(dp4) == 'Discharge'] <- 'Lowdays'
+
 
 #this model is asking how period and project influence counts
 #using NB2 formulation (most common)
@@ -527,6 +529,8 @@ summary(tmb1)
 
 #so the NFWF project is intercept 4.67 and the 4044 is 1.8 less than than NFWF
 #and then 5007 is 0.3 less than NFWF
+
+##don't forget to backtransform
 
 #tmb1.1 <- glmmTMB(Sum_spat ~ Period + Project + Period*Project + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
 #summary(tmb1.1)
@@ -603,6 +607,25 @@ library(ggeffects)
 ggpredict(tmb1)
 pred_tmb1 <- ggpredict(tmb1, c("Period", "Project"))
 plot(pred_tmb1, facet=TRUE, colors=c("red","black","blue"), add.data=TRUE)
+
+
+########
+#######trying to get ggpredict to predict for 1 period and quadrat
+#tmb1 <- glmmTMB(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
+
+#this predict not working. See page 10 of vingette
+#https://cran.r-project.org/web/packages/ggeffects/ggeffects.pdf
+
+
+new.dat<-dp4
+
+new.tmb1 <- glmmTMB(Sum_spat ~ Period + offset(log(Num_quads)), data = new.dat, family="nbinom2") #converge
+
+ggpredict(new.tmb1)
+test = ggpredict(new.tmb1, terms = c("Period [5:10]", "Num_quads [6]"), type = c("fe"), data = new.dat)
+
+
+
 
 #this is just lowdays (not significant on its own)
 ggpredict(tmb6)
