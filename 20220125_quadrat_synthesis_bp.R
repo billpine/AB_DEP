@@ -626,12 +626,32 @@ plot(pred_tmb1, facet=TRUE, colors=c("red","black","blue"), add.data=TRUE)
 #counts in first period, I don't want to predict for those early periods
 
 
-new.dat<-dp4
+##Jennifer updated March 3
+new.dat = data.frame(Sum_spat = dp4$Sum_spat,
+                     Period = dp4$Period,
+                     Num_quads = log(dp4$Num_quads))
 
-new.tmb1 <- glmmTMB(Sum_spat ~ Period + offset(log(Num_quads)), data = new.dat, family="nbinom2") #converge
+new.tmb1 <- glmmTMB(Sum_spat ~ Period + offset(Num_quads), data = new.dat, family="nbinom2") #converge
 
 ggpredict(new.tmb1)
-test = ggpredict(new.tmb1, terms = c("Period [5:10]", "Num_quads [6]"), type = c("fe"), data = new.dat)
+test = ggpredict(new.tmb1, terms = c("Period[14]", "Num_quads[1]"), type = c('fe'))
+############
+#below with project
+
+new.dat2 = data.frame(Sum_spat = dp4$Sum_spat,
+                     Period = dp4$Period,
+                     Project = dp4$Project,
+                     Num_quads = log(dp4$Num_quads))
+
+new.tmb2 <- glmmTMB(Sum_spat ~ Period + Project + offset(Num_quads), data = new.dat2, family="nbinom2") #converge
+
+ggpredict(new.tmb2)
+test = ggpredict(new.tmb2, terms = c("Period[14]", "Project", "Num_quads[1]"), type = c('fe')) #for all projects
+
+#below is almost working
+test = ggpredict(new.tmb2, terms = c("Period[14]", "Project[NWFW]","Num_quads[1]"), type = c('fe')) #for one project
+                 
+
 
 
 
