@@ -616,6 +616,15 @@ plot(pred_tmb1, facet=TRUE, colors=c("red","black","blue"), add.data=TRUE)
 #this predict not working. See page 10 of vingette
 #https://cran.r-project.org/web/packages/ggeffects/ggeffects.pdf
 
+#I even tried the Dodrill trick from the other paper of creating a new data file
+
+#Would want to predict for a specific period (such as first and then last)
+#and then for 1 quadrat
+#this model does not have Project, but it would be good
+#that if a model with project was used I could predict by project
+#because the model performs poorly for 1st period due to high
+#counts in first period, I don't want to predict for those early periods
+
 
 new.dat<-dp4
 
