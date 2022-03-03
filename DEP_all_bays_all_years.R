@@ -526,6 +526,14 @@ plot(pred_tmb1, facet=TRUE, colors=c("red","black","blue"), add.data=TRUE)
 #so think about whether separate slopes is needed (go over w/ Jennifer)
 #to help interpret mgmt
   
+ggpredict(tmb4)
+
+pred_tmb4 <- ggpredict(tmb4, c("Period", "Bay"))
+
+plot(pred_tmb4, facet=TRUE, colors=c("red","black","blue"), add.data=TRUE)
+#neat that works
+
+
 # 
 # #plot ideas
 # https://cran.r-project.org/web/packages/ggiraphExtra/vignettes/ggPredict.html
