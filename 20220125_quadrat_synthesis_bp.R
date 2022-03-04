@@ -648,8 +648,8 @@ new.tmb2 <- glmmTMB(Sum_spat ~ Period + Project + offset(Num_quads), data = new.
 ggpredict(new.tmb2)
 test = ggpredict(new.tmb2, terms = c("Period[14]", "Project", "Num_quads[1]"), type = c('fe')) #for all projects
 
-#below is almost working
-test = ggpredict(new.tmb2, terms = c("Period[14]", "Project[NWFW]","Num_quads[1]"), type = c('fe')) #for one project
+#below is for one project
+test = ggpredict(new.tmb2, terms = c("Period[14]", "Project[NFWF_1]","Num_quads[1]"), type = c('fe')) #for one project
                  
 
 
