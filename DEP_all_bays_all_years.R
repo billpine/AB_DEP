@@ -2,7 +2,7 @@
 #this is the DEP data from project 4044
 #but for all three bays (pensacola, east bay, apalach)
 
-d1 <- read.csv("~/Git/AB_DEP/DEP_three_bays_4044.csv")
+d1 <- read.csv("~/GitHub/AB_DEP/DEP_three_bays_4044.csv")
 
 library(readxl)
 library(tidyverse)
@@ -49,7 +49,7 @@ names(d2)
 #now need to merge d4 which is project 4044 year = 2021
 # to the other years of 4044
 
-d3 <- read.csv("~/Git/AB_DEP/DEP_Apalach_4044_yr2021.csv")
+d3 <- read.csv("~/GitHub/AB_DEP/DEP_Apalach_4044_yr2021.csv")
 
 d3$Project<-"NRDA_4044"
 d3$Bay<-"Apalachicola"
@@ -236,6 +236,10 @@ gf.spat<-goodfit(d6$Sum_spat, type= "nb", method="ML")
 d6$Bay <- as.factor(d6$Bay)
 
 #fit basic NB GLM
+
+library(glmmTMB)
+library(bbmle)
+
 m1 <- glm.nb(Sum_spat ~ Bay + offset(log(Num_quads)), data = d6) 
 m2 <- glm.nb(Sum_spat ~ Bay + Period + offset(log(Num_quads)), data = d6) 
 m3 <- glm.nb(Sum_spat ~ Bay * Period + offset(log(Num_quads)),data = d6, control = glm.control(maxit = 5000)
@@ -243,11 +247,11 @@ m3 <- glm.nb(Sum_spat ~ Bay * Period + offset(log(Num_quads)),data = d6, control
 
 cand.set = list(m1,m2,m3)
 modnames = c("bay", "bay+period", "bay*period")
-aictab(cand.set, modnames, second.ord = FALSE) #model selection table with AIC
+AICtab(m1,m2,m3) #model selection table with AIC
 
-#so model 3 isn't fitting
 summary(m1)
 summary(m2)
+summary(m3)
 
 #results suggests for spat bays are different but period isn't
 
@@ -343,7 +347,7 @@ s3<-ggplot(d9, aes(Period, CPUE_Legal)) +
 
 plot_grid(s1,s2,s3)
 
-ggsave("dep_allbays_site.pdf", width = 10, height = 10)
+#ggsave("dep_allbays_site.pdf", width = 10, height = 10)
 
 #single plot of CPUE, spat, different color by Bay
 s4<-ggplot(d9, aes(Period, CPUE_Spat, color=Bay)) +
@@ -532,6 +536,39 @@ pred_tmb4 <- ggpredict(tmb4, c("Period", "Bay"))
 
 plot(pred_tmb4, facet=TRUE, colors=c("red","black","blue"), add.data=TRUE)
 #neat that works
+
+##predict for specific period and one quadrat
+
+new.dat = data.frame(Sum_spat = d9$Sum_spat,
+                     Period = d9$Period,
+                     Num_quads = log(d9$Num_quads))
+
+new.tmb1 <- glmmTMB(Sum_spat ~ Period + offset(Num_quads), data = new.dat, family="nbinom2") #converge
+
+ggpredict(new.tmb1)
+test = ggpredict(new.tmb1, terms = c("Period[14]", "Num_quads[1]"), type = c('fe'))
+
+##now include Bay
+
+new.dat2 = data.frame(Sum_spat = d9$Sum_spat,
+                      Period = d9$Period,
+                      Bay = d9$Bay,
+                      Num_quads = log(d9$Num_quads))
+
+new.tmb2 <- glmmTMB(Sum_spat ~ Period + Bay + offset(Num_quads), data = new.dat2, family="nbinom2") #converge
+
+#below is for all bays but 1 quad and 1 period
+ggpredict(new.tmb2)
+test = ggpredict(new.tmb2, terms = c("Period[14]", "Bay", "Num_quads[1]"), type = c('fe')) #for all Bays
+
+
+#in period 14 for 1 quad what is predicted value in each bay
+plot(test, facet=TRUE, add.data=TRUE)
+#neat that works
+
+
+#below is for one Bay
+test2 = ggpredict(new.tmb2, terms = c("Period[14]", "Bay[Apalachicola]","Num_quads[1]"), type = c('fe')) #for one project
 
 
 # 
