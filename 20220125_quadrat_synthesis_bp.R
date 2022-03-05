@@ -19,7 +19,7 @@ library(AICcmodavg)
 library(ggeffects)
 library(cowplot)
 
-d1 <- read.csv("~/Git/AB_DEP/20220126_merged_agency_data.csv")
+d1 <- read.csv("~/Git/AB_DEP/20220305_merged_agency_data.csv")
 
 
 
@@ -170,7 +170,7 @@ f4<-ggplot(CPUE_Bulkhead, aes(Period, CPUE_Legal)) +
   ylab("CPUE Legal")
 
 
-#plot_grid(f1,f2,f3,f4)
+plot_grid(f1,f2,f3,f4)
 
 
 ##maybe start here with FWC/FSU
@@ -287,7 +287,7 @@ spat_study<-ggplot(dp3.2, aes(Period, CPUE_Spat)) +
 
 #ggsave("spat_study.pdf", width = 10, height = 10)
 
-sub_study<-ggplot(dp3.2, aes(Period, CPUE_Sublegal,color=Study)) +
+sub_study<-ggplot(dp3.2, aes(Period, CPUE_Sublegal,color=Project)) +
   geom_point(size=2) +
   ggtitle("Sublegal CPUE by Period") +
   xlab("Period") +
@@ -307,7 +307,7 @@ legal_study<-ggplot(dp3.2, aes(Period, CPUE_Legal)) +
 ################
 #moving on to GLM
 
-#> names(dp3.2)
+names(dp3.2)
 #[1] "Project"       "Period"        "Site"          "Sum_spat"      "Num_quads"    
 #[6] "Sum_sublegal"  "Sum_legal"     "CPUE_Spat"     "CPUE_Sublegal" "CPUE_Legal" 
 
@@ -352,8 +352,9 @@ r1<-ggplot(data = dp3.2[dp3.2$Project=="NFWF_1",], aes(Period, Sum_spat)) +
 #this is by study on one plot not on log scale
 r2<-ggplot(data = dp3.2[dp3.2$Project=="NFWF_1",], aes(Period, Sum_spat)) +
   geom_point(size=3) +
-  geom_point(data = dp3.2[dp3.2$Project=="NRDA_4044",], mapping = aes(Period, Sum_spat, color="red"), size = 3)+
-  geom_point(data = dp3.2[dp3.2$Project=="NRDA_5007",], mapping = aes(Period, Sum_spat, color="blue"), size = 3)+
+  geom_point(data = dp3.2[dp3.2$Project=="NRDA_4044",], mapping = aes(Period, Sum_spat, color="NRDA 4044"), size = 3)+
+  geom_point(data = dp3.2[dp3.2$Project=="NRDA_5007",], mapping = aes(Period, Sum_spat, color="NRDA 5077"), size = 3)+
+  geom_point(data = dp3.2[dp3.2$Project=="FWC_2021",], mapping = aes(Period, Sum_spat, color="FWC 2021"), size = 3)+
   ggtitle("Spat per Period by Study") +
   xlab("Period") +
   ylab("Total Spat")
@@ -530,7 +531,7 @@ summary(tmb1)
 #so the NFWF project is intercept 4.67 and the 4044 is 1.8 less than than NFWF
 #and then 5007 is 0.3 less than NFWF
 
-##don't forget to backtransform
+##don't forget to backtransform when looking at the summaries
 
 #tmb1.1 <- glmmTMB(Sum_spat ~ Period + Project + Period*Project + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
 #summary(tmb1.1)
@@ -572,7 +573,7 @@ summary(tmb4)
 tmb5 <- glmmTMB(Sum_spat ~ Period + Lowdays + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
 summary(tmb5)
 #and low days is significant and negative, so as 
-#you have low days (drier conditions) that has a negative
+#you have more low days (drier conditions) that has a negative
 #effect on number of spat
 
 #now with lag of 1 period on lowdays
@@ -606,27 +607,16 @@ library(ggeffects)
 #but with common slope
 ggpredict(tmb1)
 pred_tmb1 <- ggpredict(tmb1, c("Period", "Project"))
-plot(pred_tmb1, facet=TRUE, colors=c("red","black","blue"), add.data=TRUE)
+plot(pred_tmb1, facet=TRUE, colors=c("red","black","blue","orange"), add.data=TRUE)
 
 
 ########
 #######trying to get ggpredict to predict for 1 period and quadrat
-#tmb1 <- glmmTMB(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
 
-#this predict not working. See page 10 of vingette
 #https://cran.r-project.org/web/packages/ggeffects/ggeffects.pdf
 
-#I even tried the Dodrill trick from the other paper of creating a new data file
 
-#Would want to predict for a specific period (such as first and then last)
-#and then for 1 quadrat
-#this model does not have Project, but it would be good
-#that if a model with project was used I could predict by project
-#because the model performs poorly for 1st period due to high
-#counts in first period, I don't want to predict for those early periods
-
-
-##Jennifer updated March 3
+##Jennifer approach updated March 3
 new.dat = data.frame(Sum_spat = dp4$Sum_spat,
                      Period = dp4$Period,
                      Num_quads = log(dp4$Num_quads))
@@ -634,7 +624,7 @@ new.dat = data.frame(Sum_spat = dp4$Sum_spat,
 new.tmb1 <- glmmTMB(Sum_spat ~ Period + offset(Num_quads), data = new.dat, family="nbinom2") #converge
 
 ggpredict(new.tmb1)
-test = ggpredict(new.tmb1, terms = c("Period[14]", "Num_quads[1]"), type = c('fe'))
+test1 = ggpredict(new.tmb1, terms = c("Period[14]", "Num_quads[1]"), type = c('fe'))
 ############
 #below with project
 
@@ -646,16 +636,11 @@ new.dat2 = data.frame(Sum_spat = dp4$Sum_spat,
 new.tmb2 <- glmmTMB(Sum_spat ~ Period + Project + offset(Num_quads), data = new.dat2, family="nbinom2") #converge
 
 ggpredict(new.tmb2)
-test = ggpredict(new.tmb2, terms = c("Period[14]", "Project", "Num_quads[1]"), type = c('fe')) #for all projects
+test2 = ggpredict(new.tmb2, terms = c("Period[14]", "Project", "Num_quads[1]"), type = c('fe')) #for all projects
 
 #below is for one project
-test = ggpredict(new.tmb2, terms = c("Period[14]", "Project[NRDA_4044]","Num_quads[1]"), type = c('fe')) #for one project
+test3 = ggpredict(new.tmb2, terms = c("Period[14]", "Project[NRDA_4044]","Num_quads[1]"), type = c('fe')) #for one project
                  
-
-
-
-
-
 #this is just lowdays (not significant on its own)
 ggpredict(tmb6)
 pred_tmb6 <- ggpredict(tmb6, c("Lowdays"))
@@ -678,6 +663,7 @@ plot(pred_tmb4, colors=c("green"), add.data=TRUE)
 nfwf_pred<- subset(pred_tmb1, pred_tmb1$group == "NFWF_1")
 DEP_4044<- subset(pred_tmb1, pred_tmb1$group == "NRDA_4044")
 DEP_5007<- subset(pred_tmb1, pred_tmb1$group == "NRDA_5007")
+FWC_2021<- subset(pred_tmb1, pred_tmb1$group == "FWC_2021")
 
 pr1 = ggplot(nfwf_pred, aes(x, predicted))+
   geom_line(size=2)+
@@ -699,7 +685,6 @@ pr2 = ggplot(DEP_4044, aes(x, predicted))+
   geom_point(data = dp3.2[dp3.2$Project == "NRDA_4044",], mapping = aes(Period, Sum_spat), size = 2)+
   scale_x_continuous(breaks=seq(1,14,1))
 
-
 pr3 = ggplot(DEP_5007, aes(x, predicted))+
   geom_line(size=2)+
   ylab("Live oyster count per quad") +
@@ -709,6 +694,16 @@ pr3 = ggplot(DEP_5007, aes(x, predicted))+
   geom_point(data = dp3.2[dp3.2$Project == "NRDA_5007",], mapping = aes(Period, Sum_spat), size = 2)+
   scale_x_continuous(breaks=seq(1,14,1))
 
+pr4 = ggplot(FWC_2021, aes(x, predicted))+
+  geom_line(size=2)+
+  ylab("Live oyster count per quad") +
+  xlab ("Period")+
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
+  ggtitle("FWC 2021 Spat by Period") +
+  geom_point(data = dp3.2[dp3.2$Project == "FWC_2021",], mapping = aes(Period, Sum_spat), size = 2)+
+  scale_x_continuous(breaks=seq(1,14,1))
+
+plot_grid(pr1,pr2,pr3,pr4)
 plot_grid(pr1,pr2,pr3)
 
 ############
