@@ -197,13 +197,89 @@ d7.10<-d7.9 %>%
   mutate(Site = replace(Site,Site == "Monkey's Elbow", "Monkeys Elbow"))
 d7.11<-d7.10 %>%
   mutate(Site = replace(Site,Site == "Cabbage Lumps ", "Cabbage Lumps"))
+d7.12<-d7.11 %>%
+  mutate(Site = replace(Site,Site == "Normans Bar North", "Normans"))
+d7.13<-d7.12 %>%
+  mutate(Site = replace(Site,Site == "Normans Bar Middle", "Normans"))
+d7.14<-d7.13 %>%
+  mutate(Site = replace(Site,Site == "Hotel Bar 2", "Hotel"))
+d7.15<-d7.14 %>%
+  mutate(Site = replace(Site,Site == "Hotel Bar 1", "Hotel"))
+d7.16<-d7.15 %>%
+  mutate(Site = replace(Site,Site == "East Hole 1", "East Hole"))
+d7.17<-d7.16 %>%
+  mutate(Site = replace(Site,Site == "East Hole 2", "East Hole"))
 
-unique(d7.11$Site)
 
-#name check file for FWC and DEP
+
+unique(d7.17$Site)
+
+#name check file for FWC and DEP (2021 not brought in until below)
 #write.table((unique(d7.11$Site)), file = "~/Git/AB_DEP/name_check.csv", row.names = FALSE,col.names = TRUE,sep = ",")
 
+#################################################
+##2021 FWC
+#################################################
+
+##bring in FWC 2021
+
+e1<-read.csv("~/Git/AB_DEP/FWC_2021_to_merge.csv")
+names(e1)
+
+
+#remember TotalSpat in FWC file has been converted based on Matt Davis's
+#recommendations by multipling the total number of oysters counted
+#by the proportion of oysters < 26 mm
+
+e1$Bottom<-"Rock"
+e1$Project<-"FWC_2021"
+e1$Cultch<-0
+
+names(e1)
+
+#some renaming 
+#Spat is TotalSpat from FWC-NFWF
+e1.1 <- dplyr::rename(e1,Weight=Weight_kg,Spat=TotalSpat, Sublegal=TotalSeed, Legal=TotalLegal)
+
+#subset the columns to the ones you want to work with
+e1.2 <- e1.1 %>% 
+  dplyr::select(StationName, Quadrat, Weight, Spat, Sublegal, Legal, Year, Month, Day, Period, Season, Bottom, Project,Cultch)
+
+unique(e1.2$StationName)
+
+#Start here fixing names
+#you are working to move this back into the "merging_dep_fwc" file by
+#reading this file in
+
+e1.3<-e1.2 %>%
+  mutate(StationName = replace(StationName,StationName == "Easthole #7", "Easthole"))
+e1.4<-e1.3 %>%
+  mutate(StationName = replace(StationName,StationName == "Lighthouse Bar", "Lighthouse Bar"))
+e1.5<-e1.4 %>%
+  mutate(StationName = replace(StationName,StationName == "Hotel Bar 1", "Hotel"))
+e1.6<-e1.5 %>%
+  mutate(StationName = replace(StationName,StationName == "Dry Bar North", "Dry Bar"))
+
+e1.6 <- dplyr::rename(e1.6,Site=StationName)
+
+unique(e1.6$StationName)
+
+#Put columns in order
+e1.6<-e1.6[,c("Project","Year", "Month", "Day", "Site", "Period", "Season", "Bottom","Cultch", "Quadrat", "Weight", "Spat", "Sublegal", "Legal")]
+
+
+
+#d7.17 is FWC and DEP (not FWC 2021 data, that is in e)
+
+str(d7.17)
+str(e1.6)
+
+
+f1<-rbind(d7.17, e1.6)
+
+#this is the all of the DEP data (including 2021 from DEP directly)
+#and FWC 2021 from Estes
 
 
 #merged FWC and DEP
-write.table(d7.11, file = "~/Git/AB_DEP/20220126_merged_agency_data.csv", row.names = FALSE,col.names = TRUE,sep = ",")
+write.table(f1, file = "~/Git/AB_DEP/20220305_merged_agency_data.csv", row.names = FALSE,col.names = TRUE,sep = ",")
