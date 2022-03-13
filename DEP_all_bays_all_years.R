@@ -2,7 +2,7 @@
 #this is the DEP data from project 4044
 #but for all three bays (pensacola, east bay, apalach)
 
-d1 <- read.csv("~/GitHub/AB_DEP/DEP_three_bays_4044.csv")
+d1 <- read.csv("~/Git/AB_DEP/DEP_three_bays_4044.csv")
 
 library(readxl)
 library(tidyverse)
@@ -30,7 +30,7 @@ names(d1)
 #ID the project
 
 d1$Project<-"NRDA_4044"
-d1$Bottom<-"Shell"
+d1$Bottom<-"Rock"
 d1$Cultch<-200
 
 #subset the columns to the ones you want to work with
@@ -49,7 +49,7 @@ names(d2)
 #now need to merge d4 which is project 4044 year = 2021
 # to the other years of 4044
 
-d3 <- read.csv("~/GitHub/AB_DEP/DEP_Apalach_4044_yr2021.csv")
+d3 <- read.csv("~/Git/AB_DEP/DEP_Apalach_4044_yr2021.csv")
 
 d3$Project<-"NRDA_4044"
 d3$Bay<-"Apalachicola"
@@ -485,6 +485,7 @@ names(d9)
 tmb0 <- glmmTMB(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = d9, family="nbinom2") #converge
 summary(tmb0)
 
+##below is best model TMB1
 tmb1 <- glmmTMB(Sum_spat ~ Period + Bay + (1|Site) + offset(log(Num_quads)), data = d9, family="nbinom2") #converge
 summary(tmb1)
 
@@ -517,6 +518,8 @@ AICtab(tmb0,tmb1,tmb4)
 #need to check this, but I think below is just plotting with a common slope
 #b/c no interaction term
 
+
+##key plot
 library(ggeffects)
 
 ggpredict(tmb1)
@@ -548,6 +551,10 @@ new.tmb1 <- glmmTMB(Sum_spat ~ Period + offset(Num_quads), data = new.dat, famil
 ggpredict(new.tmb1)
 test = ggpredict(new.tmb1, terms = c("Period[14]", "Num_quads[1]"), type = c('fe'))
 
+#in period 14 for 1 quad what is predicted value in each bay
+plot(test, facet=TRUE, add.data=TRUE)
+
+
 ##now include Bay
 
 new.dat2 = data.frame(Sum_spat = d9$Sum_spat,
@@ -557,18 +564,37 @@ new.dat2 = data.frame(Sum_spat = d9$Sum_spat,
 
 new.tmb2 <- glmmTMB(Sum_spat ~ Period + Bay + offset(Num_quads), data = new.dat2, family="nbinom2") #converge
 
-#below is for all bays but 1 quad and 1 period
+##this is key plot
+#below is for all bays but 1 quad
 ggpredict(new.tmb2)
-test = ggpredict(new.tmb2, terms = c("Period[14]", "Bay", "Num_quads[1]"), type = c('fe')) #for all Bays
+test2 = ggpredict(new.tmb2, terms = c("Period", "Bay", "Num_quads[1]"), type = c('fe')) #for all Bays
 
 
-#in period 14 for 1 quad what is predicted value in each bay
-plot(test, facet=TRUE, add.data=TRUE)
+#across periods for 1 quad what is predicted value in each bay
+plot(test2, facet=TRUE, add.data=TRUE,colors=c("red","black","blue") )
 #neat that works
 
 
 #below is for one Bay
 test2 = ggpredict(new.tmb2, terms = c("Period[14]", "Bay[Apalachicola]","Num_quads[1]"), type = c('fe')) #for one project
+
+
+# 
+# ##Jennifer style
+# Pensacola<- subset(pred_tmb1, test2$Bay == "Pensacola")
+# StAndrews<- subset(pred_tmb1, pred_tmb1$Bay == "St. Andrews")
+# Apalach<- subset(pred_tmb1, pred_tmb1$group == "Apalachicola")
+# 
+# 
+# pr1 = ggplot(Pensacola_pred, aes(x, predicted))+
+#   geom_line(size=2)+
+#   ylab("Live oyster count per quad") +
+#   xlab ("Period")+
+#   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
+#   ggtitle("NFWF Apalachicola Spat by Period") +
+#   geom_point(data = dp3.2[dp3.2$Project == "NFWF_1",], mapping = aes(Period, Sum_spat), size = 2)+
+#   scale_x_continuous(breaks=seq(1,14,1))
+# 
 
 
 # 
