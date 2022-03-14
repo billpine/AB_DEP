@@ -380,92 +380,106 @@ r0<-ggplot(d9, aes(Period, Sum_spat)) +
   ylab("Total Spat")+
   facet_wrap(~Bay)
 
+r1<-ggplot(d9, aes(Period, Sum_sublegal)) +
+  geom_point(size=4) +
+  ggtitle("Sublegal per Period by Site") +
+  xlab("Period") +
+  ylab("Total Sublegal")+
+  facet_wrap(~Bay)
+
+r2<-ggplot(d9, aes(Period, Sum_legal)) +
+  geom_point(size=4) +
+  ggtitle("Legal per Period by Site") +
+  xlab("Period") +
+  ylab("Total Legal")+
+  facet_wrap(~Bay)
+
 
 #fit basic NB GLM Random
 
-###SPAT ONLY###
-
-library(lme4) #mixed effect models
-library(MASS) #negative binomial models
-
-#make site factor for random effect
-d9$Site<-as.factor(d9$Site)
-
-#make bay factor to use in ggpredict as group
-d9$Bay<-as.factor(d9$Bay)
-
-#no offset, station name as random
-r1 <- glmer.nb(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = d9) #no converge
-r2 <- glmer.nb(Sum_spat ~ Period + Bay + (1|Site) + offset(log(Num_quads)), data = d9) #converge
-
-summary(r2)
-
-library(ggeffects)
-
-ggpredict(r2)
-
-pred_r2 <- ggpredict(r2, c("Period", "Bay"))
-#really important to look at this pred_r2 because it shows you
-#the groups have unique predictions
-
-#plot(pred_r2, facet=TRUE, colors="Bay")
-plot(pred_r2, facet=TRUE, colors=c("red","black","blue"))
-
-#plot(pred_r2, facet=TRUE, colors="social")
-#palletts and options here
-#https://strengejacke.github.io/ggeffects/reference/plot.html#examples
-
-#or a better way is how Jennifer does it
-
-#now subset the predicted for each bay
-app_pred <- subset(pred_r2, pred_r2$group == "Apalachicola")
-pen_pred <- subset(pred_r2, pred_r2$group == "Pensacola")
-sa_pred <- subset(pred_r2, pred_r2$group == "St. Andrews")
-
-#now make new plots for each bay and add the raw data points
-#this gives you predicted for each bay and then the raw data points
-
-pm1 = ggplot(app_pred, aes(x, predicted))+
-  geom_line(size=2)+
-  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5)+
-  ylab("Live oyster count per quad") +
-  xlab ("Period")+
-  ggtitle("Apalachicola Spat by Period") +
-  geom_point(data = d9[d9$Bay == "Apalachicola",], mapping = aes(Period, Sum_spat), size = 2)+
-  scale_x_continuous(breaks=seq(3,12,1))
-
-  
-pm2 = ggplot(pen_pred, aes(x, predicted))+
-  geom_line(size=2)+
-  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5)+
-  ylab("Live oyster count per quad") +
-  xlab ("Period")+
-  ggtitle("Pensacola Spat by Period") +
-  geom_point(data = d9[d9$Bay == "Pensacola",], mapping = aes(Period, Sum_spat), size = 2)
-
-pm3 = ggplot(sa_pred, aes(x, predicted))+
-  geom_line(size=2)+
-  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5)+
-  ylab("Live oyster count per quad") +
-  xlab ("Period")+
-  ggtitle("St. Andrews Spat by Period") +
-  geom_point(data = d9[d9$Bay == "St. Andrews",], mapping = aes(Period, Sum_spat), size = 2)
-
-plot_grid(r0,pm1,pm2,pm3)
-
-ggsave("dep_allbays_predicted_nbglm.pdf", width = 10, height = 10)
-
-#or
-
-pm <- plot_grid(
-  pm1 + theme(legend.position="none"),
-  pm2 + theme(legend.position="none"),
-  pm3 + theme(legend.position="none"),
-  align = 'vh',
-  hjust = -1,
-  nrow = 1,
-  ncol=3
-)
+# ###SPAT ONLY###
+# 
+# library(lme4) #mixed effect models
+# library(MASS) #negative binomial models
+# 
+# #make site factor for random effect
+# d9$Site<-as.factor(d9$Site)
+# 
+# #make bay factor to use in ggpredict as group
+# d9$Bay<-as.factor(d9$Bay)
+# 
+# #no offset, station name as random
+# r1 <- glmer.nb(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = d9) #no converge
+# r2 <- glmer.nb(Sum_spat ~ Period + Bay + (1|Site) + offset(log(Num_quads)), data = d9) #converge
+# 
+# summary(r2)
+# 
+# library(ggeffects)
+# 
+# ggpredict(r2)
+# 
+# pred_r2 <- ggpredict(r2, c("Period", "Bay"))
+# #really important to look at this pred_r2 because it shows you
+# #the groups have unique predictions
+# 
+# #plot(pred_r2, facet=TRUE, colors="Bay")
+# plot(pred_r2, facet=TRUE, colors=c("red","black","blue"))
+# 
+# #plot(pred_r2, facet=TRUE, colors="social")
+# #palletts and options here
+# #https://strengejacke.github.io/ggeffects/reference/plot.html#examples
+# 
+# #or a better way is how Jennifer does it
+# 
+# #now subset the predicted for each bay
+# app_pred <- subset(pred_r2, pred_r2$group == "Apalachicola")
+# pen_pred <- subset(pred_r2, pred_r2$group == "Pensacola")
+# sa_pred <- subset(pred_r2, pred_r2$group == "St. Andrews")
+# 
+# #now make new plots for each bay and add the raw data points
+# #this gives you predicted for each bay and then the raw data points
+# 
+# pm1 = ggplot(app_pred, aes(x, predicted))+
+#   geom_line(size=2)+
+#   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5)+
+#   ylab("Live oyster count per quad") +
+#   xlab ("Period")+
+#   ggtitle("Apalachicola Spat by Period") +
+#   geom_point(data = d9[d9$Bay == "Apalachicola",], mapping = aes(Period, Sum_spat), size = 2)+
+#   scale_x_continuous(breaks=seq(3,12,1))
+# 
+#   
+# pm2 = ggplot(pen_pred, aes(x, predicted))+
+#   geom_line(size=2)+
+#   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5)+
+#   ylab("Live oyster count per quad") +
+#   xlab ("Period")+
+#   ggtitle("Pensacola Spat by Period") +
+#   geom_point(data = d9[d9$Bay == "Pensacola",], mapping = aes(Period, Sum_spat), size = 2)
+# 
+# pm3 = ggplot(sa_pred, aes(x, predicted))+
+#   geom_line(size=2)+
+#   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5)+
+#   ylab("Live oyster count per quad") +
+#   xlab ("Period")+
+#   ggtitle("St. Andrews Spat by Period") +
+#   geom_point(data = d9[d9$Bay == "St. Andrews",], mapping = aes(Period, Sum_spat), size = 2)
+# 
+# plot_grid(r0,pm1,pm2,pm3)
+# 
+# ggsave("dep_allbays_predicted_nbglm.pdf", width = 10, height = 10)
+# 
+# #or
+# 
+# pm <- plot_grid(
+#   pm1 + theme(legend.position="none"),
+#   pm2 + theme(legend.position="none"),
+#   pm3 + theme(legend.position="none"),
+#   align = 'vh',
+#   hjust = -1,
+#   nrow = 1,
+#   ncol=3
+# )
 
 
 #for plotting could scale y axis better but that would 
@@ -551,7 +565,7 @@ new.tmb1 <- glmmTMB(Sum_spat ~ Period + offset(Num_quads), data = new.dat, famil
 ggpredict(new.tmb1)
 test = ggpredict(new.tmb1, terms = c("Period[14]", "Num_quads[1]"), type = c('fe'))
 
-#in period 14 for 1 quad what is predicted value in each bay
+#in period 14 for 1 quad what is predicted value
 plot(test, facet=TRUE, add.data=TRUE)
 
 
@@ -579,14 +593,14 @@ plot(test2, facet=TRUE, add.data=TRUE,colors=c("red","black","blue") )
 test2 = ggpredict(new.tmb2, terms = c("Period[14]", "Bay[Apalachicola]","Num_quads[1]"), type = c('fe')) #for one project
 
 
-# 
-# ##Jennifer style
-# Pensacola<- subset(pred_tmb1, test2$Bay == "Pensacola")
-# StAndrews<- subset(pred_tmb1, pred_tmb1$Bay == "St. Andrews")
-# Apalach<- subset(pred_tmb1, pred_tmb1$group == "Apalachicola")
-# 
-# 
-# pr1 = ggplot(Pensacola_pred, aes(x, predicted))+
+# # 
+# # ##Jennifer style
+#  Pensacola<- subset(pred_tmb1, test2$Bay == "Pensacola")
+#  StAndrews<- subset(pred_tmb1, pred_tmb1$Bay == "St. Andrews")
+#  Apalach<- subset(pred_tmb1, pred_tmb1$group == "Apalachicola")
+# # 
+# # 
+#  pr1 = ggplot(Pensacola_pred, aes(x, predicted))+
 #   geom_line(size=2)+
 #   ylab("Live oyster count per quad") +
 #   xlab ("Period")+
@@ -594,7 +608,49 @@ test2 = ggpredict(new.tmb2, terms = c("Period[14]", "Bay[Apalachicola]","Num_qua
 #   ggtitle("NFWF Apalachicola Spat by Period") +
 #   geom_point(data = dp3.2[dp3.2$Project == "NFWF_1",], mapping = aes(Period, Sum_spat), size = 2)+
 #   scale_x_continuous(breaks=seq(1,14,1))
-# 
+
+
+#####################################################
+##SUBLEGALS from best model above
+###below is best model TMB1
+tmb1_sublegal <- glmmTMB(Sum_sublegal ~ Period + Bay + (1|Site) + offset(log(Num_quads)), data = d9, family="nbinom2") #converge
+summary(tmb1_sublegal)
+
+new.dat_sub = data.frame(Sum_sublegal = d9$Sum_sublegal,
+                      Period = d9$Period,
+                      Bay = d9$Bay,
+                      Num_quads = log(d9$Num_quads))
+
+new.tmb2_sub <- glmmTMB(Sum_sublegal ~ Period + Bay + offset(Num_quads), data = new.dat_sub, family="nbinom2") #converge
+
+##this is key plot
+#below is for all bays but 1 quad
+ggpredict(new.tmb2_sub)
+test2_sub = ggpredict(new.tmb2_sub, terms = c("Period", "Bay", "Num_quads[1]"), type = c('fe')) #for all Bays
+plot(test2_sub, facet=TRUE, add.data=TRUE,colors=c("red","black","blue") )
+######################################################################
+
+#####################################################
+##LEGALS from best model above
+###below is best model TMB1
+tmb1_legal <- glmmTMB(Sum_legal ~ Period + Bay + (1|Site) + offset(log(Num_quads)), data = d9, family="nbinom2") #converge
+summary(tmb1_legal)
+
+new.dat_legal = data.frame(Sum_legal = d9$Sum_legal,
+                         Period = d9$Period,
+                         Bay = d9$Bay,
+                         Num_quads = log(d9$Num_quads))
+
+new.tmb2_legal <- glmmTMB(Sum_legal ~ Period + Bay + offset(Num_quads), data = new.dat_legal, family="nbinom2") #converge
+
+##this is key plot
+#below is for all bays but 1 quad
+ggpredict(new.tmb2_legal)
+test2_legal = ggpredict(new.tmb2_legal, terms = c("Period", "Bay", "Num_quads[1]"), type = c('fe')) #for all Bays
+plot(test2_legal, facet=TRUE, add.data=TRUE,colors=c("red","black","blue") )
+######################################################################
+
+
 
 
 # 
