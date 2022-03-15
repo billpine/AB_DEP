@@ -24,10 +24,10 @@ library(cowplot)
 
 #start with 4044
 
-d1 <- read.csv("~/Git/AB_DEP/4044_to_merge.csv")
+d1 <- read.csv("~/GitHub/AB_DEP/4044_to_merge.csv")
 
 
-d1$Bottom<-"Shell"
+d1$Bottom<-"Rock"
 d1$Cultch<-200 #from jonathan and reports
 d1$Project<-"NRDA_4044"
 
@@ -49,7 +49,7 @@ min(d1.2$Year)
 
 #now 5077
 
-d2 <- read.csv("~/Git/AB_DEP/5007_to_merge.csv")
+d2 <- read.csv("~/GitHub/AB_DEP/5007_to_merge.csv")
 
 d2$Bottom<-"Rock"
 d2$Cultch<-300
@@ -81,9 +81,9 @@ d3<-rbind(d1.2, d2.1)
 # to the other years of 4044 and project 5077
 
 
-d4 <- read.csv("~/Git/AB_DEP/4044_yr2021_to_merge.csv")
+d4 <- read.csv("~/GitHub/AB_DEP/4044_yr2021_to_merge.csv")
 
-d4$Bottom<-"Shell"
+d4$Bottom<-"Rock"
 d4$Cultch<-200
 d4$Project<-"NRDA_4044"
 
@@ -119,7 +119,7 @@ names(d3)
 #merge with the 3 bays file, this will be all 
 #3 bays all years for 4044
 
-write.table(d4.1, file = "~/Git/AB_DEP/DEP_Apalach_4044_yr2021.csv", row.names = FALSE,col.names = TRUE,sep = ",")
+write.table(d4.1, file = "~/GitHub/AB_DEP/DEP_Apalach_4044_yr2021.csv", row.names = FALSE,col.names = TRUE,sep = ",")
 
 
 #merge the dep files together for the two main studies 4044 and 5007
@@ -130,7 +130,7 @@ unique(d5$Year)
 
 ##bring in FWC
 
-d6<-read.csv("~/Git/AB_DEP/FWC_to_merge.csv")
+d6<-read.csv("~/GitHub/AB_DEP/FWC_to_merge.csv")
 names(d6)
 
 #d6 <- dplyr::rename(d6,Season=season)
@@ -176,9 +176,9 @@ unique(d7$Site)
 
 
 d7.1<-d7 %>%
-  mutate(Site = replace(Site,Site == "Redfish Creek #1", "Redfish Creek 1"))
+  mutate(Site = replace(Site,Site == "Redfish Creek #1", "Redfish Creek"))
 d7.2<-d7.1 %>%
-  mutate(Site = replace(Site,Site == "Redfish Creek #2", "Redfish Creek 2"))
+  mutate(Site = replace(Site,Site == "Redfish Creek #2", "Redfish Creek"))
 d7.3<-d7.2 %>%
   mutate(Site = replace(Site,Site == "Norman's Bar Middle", "Normans Bar Middle"))
 d7.4<-d7.3 %>%
@@ -209,10 +209,21 @@ d7.16<-d7.15 %>%
   mutate(Site = replace(Site,Site == "East Hole 1", "East Hole"))
 d7.17<-d7.16 %>%
   mutate(Site = replace(Site,Site == "East Hole 2", "East Hole"))
+d7.18<-d7.17 %>%
+  mutate(Site = replace(Site,Site == "Easthole", "East Hole"))
+d7.19<-d7.18 %>%
+  mutate(Site = replace(Site,Site == "Eleven Mile North", "Eleven Mile"))
+d7.20<-d7.19 %>%
+  mutate(Site = replace(Site,Site == "Eleven Mile South", "Eleven Mile"))
+d7.21<-d7.20 %>%
+  mutate(Site = replace(Site,Site == "Hotel", "Hotel Bar"))
+d7.22<-d7.21 %>%
+  mutate(Site = replace(Site,Site == "Lighthouse", "Lighthouse Bar"))
+d7.23<-d7.22 %>%
+  mutate(Site = replace(Site,Site == "North Spur 2", "North Spur"))
 
 
-
-unique(d7.17$Site)
+unique(d7.23$Site)
 
 #name check file for FWC and DEP (2021 not brought in until below)
 #write.table((unique(d7.11$Site)), file = "~/Git/AB_DEP/name_check.csv", row.names = FALSE,col.names = TRUE,sep = ",")
@@ -223,12 +234,12 @@ unique(d7.17$Site)
 
 ##bring in FWC 2021
 
-e1<-read.csv("~/Git/AB_DEP/FWC_2021_to_merge.csv")
+e1<-read.csv("~/GitHub/AB_DEP/FWC_2021_to_merge.csv")
 names(e1)
 
 
 #remember TotalSpat in FWC file has been converted based on Matt Davis's
-#recommendations by multipling the total number of oysters counted
+#recommendations by multiplying the total number of oysters counted
 #by the proportion of oysters < 26 mm
 
 e1$Bottom<-"Rock"
@@ -256,7 +267,7 @@ e1.3<-e1.2 %>%
 e1.4<-e1.3 %>%
   mutate(StationName = replace(StationName,StationName == "Lighthouse Bar", "Lighthouse Bar"))
 e1.5<-e1.4 %>%
-  mutate(StationName = replace(StationName,StationName == "Hotel Bar 1", "Hotel"))
+  mutate(StationName = replace(StationName,StationName == "Hotel Bar 1", "Hotel Bar"))
 e1.6<-e1.5 %>%
   mutate(StationName = replace(StationName,StationName == "Dry Bar North", "Dry Bar"))
 
@@ -282,4 +293,4 @@ f1<-rbind(d7.17, e1.6)
 
 
 #merged FWC and DEP
-write.table(f1, file = "~/Git/AB_DEP/20220305_merged_agency_data.csv", row.names = FALSE,col.names = TRUE,sep = ",")
+write.table(f1, file = "~/GitHub/AB_DEP/20220305_merged_agency_data.csv", row.names = FALSE,col.names = TRUE,sep = ",")
