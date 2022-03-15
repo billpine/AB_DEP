@@ -617,6 +617,9 @@ plot(pred_tmb1, facet=TRUE, colors=c("red","black","blue","orange"), add.data=TR
 
 
 ##Jennifer approach updated March 3
+
+
+#predict all projects combined
 new.dat = data.frame(Sum_spat = dp4$Sum_spat,
                      Period = dp4$Period,
                      Num_quads = log(dp4$Num_quads))
