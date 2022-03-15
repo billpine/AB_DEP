@@ -19,7 +19,7 @@ library(AICcmodavg)
 library(ggeffects)
 library(cowplot)
 
-d1 <- read.csv("~/GitHub/AB_DEP/20220305_merged_agency_data.csv")
+d1 <- read.csv("~/Git/AB_DEP/20220305_merged_agency_data.csv")
 
 
 
@@ -497,7 +497,7 @@ library(bbmle)
 #it isn't really discharge as CFS, it is number of days
 #in a period below 12000 CFS @ JWLD
 
-Lowdays <- read.csv("~/GitHub/AB_DEP/below_12_threshold.csv")
+Lowdays <- read.csv("~/Git/AB_DEP/below_12_threshold.csv")
 dp4<-merge(dp3.2,Lowdays, by=c("Period"))
 for(i in 1:nrow(dp4))
 {dp4$lag1[i] <- Lowdays$Discharge[Lowdays$Period == (dp4$Period[i]-1)]}
@@ -645,9 +645,18 @@ test2 = ggpredict(new.tmb2, terms = c("Period[14]", "Project", "Num_quads[1]"), 
 test3 = ggpredict(new.tmb2, terms = c("Period[14]", "Project[NRDA_4044]","Num_quads[1]"), type = c('fe')) #for one project
                  
 #this is just lowdays (not significant on its own)
-ggpredict(tmb6)
-pred_tmb6 <- ggpredict(tmb6, c("Lowdays"))
-plot(pred_tmb7, colors=c("blue"), add.data=TRUE)
+
+new.dat3 = data.frame(Sum_spat = dp4$Sum_spat,
+                      Period = dp4$Period,
+                      Lowdays = dp4$Lowdays,
+                      Num_quads = log(dp4$Num_quads))
+
+new.tmb3 <- glmmTMB(Sum_spat ~ Period + Lowdays + offset(Num_quads), data = new.dat3, family="nbinom2") #converge
+
+ggpredict(new.tmb3)
+test3 = ggpredict(new.tmb3, terms = c("Period[14]", "Num_quads[1]"), type = c('fe')) #for all projects
+#this is for the average number of low days.
+
 
 #this is just period
 
