@@ -221,9 +221,15 @@ d7.22<-d7.21 %>%
   mutate(Site = replace(Site,Site == "Lighthouse", "Lighthouse Bar"))
 d7.23<-d7.22 %>%
   mutate(Site = replace(Site,Site == "North Spur 2", "North Spur"))
+d7.24<-d7.23 %>%
+  mutate(Site = replace(Site,Site == "Redfish Creek 1", "Redfish Creek"))
+d7.25<-d7.24 %>%
+  mutate(Site = replace(Site,Site == "Redfish Creek 2", "Redfish Creek"))
+d7.26<-d7.25 %>%
+  mutate(Site = replace(Site,Site == "South Bulkhead", "Bulkhead"))
 
 
-unique(d7.23$Site)
+unique(d7.26$Site)
 
 #name check file for FWC and DEP (2021 not brought in until below)
 #write.table((unique(d7.11$Site)), file = "~/Git/AB_DEP/name_check.csv", row.names = FALSE,col.names = TRUE,sep = ",")
@@ -263,30 +269,34 @@ unique(e1.2$StationName)
 #reading this file in
 
 e1.3<-e1.2 %>%
-  mutate(StationName = replace(StationName,StationName == "Easthole #7", "Easthole"))
+  mutate(StationName = replace(StationName,StationName == "Easthole #7", "East Hole"))
 e1.4<-e1.3 %>%
   mutate(StationName = replace(StationName,StationName == "Lighthouse Bar", "Lighthouse Bar"))
 e1.5<-e1.4 %>%
   mutate(StationName = replace(StationName,StationName == "Hotel Bar 1", "Hotel Bar"))
 e1.6<-e1.5 %>%
   mutate(StationName = replace(StationName,StationName == "Dry Bar North", "Dry Bar"))
+e1.7<-e1.6 %>%
+  mutate(StationName = replace(StationName,StationName == "Hotel", "Hotel Bar"))
 
-e1.6 <- dplyr::rename(e1.6,Site=StationName)
 
-unique(e1.6$StationName)
+
+e1.8 <- dplyr::rename(e1.7,Site=StationName)
+
+unique(e1.8$Site)
 
 #Put columns in order
-e1.6<-e1.6[,c("Project","Year", "Month", "Day", "Site", "Period", "Season", "Bottom","Cultch", "Quadrat", "Weight", "Spat", "Sublegal", "Legal")]
+e1.8<-e1.8[,c("Project","Year", "Month", "Day", "Site", "Period", "Season", "Bottom","Cultch", "Quadrat", "Weight", "Spat", "Sublegal", "Legal")]
 
 
 
-#d7.17 is FWC and DEP (not FWC 2021 data, that is in e)
+#d7.28 is FWC and DEP (not FWC 2021 data, that is in e)
 
-str(d7.17)
-str(e1.6)
+str(d7.26)
+str(e1.8)
 
 
-f1<-rbind(d7.17, e1.6)
+f1<-rbind(d7.26, e1.8)
 
 #this is the all of the DEP data (including 2021 from DEP directly)
 #and FWC 2021 from Estes
