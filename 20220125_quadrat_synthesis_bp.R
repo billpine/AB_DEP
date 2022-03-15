@@ -19,7 +19,7 @@ library(AICcmodavg)
 library(ggeffects)
 library(cowplot)
 
-d1 <- read.csv("~/Git/AB_DEP/20220305_merged_agency_data.csv")
+d1 <- read.csv("~/GitHub/AB_DEP/20220305_merged_agency_data.csv")
 
 
 
@@ -182,7 +182,7 @@ f5<-ggplot(d3, aes(Period, CPUE_Spat)) +
   ylab("Spat") +
   facet_wrap(~Site)
 
-#  ggsave("spat.pdf", width = 10, height = 10)
+  ggsave("spat.pdf", width = 10, height = 10)
 
 f5.1<-ggplot(d3, aes(Period, CPUE_Sublegal)) +
   geom_point(size=2) +
@@ -497,7 +497,7 @@ library(bbmle)
 #it isn't really discharge as CFS, it is number of days
 #in a period below 12000 CFS @ JWLD
 
-Lowdays <- read.csv("~/Git/AB_DEP/below_12_threshold.csv")
+Lowdays <- read.csv("~/GitHub/AB_DEP/below_12_threshold.csv")
 dp4<-merge(dp3.2,Lowdays, by=c("Period"))
 for(i in 1:nrow(dp4))
 {dp4$lag1[i] <- Lowdays$Discharge[Lowdays$Period == (dp4$Period[i]-1)]}

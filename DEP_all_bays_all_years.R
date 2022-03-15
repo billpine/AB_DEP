@@ -2,7 +2,7 @@
 #this is the DEP data from project 4044
 #but for all three bays (pensacola, east bay, apalach)
 
-d1 <- read.csv("~/Git/AB_DEP/DEP_three_bays_4044.csv")
+d1 <- read.csv("~/GitHub/AB_DEP/DEP_three_bays_4044.csv")
 
 library(readxl)
 library(tidyverse)
@@ -49,7 +49,7 @@ names(d2)
 #now need to merge d4 which is project 4044 year = 2021
 # to the other years of 4044
 
-d3 <- read.csv("~/Git/AB_DEP/DEP_Apalach_4044_yr2021.csv")
+d3 <- read.csv("~/GitHub/AB_DEP/DEP_Apalach_4044_yr2021.csv")
 
 d3$Project<-"NRDA_4044"
 d3$Bay<-"Apalachicola"
@@ -525,7 +525,7 @@ AICtab(tmb1,tmb2,tmb3)
 #then using a common family, compare different models
 
 #now different models
-AICtab(tmb0,tmb1,tmb4)
+AICtab(tmb1,tmb4)
 
 #no improvement with interaction term
 
