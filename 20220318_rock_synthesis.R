@@ -103,11 +103,10 @@ r1<-ggplot(data = d3[d3$Project=="NFWF_1",], aes(Period, CPUE_Weight, color="NFW
   geom_point(data = d3[d3$Project=="NRDA_4044",], mapping = aes(Period, CPUE_Weight, color="NRDA_4044"), size = 3)+
   geom_point(data = d3[d3$Project=="NRDA_5007",], mapping = aes(Period, CPUE_Weight, color="NRDA_5077"), size = 3)+
   geom_point(data = d3[d3$Project=="FWC_2021",], mapping = aes(Period, CPUE_Weight, color="FWC_2021"), size = 3)+
-  
-  ggtitle("Spat per Period by Study") +
+  ggtitle("Weight per quadrat") +
   scale_y_log10()+
   xlab("Period") +
-  ylab("Total Spat")
+  ylab("Weight")
 #facet_wrap(~Project)
 
 
@@ -117,28 +116,136 @@ r2<-ggplot(data = d3, aes(Period, CPUE_Weight, color=Project)) +
 
 r2+scale_color_manual(values=c("black", "light blue", "red", "dark blue"))
 
-  
+ggsave("weight.pdf", width = 10, height = 10)  
 
 
-f2<-ggplot(CPUE_Hotel, aes(Period, CPUE_Legal)) +
-  geom_point(size=4) +
-  ggtitle("Hotel Bar Legal") +
-  xlim(0,14)+
-  xlab("Period") +
-  ylab("CPUE Legal")
+######
+#glmmTMB approach
+######
+######################
 
-f3<-ggplot(CPUE_Dry, aes(Period, CPUE_Legal)) +
-  geom_point(size=4) +
-  xlim(0,14)+
-  ggtitle("Dry Bar Legal") +
-  xlab("Period") +
-  ylab("CPUE Legal")
+library(glmmTMB)
+library(bbmle)
 
-f4<-ggplot(CPUE_Bulkhead, aes(Period, CPUE_Legal)) +
-  geom_point(size=4) +
-  xlim(0,14)+
-  ggtitle("Bulkhead") +
-  xlab("Period") +
-  ylab("CPUE Legal")
+d3$Roundwt<-round(d3$Weight,0)
 
+
+#just the rounded weights, not accounting for different # quads
+r3<-ggplot(data = d3, aes(Period, Roundwt, color=Project)) +
+  geom_point(size=3)
+
+
+
+#this model is asking how period and project influence weight
+#using NB2 formulation (most common)
+tmb1 <- glmmTMB(Roundwt ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = d3, family="nbinom2") #converge
+summary(tmb1)
+
+
+#interaction term for different slopes
+tmb2 <- glmmTMB(Roundwt ~ Period * Project + (1|Site) + offset(log(Num_quads)), data = d3, family="nbinom2") #converge
+summary(tmb2)
+
+
+###
+library(ggeffects)
+
+new.dat1 = data.frame(Roundwt = d3$Roundwt,
+                      Period = d3$Period,
+                      Project = d3$Project,
+                      Num_quads = log(d3$Num_quads))
+
+new.tmb1 <- glmmTMB(Roundwt ~ Period + Project + offset(Num_quads), data = new.dat1, family="nbinom2") #converge
+ggpredict(new.tmb1)
+pred_tmb1 = ggpredict(new.tmb1, terms = c("Period", "Project", "Num_quads[1]"), type = c('fe')) #for all projects
+plot(pred_tmb1, facet=TRUE, colors=c("red","black","blue","orange"), add.data=FALSE)
+plot(pred_tmb1, facet=FALSE, colors=c("red","black","blue","orange"), add.data=FALSE)
+
+####
+new.tmb2 <- glmmTMB(Roundwt ~ Period * Project + offset(Num_quads), data = new.dat1, family="nbinom2") #converge
+ggpredict(new.tmb2)
+pred_tmb2 = ggpredict(new.tmb2, terms = c("Period", "Project", "Num_quads[1]"), type = c('fe')) #for all projects
+plot(pred_tmb2, facet=TRUE, colors=c("red","black","blue","orange"), add.data=FALSE)
+
+#if you run pred_tmb2 without the [1] it calculates for average
+#number of quads which is like 4.27. So then I predicted in pred_tmb3
+#for 5 quads and the overlay w/ data looks good for NFWF 1 but not
+#other projects
+
+pred_tmb3 = ggpredict(new.tmb2, terms = c("Period", "Project", "Num_quads[5]"), type = c('fe')) #for all projects
+plot(pred_tmb3, facet=TRUE, colors=c("red","black","blue","orange"), add.data=TRUE)
+
+
+#this is plotting for 1 quadrat. If you add the real data, that is for a lot of
+#quadrats so that's why the predicted is WAY less than real
+
+
+####
+
+
+nfwf_pred<- subset(pred_tmb1, pred_tmb1$group == "NFWF_1")
+pr1 = ggplot(nfwf_pred, aes(x, predicted))+
+  geom_line(size=2)+
+  ylab("Weight per quad") +
+  xlab ("Period")+
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
+  ggtitle("NFWF_1 Weight by Period") +
+  geom_point(data = d3[d3$Project == "NFWF_1",], mapping = aes(Period, Roundwt), size = 2)+
+  scale_x_continuous(breaks=seq(1,14,1))
+
+NRDA_4044_pred<- subset(pred_tmb1, pred_tmb1$group == "NRDA_4044")
+pr2 = ggplot(NRDA_4044_pred, aes(x, predicted))+
+  geom_line(size=2)+
+  ylab("Weight per quad") +
+  xlab ("Period")+
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
+  ggtitle("NRDA_4044 Weight by Period") +
+  geom_point(data = d3[d3$Project == "NRDA_4044",], mapping = aes(Period, Roundwt), size = 2)+
+  scale_x_continuous(breaks=seq(1,14,1))
+
+
+#######
+
+#subset data for each project, fit tmbglm, then predict, then separate plot
+#for each project
+
+unique(d3$Project)
+
+dNFWF_1<-subset(d3,d3$Project =="NFWF_1")
+dFWC_2021<-subset(d3,d3$Project =="FWC_2021")
+dNRDA_4044<-subset(d3,d3$Project =="NRDA_4044")
+dNRDA_5007<-subset(d3,d3$Project =="NRDA_5007")
+#########NFWF_1 only#################
+#NFWF_1 this is working
+tmb_NFWF <- glmmTMB(Roundwt ~ Period + (1|Site) + offset(log(Num_quads)), data = dNFWF_1, family="nbinom2") #converge
+summary(tmb_NFWF)
+
+
+dNFWF_1.new = data.frame(Roundwt = dNFWF_1$Roundwt,
+                      Period = dNFWF_1$Period,
+                      Project = dNFWF_1$Project,
+                      Num_quads = log(dNFWF_1$Num_quads))
+
+dNFWF_1.new.tmb1 <- glmmTMB(Roundwt ~ Period + offset(Num_quads), data = dNFWF_1.new, family="nbinom2") #converge
+ggpredict(dNFWF_1.new.tmb1)
+dNFWF_1_pred = ggpredict(dNFWF_1.new.tmb1, terms = c("Period", "Num_quads[5]"), type = c('fe')) #for all projects
+plot(dNFWF_1_pred, facet=FALSE, colors=c("red"), add.data=TRUE)
+
+
+#note this matches the data well if you predict for 5 quads
+#but to compare projects just predict for 1 quad.
+#to keep checking if this is working correctly, just make this same
+#subset for each study and make unique plots.
+#need to get jennifer way to work.  
+
+#jennifer way
+nfwf_pred<- subset(pred_tmb1, pred_tmb1$group == "NFWF_1")
+pr1 = ggplot(nfwf_pred, aes(x, predicted))+
+  geom_line(size=2)+
+  ylab("Weight per quad") +
+  xlab ("Period")+
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
+  ggtitle("NFWF_1 Weight by Period") +
+  geom_point(data = d3[d3$Project == "NFWF_1",], mapping = aes(Period, Roundwt), size = 2)+
+  scale_x_continuous(breaks=seq(1,14,1))
 
