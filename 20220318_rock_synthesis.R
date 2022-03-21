@@ -184,7 +184,9 @@ pr1 = ggplot(dNFWF_2_pred, aes(x, predicted))+
   xlab ("Period")+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
   ggtitle("Predicted NFWF_1 Cultch (Shell) Weight by Period - 1 quadrat")+
-  scale_x_continuous(breaks=seq(1,14,1))
+  #scale_x_continuous(breaks=seq(1,14,1))+
+  ylim(0,30)+
+  xlim(1,14)
 
 
 #no need to include the data on single quadrat because the data are from
@@ -229,7 +231,9 @@ pr2 = ggplot(dFWC_2_pred, aes(x, predicted))+
   ylab("Weight per quad") +
   xlab ("Period")+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
-  ggtitle("Predicted FWC_2021 Cultch (Rock) Weight by Period - 1 quadrat") 
+  ggtitle("Predicted FWC_2021 Cultch (Rock) Weight by Period - 1 quadrat") +
+  ylim(0,30)+
+  xlim(1,14)
 
 #no need to include the data on single quadrat because the data are from
 #more than 1 quadrat
@@ -272,7 +276,9 @@ pr3 = ggplot(dNRDA_4044_2_pred, aes(x, predicted))+
   ylab("Weight per quad") +
   xlab ("Period")+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
-  ggtitle("Predicted NRDA 4044 Cultch (Rock) Weight by Period - 1 quadrat") 
+  ggtitle("Predicted NRDA 4044 Cultch (Rock) Weight by Period - 1 quadrat")+
+  ylim(0,30)+
+  xlim(1,14)
 
 #########NRDA 5007 only#################
 
@@ -310,10 +316,14 @@ pr4 = ggplot(dNRDA_5007_2_pred, aes(x, predicted))+
   xlab ("Period")+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
   ggtitle("Predicted NRDA 5007 Cultch (Rock) Weight by Period - 1 quadrat") +
-  #scale_y_continuous(breaks=seq(0,30,2))+
-  ylim(0,30)
+  #scale_x_continuous(breaks=seq(2,14,1))+
+  ylim(0,30)+
+  xlim(1,14)
+  
 
 plot_grid(pr1,pr2,pr3,pr4)
+
+ggsave("predicted_weight.pdf", width = 10, height = 10)  
 
 
 #next standardize x and y axis. Yeah!
