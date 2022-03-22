@@ -49,16 +49,20 @@ quad_sum<- d2 %>%
   #dplyr::summarise(summarise(count = n()),na.rm=TRUE) %>%
   dplyr::relocate(Project, Year, Month, Period, Site)
 names(quad_sum) <- c("Project", "Year", "Month","Period", "Site",
-                     "Number_Quadrats")
+                     "Number_Quadrats")%>%
+dx<-quad_sum %>%
+  arrange(Period, Project, Year, Month, Site)
+
+
 
 quad_sumx<- d2 %>%
-  dplyr::group_by(Project, Period) %>%
-  dplyr::count(Project, Period)
+  dplyr::group_by(Project, Period, Year, Month) %>%
+  dplyr::count(Project, Period, Year, Month)
 
 
 #just writing the table with number of quadrats by year, month, station to folder
-#write.table(quad_sum, file = "quad_count_project_yr_mnth_station.txt", row.names = FALSE,
-#            col.names = TRUE,sep = ",")
+write.table(dx, file = "quad_count_project_yr_mnth_station.txt", row.names = FALSE,
+            col.names = TRUE,sep = ",")
 
 ##sum cultch weight each month
 #by Project, Year, Month, Period, Site
@@ -73,6 +77,7 @@ names(wt_sum) <- c("Project", "Year", "Month","Period", "Site",
 #sum wt for each site period season
 wt=aggregate(Weight~Project+Site+Period+Season,data=d2,sum)
 sum_wt <- dplyr::rename(wt,Project=Project, Site=Site,Period=Period, Season=Season,Weight=Weight)
+
 
 
 #count number quads by doing the length of transect, then rename
@@ -107,7 +112,7 @@ r1<-ggplot(data = d3[d3$Project=="NFWF_1",], aes(Period, CPUE_Weight, color="NFW
   geom_point(data = d3[d3$Project=="NRDA_5007",], mapping = aes(Period, CPUE_Weight, color="NRDA_5077"), size = 3)+
   geom_point(data = d3[d3$Project=="FWC_2021",], mapping = aes(Period, CPUE_Weight, color="FWC_2021"), size = 3)+
   ggtitle("Weight per quadrat") +
-  scale_y_log10()+
+  #scale_y_log10()+
   xlab("Period") +
   ylab("Weight")
 #facet_wrap(~Project)
@@ -131,7 +136,6 @@ library(glmmTMB)
 library(bbmle)
 
 d3$Roundwt<-round(d3$Weight,0)
-
 
 #just the rounded weights, not accounting for different # quads
 r3<-ggplot(data = d3, aes(Period, Roundwt, color=Project)) +
@@ -276,7 +280,7 @@ pr3 = ggplot(dNRDA_4044_2_pred, aes(x, predicted))+
   ylab("Weight per quad") +
   xlab ("Period")+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
-  ggtitle("Predicted NRDA 4044 Cultch (Rock) Weight by Period - 1 quadrat")+
+  ggtitle("Predicted NRDA 4044 Cultch (Shell) Weight by Period - 1 quadrat")+
   ylim(0,30)+
   xlim(1,14)
 
@@ -295,14 +299,14 @@ ggpredict(dNRDA_5007.new.tmb1)
 
 
 #below is not specifying # quads so it just picks 3 values from 2 to 4.5
-dNRDA_5007_pred = ggpredict(dNRDA_5007.new.tmb1, terms = c("Period", "Num_quads"), type = c('fe')) #for all projects
-plot(dNRDA_5007_pred, facet=FALSE, add.data=TRUE)
+dNRDA_5007_pred = ggpredict(dNRDA_5007.new.tmb1, terms = c("Period", "Num_quads[1]"), type = c('fe')) #for all projects
+plot(dNRDA_5007_pred, facet=FALSE, add.data=FALSE)
 
 #the above is a good demonstration the model is a decent fit to data
 
 #this predicts with 1 quad which is how we will compare the 3 projects
-dNRDA_5007_2_pred = ggpredict(dNRDA_5007.new.tmb1, terms = c("Period", "Num_quads[1]"), type = c('fe')) #for all projects
-plot(dNRDA_5007_2_pred, facet=FALSE, colors=c("red"), add.data=FALSE)
+dNRDA_5007_2_pred = ggpredict(dNRDA_5007.new.tmb1, terms = c("Period", "Num_quads[3]"), type = c('fe')) #for all projects
+plot(dNRDA_5007_2_pred, facet=FALSE, colors=c("red"), add.data=TRUE)
 
 #note this matches the data well if you predict for 1-3 quads
 #but to compare projects just predict for 1 quad.
@@ -315,7 +319,7 @@ pr4 = ggplot(dNRDA_5007_2_pred, aes(x, predicted))+
   ylab("Weight per quad") +
   xlab ("Period")+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
-  ggtitle("Predicted NRDA 5007 Cultch (Rock) Weight by Period - 1 quadrat") +
+  ggtitle("Predicted Restore 5007 Cultch (Rock) Weight by Period - 1 quadrat") +
   #scale_x_continuous(breaks=seq(2,14,1))+
   ylim(0,30)+
   xlim(1,14)
