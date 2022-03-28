@@ -28,12 +28,17 @@ d2 <- filter(d1, Legal != "NA")
 names(d2)
 #check bays
 unique(d2$Bay)
+
+#ok, change Apalachicola Bay to Apalachicola
+d2<-d2 %>%
+  mutate(Bay = replace(Bay,Bay == "Apalachicola Bay", "Apalachicola"))
+
 #check sites
-unique(d4$Site)
+unique(d2$Site)
 
 #just check to see if other NAs
 which(is.na(d2), arr.ind=TRUE)
-
+#this is one NA for weight, but it has counts
 max(d2$Legal)
 max(d2$Seed)
 max(d2$Spat)
@@ -46,15 +51,15 @@ quad_sum<- d2 %>%
   dplyr::relocate(Period, Bay)
 names(quad_sum) <- c("Period", "Bay",
                      "Number_Quadrats")
-# 
+ 
 # ##summary number of oyster spat counted each period
-# spat_sum <- d4 %>%
-#   dplyr::group_by(Bay, Period) %>%
-#   dplyr::summarise(sum=sum(Spat,na.rm=TRUE)) %>%
-#   dplyr::arrange(Bay, Period)
+ spat_sum <- d2 %>%
+   dplyr::group_by(Bay, Period) %>%
+   dplyr::summarise(sum=sum(Spat,na.rm=TRUE)) %>%
+   dplyr::arrange(Bay, Period)
 # 
-# names(spat_sum) <- c("Bay","Period",
-#                      "Number Live Spat")
+ names(spat_sum) <- c("Bay","Period",
+                      "Number Live Spat")
 
 ###########################
 ###########################
@@ -68,29 +73,29 @@ names(quad_sum) <- c("Period", "Bay",
 
 
 #sum live counts for each transect
-count_spat=aggregate(Spat~Bay+Period,data=d4,sum)
+count_spat=aggregate(Spat~Bay+Period,data=d2,sum)
 count_spat <- dplyr::rename(count_spat,Bay=Bay,Period=Period,Sum_spat=Spat)
 
-count_sublegal=aggregate(Sublegal~Bay+Period,data=d4,sum)
-count_sublegal <- dplyr::rename(count_sublegal,Bay=Bay,Period=Period,Sum_sublegal=Sublegal)
+count_seed=aggregate(Seed~Bay+Period,data=d2,sum)
+count_seed <- dplyr::rename(count_seed,Bay=Bay,Period=Period,Sum_seed=Seed)
 
-count_legal=aggregate(Legal~Bay+Period,data=d4,sum)
+count_legal=aggregate(Legal~Bay+Period,data=d2,sum)
 count_legal <- dplyr::rename(count_legal,Bay=Bay,Period=Period,Sum_legal=Legal)
 
 #count number quads by doing the length of transect, then rename
-count_quads=aggregate(Spat~Bay+Period,data=d4,length)
+count_quads=aggregate(Spat~Bay+Period,data=d2,length)
 count_quads_spat <- dplyr::rename(count_quads,Bay=Bay,Period=Period,Num_quads=Spat)
 
 #merge spat live count total data frame with the tran_length total data frame
 d5=merge(count_spat,count_quads_spat,by=c("Bay", "Period"))
-d5.1=merge(d5,count_sublegal,by=c("Bay", "Period"))
+d5.1=merge(d5,count_seed,by=c("Bay", "Period"))
 d5.2=merge(d5.1,count_legal,by=c("Bay", "Period"))
 
 d6<-d5.2
 
 #calculate CPUE. Just for fun to plot
 d6$CPUE_Spat<-d6$Sum_spat/d6$Num_quads
-d6$CPUE_Sublegal<-d6$Sum_sublegal/d6$Num_quads
+d6$CPUE_Seed<-d6$Sum_seed/d6$Num_quads
 d6$CPUE_Legal<-d6$Sum_legal/d6$Num_quads
 
 f1<-ggplot(d6, aes(Period, CPUE_Spat)) +
@@ -100,11 +105,11 @@ f1<-ggplot(d6, aes(Period, CPUE_Spat)) +
   ylab("Spat") +
   facet_wrap(~Bay)
 
-f2<-ggplot(d6, aes(Period, CPUE_Sublegal)) +
+f2<-ggplot(d6, aes(Period, CPUE_Seed)) +
   geom_point(size=4) +
-  ggtitle("Sublegal CPUE by Period") +
+  ggtitle("Seed CPUE by Period") +
   xlab("Period") +
-  ylab("Sublegal") +
+  ylab("Seed") +
   facet_wrap(~Bay)
 
 f3<-ggplot(d6, aes(Period, CPUE_Legal)) +
@@ -116,7 +121,7 @@ f3<-ggplot(d6, aes(Period, CPUE_Legal)) +
 
 plot_grid(f1,f2,f3)
 
-#ggsave("dep_allbays_cpue.pdf", width = 10, height = 10)
+ggsave("allbays_cpue.pdf", width = 10, height = 10)
 
 #############
 #The CPUE was just for visual
@@ -129,18 +134,18 @@ plot_grid(f1,f2,f3)
 #####################################
 
 #plots of total counts and then GLMs
-f4<-ggplot(d2, aes(Period, Sum_spat)) +
+f4<-ggplot(d6, aes(Period, Sum_spat)) +
   geom_point(size=4) +
   ggtitle("Spat Sum by Period") +
   xlab("Period") +
   ylab("Spat") +
   facet_wrap(~Bay)
 
-f5<-ggplot(d6, aes(Period, Sum_sublegal)) +
+f5<-ggplot(d6, aes(Period, Sum_seed)) +
   geom_point(size=4) +
-  ggtitle("Sublegal Sum by Period") +
+  ggtitle("Seed Sum by Period") +
   xlab("Period") +
-  ylab("Sublegal") +
+  ylab("Seed") +
   facet_wrap(~Bay)
 
 f6<-ggplot(d6, aes(Period, Sum_legal)) +
@@ -194,47 +199,48 @@ gf.spat<-goodfit(d6$Sum_spat, type= "nb", method="ML")
 d6$Bay <- as.factor(d6$Bay)
 
 #fit basic NB GLM
-
-library(glmmTMB)
-library(bbmle)
-
-m1 <- glm.nb(Sum_spat ~ Bay + offset(log(Num_quads)), data = d6) 
-m2 <- glm.nb(Sum_spat ~ Bay + Period + offset(log(Num_quads)), data = d6) 
-m3 <- glm.nb(Sum_spat ~ Bay * Period + offset(log(Num_quads)),data = d6, control = glm.control(maxit = 5000)
-) 
-
-cand.set = list(m1,m2,m3)
-modnames = c("bay", "bay+period", "bay*period")
-AICtab(m1,m2,m3) #model selection table with AIC
-
-summary(m1)
-summary(m2)
-summary(m3)
-
-#results suggests for spat bays are different but period isn't
-
-m1.1 <- glm.nb(Sum_sublegal ~ Bay + offset(log(Num_quads)), data = d6) 
-m2.1 <- glm.nb(Sum_sublegal ~ Bay + Period + offset(log(Num_quads)), data = d6) 
-m3.1 <- glm.nb(Sum_sublegal ~ Bay * Period + offset(log(Num_quads)), data = d6) 
-
-cand.set2 = list(m1.1,m2.1,m3.1)
-modnames2 = c("bay", "bay+period", "bay*period")
-aictab(cand.set2, modnames2, second.ord = FALSE) #model selection table with AIC
-
-summary(m2.1)
-#again, bays differ for sublegal but time doesn't
-
-#legals
-m1.2 <- glm.nb(Sum_legal ~ Bay + offset(log(Num_quads)), data = d6) 
-m2.2 <- glm.nb(Sum_legal ~ Bay + Period + offset(log(Num_quads)), data = d6) 
-m3.2 <- glm.nb(Sum_legal ~ Bay * Period + offset(log(Num_quads)), data = d6) 
-
-cand.set3 = list(m1.2,m2.2,m3.2)
-modnames3 = c("bay", "bay+period", "bay*period")
-aictab(cand.set3, modnames3, second.ord = FALSE) #model selection table with AIC
-
-summary(m2.2)
-#for legals, st. andrews differs from others but that's it
+#below is not with site as random so I turned it off
+# 
+# library(glmmTMB)
+# library(bbmle)
+# 
+# m1 <- glm.nb(Sum_spat ~ Bay + offset(log(Num_quads)), data = d6) 
+# m2 <- glm.nb(Sum_spat ~ Bay + Period + offset(log(Num_quads)), data = d6) 
+# m3 <- glm.nb(Sum_spat ~ Bay * Period + offset(log(Num_quads)),data = d6, control = glm.control(maxit = 5000)
+# ) 
+# 
+# cand.set = list(m1,m2,m3)
+# modnames = c("bay", "bay+period", "bay*period")
+# AICtab(m1,m2,m3) #model selection table with AIC
+# 
+# summary(m1)
+# summary(m2)
+# summary(m3)
+# 
+# #results suggests for spat bays are different
+# 
+# m1.1 <- glm.nb(Sum_sublegal ~ Bay + offset(log(Num_quads)), data = d6) 
+# m2.1 <- glm.nb(Sum_sublegal ~ Bay + Period + offset(log(Num_quads)), data = d6) 
+# m3.1 <- glm.nb(Sum_sublegal ~ Bay * Period + offset(log(Num_quads)), data = d6) 
+# 
+# cand.set2 = list(m1.1,m2.1,m3.1)
+# modnames2 = c("bay", "bay+period", "bay*period")
+# aictab(cand.set2, modnames2, second.ord = FALSE) #model selection table with AIC
+# 
+# summary(m2.1)
+# #again, 
+# 
+# #legals
+# m1.2 <- glm.nb(Sum_legal ~ Bay + offset(log(Num_quads)), data = d6) 
+# m2.2 <- glm.nb(Sum_legal ~ Bay + Period + offset(log(Num_quads)), data = d6) 
+# m3.2 <- glm.nb(Sum_legal ~ Bay * Period + offset(log(Num_quads)), data = d6) 
+# 
+# cand.set3 = list(m1.2,m2.2,m3.2)
+# modnames3 = c("bay", "bay+period", "bay*period")
+# aictab(cand.set3, modnames3, second.ord = FALSE) #model selection table with AIC
+# 
+# summary(m2.2)
+# #for legals, st. andrews differs from others but that's it
 
 ##################################################
 ##################################################
@@ -526,6 +532,12 @@ pr3 = ggplot(StAndrews, aes(x, predicted))+
 
 plot_grid(pr1, pr2, pr3)
 
+##look more at this
+#this is a great plot, but the predicted all decline
+#where as the fitted values to the data suggest slight
+#increase for pensacola and st. andrews
+#I think this is because the prediction is for a single quad
+
 pr <- plot_grid(
    pr1 + theme(legend.position="none"),
    pr2 + theme(legend.position="none"),   
@@ -536,16 +548,7 @@ pr <- plot_grid(
    ncol=3
  )
 
- # pm <- plot_grid(
- #   pm1 + theme(legend.position="none"),
- #   pm2 + theme(legend.position="none"),
- #   pm3 + theme(legend.position="none"),
- #   align = 'vh',
- #   hjust = -1,
- #   nrow = 1,
- #   ncol=3
- # )
- 
+##below needs more work
 
 #####################################################
 ##seeds from best model above
