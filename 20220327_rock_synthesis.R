@@ -20,6 +20,12 @@ library(cowplot)
 #this has all 3 bays
 d1 <- read.csv("~/Git/AB_DEP/20220326_merged_agency_data.csv")
 
+unique(d1$Bay)
+#ok, change Apalachicola Bay to Apalachicola
+d1<-d1 %>%
+  mutate(Bay = replace(Bay,Bay == "Apalachicola Bay", "Apalachicola"))
+
+
 dApalach<-subset(d1,d1$Bay =="Apalachicola")
 
 #the FWC data have been modified per Matt at FWC to
@@ -48,16 +54,13 @@ quad_sum<- d2 %>%
   #dplyr::summarise(summarise(count = n()),na.rm=TRUE) %>%
   dplyr::relocate(Bay, Project, Year, Month, Period, Site)
 names(quad_sum) <- c("Bay", "Project", "Year", "Month","Period", "Site",
-                     "Number_Quadrats")%>%
+                     "Number_Quadrats")
 dx<-quad_sum %>%
-  arrange(Period, Project, Year, Month, Site)
-
-
+  arrange(Period,Bay, Project, Year, Month, Site)
 
 quad_sumx<- d2 %>%
   dplyr::group_by(Bay,Project, Period, Year, Month) %>%
   dplyr::count(Bay,Project, Period, Year, Month)
-
 
 #just writing the table with number of quadrats by year, month, station to folder
 #write.table(dx, file = "quad_count_bay_project_yr_mnth_station.txt", row.names = FALSE,
@@ -92,13 +95,6 @@ CPUE_NFWF_1<-subset(d3,d3$Site =="NFWF_1")
 CPUE_NRDA_4044<-subset(d3,d3$Site =="NRDA_4044")
 CPUE_NRDA_5007<-subset(d3,d3$Site =="NRDA_5007")
 
-f1<-ggplot(CPUE_FWC_2021, aes(Period, CPUE_Legal)) +
-  geom_point(size=4) +
-  ggtitle("Cat Point Legal") +
-  xlim(0,14)+
-  xlab("Period") +
-  ylab("CPUE Legal")
-
 #this is by study on one plot 
 r1<-ggplot(data = d3[d3$Project=="NFWF_1",], aes(Period, CPUE_Weight, color="NFWF_1")) +
   geom_point(size=3) +
@@ -110,7 +106,6 @@ r1<-ggplot(data = d3[d3$Project=="NFWF_1",], aes(Period, CPUE_Weight, color="NFW
   xlab("Period") +
   ylab("Weight")
 #facet_wrap(~Project)
-
 
 #this is by study on one plot 
 r2<-ggplot(data = d3, aes(Period, CPUE_Weight, color=Project)) +
