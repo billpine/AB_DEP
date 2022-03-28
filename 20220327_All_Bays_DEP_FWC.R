@@ -487,6 +487,8 @@ test2 = ggpredict(new.tmb2, terms = c("Period", "Bay", "Num_quads[1]"), type = c
 plot(test2, facet=TRUE, add.data=FALSE,colors=c("red","black","blue") )
 #neat that works
 
+#the above works well for 4 quads and turning add.data = TRUE
+
 #below is for one Bay
 test3 = ggpredict(new.tmb2, terms = c("Period", "Bay[Apalachicola]","Num_quads[1]"), type = c('fe')) #for one project
 plot(test3, facet=FALSE, add.data=FALSE,colors=c("red"))
@@ -537,6 +539,10 @@ plot_grid(pr1, pr2, pr3)
 #where as the fitted values to the data suggest slight
 #increase for pensacola and st. andrews
 #I think this is because the prediction is for a single quad
+#i looked more at this and if you predict by 4, and overplot
+#the data the fit visually looks good, and trends down
+#need to look at the original glm more
+#which is tmb4
 
 pr <- plot_grid(
    pr1 + theme(legend.position="none"),
