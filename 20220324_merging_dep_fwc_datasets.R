@@ -218,7 +218,7 @@ names(e1)
 
 e1$Bottom<-"Rock"
 e1$Project<-"FWC_2021"
-e1$Cultch<-0
+e1$Cultch<-999
 e1$Bay<-"Apalachicola"
 
 names(e1)
