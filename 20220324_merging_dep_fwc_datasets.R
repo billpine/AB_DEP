@@ -17,14 +17,14 @@ library(cowplot)
 
 
 #now we will start merging the data sets
-#first the two DEP
-#then the FWC
+#first the two DEP 4044 and 5077
+#then the FWC NFWF1 and NFWF 2021
 
 #start with Pensacola
 
 d1 <- read.csv("~/Git/AB_DEP/20220324_Pensacola_NRDA_to_merge.csv")
 
-d1$Bottom<-"Rock"
+d1$Bottom<-"Shell"
 d1$Cultch<-200 #from jonathan and reports
 d1$Project<-"NRDA_4044"
 
@@ -36,12 +36,21 @@ unique(d1$Bay)
 
 d2 <- read.csv("~/Git/AB_DEP/20220324_StAndrews_NRDA_to_merge.csv")
 
-d2$Bottom<-"Rock"
-d2$Cultch<-300
-d2$Project<-"NRDA_5007"
+d2$Bottom<-"Shell"
+d2$Cultch<-200
+d2$Project<-"NRDA_4044"
 
-##merge Pensacola and St. Andrews
-d3<-rbind(d1,d2)
+#now Apalach
+
+d2.1 <- read.csv("~/Git/AB_DEP/20220327_Apalachicola_NRDA_to_merge.csv")
+
+d2.1$Bottom<-"Shell"
+d2.1$Cultch<-200
+d2.1$Project<-"NRDA_4044"
+
+
+##merge Pensacola and St. Andrews and Apalch NRDA
+d3<-rbind(d1,d2,d2.1)
 d3 <- dplyr::rename(d3,Legal=Adults)
 
 d3.1 <- d3 %>% 
@@ -81,7 +90,7 @@ d5<-rbind(d3.1, d4.1)
 #errors identified after my original cleaning, so I don't have to
 #bring in a separate 2021 file.
 
-
+unique(d5$Site)
 
 ##bring in FWC
 
