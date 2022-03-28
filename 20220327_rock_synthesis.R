@@ -308,7 +308,7 @@ plot(dNRDA_5007_pred, facet=FALSE, add.data=FALSE)
 dNRDA_5007_2_pred = ggpredict(dNRDA_5007.new.tmb1, terms = c("Period", "Num_quads[3]"), type = c('fe')) #for all projects
 plot(dNRDA_5007_2_pred, facet=FALSE, colors=c("red"), add.data=TRUE)
 
-#note this matches the data well if you predict for 1-3 quads
+##note this matches the data well if you predict for 1-3 quads
 #but to compare projects just predict for 1 quad.
 #to keep checking if this is working correctly, just make this same
 #subset for each study and make unique plots.
