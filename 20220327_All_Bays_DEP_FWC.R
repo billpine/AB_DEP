@@ -121,7 +121,7 @@ f3<-ggplot(d6, aes(Period, CPUE_Legal)) +
 
 plot_grid(f1,f2,f3)
 
-ggsave("allbays_cpue.pdf", width = 10, height = 10)
+#ggsave("allbays_cpue.pdf", width = 10, height = 10)
 
 #############
 #The CPUE was just for visual
@@ -179,7 +179,6 @@ qqnorm(d6$Sum_legal)
 
 #qqnorms look overdispersed
 
-
 library(vcd)
 
 plot(d6$Sum_spat~d6$Period)
@@ -198,9 +197,10 @@ gf.spat<-goodfit(d6$Sum_spat, type= "nb", method="ML")
 
 d6$Bay <- as.factor(d6$Bay)
 
+#################################################
 #fit basic NB GLM
-#below is not with site as random so I turned it off
-# 
+#below is not with site as random effect so I turned it off
+################################################# 
 # library(glmmTMB)
 # library(bbmle)
 # 
@@ -403,7 +403,8 @@ tmb4 <- glmmTMB(Sum_spat ~ Period*Bay + (1|Site) + offset(log(Num_quads)), data 
 summary(tmb4)
 
 #which is best "family"
-AICtab(tmb1,tmb2,tmb3)
+#turned off now as Nbinom2 was best
+#AICtab(tmb1,tmb2,tmb3)
 
 #tmb1 better fit of base models, tmb1 and tmb4 no difference
 #really should just compare the tmb1,2,3 here to determine which family
@@ -429,8 +430,6 @@ tmb1_Apalachicola <- glmmTMB(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads
 summary(tmb1_Apalachicola)
 ###########
 
-
-
 #need to check this, but I think below is just plotting with a common slope
 #b/c no interaction term
 
@@ -452,7 +451,9 @@ ggpredict(tmb4)
 pred_tmb4 <- ggpredict(tmb4, c("Period", "Bay"))
 
 plot(pred_tmb4, facet=TRUE, colors=c("red","black","blue"), add.data=TRUE)
-#neat that works
+#neat that works but different results than pred_tmb1 b/c
+#of differences in slopes
+#also different than model in/near line 482 which generates dataset
 
 ##predict for specific period and one quadrat
 
@@ -469,7 +470,7 @@ test = ggpredict(new.tmb1, terms = c("Period[13]", "Num_quads[1]"), type = c('fe
 plot(test, facet=TRUE, add.data=TRUE)
 
 
-##now include Bay
+##now include Bay and use new data frame
 
 new.dat2 = data.frame(Sum_spat = d4$Sum_spat,
                       Period = d4$Period,
