@@ -2,7 +2,7 @@
 #this is the DEP data from project 4044
 #but for all three bays (pensacola, east bay, apalach)
 
-d1 <- read.csv("~/Git/AB_DEP/20220326_merged_agency_data.csv")
+d1 <- read.csv("~/GitHub/AB_DEP/20220326_merged_agency_data.csv")
 
 library(readxl)
 library(tidyverse)
@@ -444,40 +444,60 @@ plot(pred_tmb1, facet=TRUE, colors=c("red","black","blue"), add.data=TRUE)
 #neat that works
 
 #so think about whether separate slopes is needed (go over w/ Jennifer)
-#to help interpret mgmt
+#to help interpret mgmt actions
+#I think the interaction term is key
   
 ggpredict(tmb4)
 
 pred_tmb4 <- ggpredict(tmb4, c("Period", "Bay"))
 
 plot(pred_tmb4, facet=TRUE, colors=c("red","black","blue"), add.data=TRUE)
+
 #neat that works but different results than pred_tmb1 b/c
 #of differences in slopes
-#also different than model in/near line 482 which generates dataset
+#note that is predicting for 45.11 quadrats (the mean)
+#here it is for 1 quadrat (not on log scale)
 
-##predict for specific period and one quadrat
 
+##predict for specific period and one quadrat (becuse this is log the [] needs 0 not 1 to be 1)
+#that's because exp(0) is 1
+
+#new.dat = data.frame(Sum_spat = d4$Sum_spat,
+#                     Period = d4$Period,
+#                     Num_quads = log(d4$Num_quads))
+
+#new.tmb1 <- glmmTMB(Sum_spat ~ Period + offset(Num_quads), data = new.dat, family="nbinom2") #converge
+
+
+#this way does not log transform number of quads, just works with number
+#from the data
+#but if you use this one you have to put log in the model
 new.dat = data.frame(Sum_spat = d4$Sum_spat,
                      Period = d4$Period,
-                     Num_quads = log(d4$Num_quads))
+                     Num_quads = d4$Num_quads)
 
-new.tmb1 <- glmmTMB(Sum_spat ~ Period + offset(Num_quads), data = new.dat, family="nbinom2") #converge
+new.tmb1 <- glmmTMB(Sum_spat ~ Period + offset(log(Num_quads)), data = new.dat, family="nbinom2") #converge
 
 ggpredict(new.tmb1)
-test = ggpredict(new.tmb1, terms = c("Period[13]", "Num_quads[1]"), type = c('fe'))
+test = ggpredict(new.tmb1, terms = c("Period", "Num_quads[1]"), type = c('fe'))
 
-#in period 13 for 1 quad what is predicted value
-plot(test, facet=TRUE, add.data=TRUE)
+#across period for 1 quad what is predicted value
+#plot(test, facet=TRUE, add.data=TRUE)
 
 
-##now include Bay and use new data frame
+##now include Bay as interaction term and use new data frame
+
+#note I moved the log num quads to the model from the new.dat2
 
 new.dat2 = data.frame(Sum_spat = d4$Sum_spat,
                       Period = d4$Period,
                       Bay = d4$Bay,
-                      Num_quads = log(d4$Num_quads))
+                      Num_quads = d4$Num_quads)
 
-new.tmb2 <- glmmTMB(Sum_spat ~ Period + Bay + offset(Num_quads), data = new.dat2, family="nbinom2") #converge
+new.tmb2 <- glmmTMB(Sum_spat ~ Period * Bay + offset(log(Num_quads)), data = new.dat2, family="nbinom2") #converge
+
+#if you go back to the new.dat2 and change Num_quads to Num_quads = d4$Num_quads
+#new.tmb2 <- glmmTMB(Sum_spat ~ Period * Bay + offset(log(Num_quads)), data = new.dat2, family="nbinom2") #converge
 
 ##this is key plot
 #below is for all bays but 1 quad
@@ -485,10 +505,10 @@ ggpredict(new.tmb2)
 test2 = ggpredict(new.tmb2, terms = c("Period", "Bay", "Num_quads[1]"), type = c('fe')) #for all Bays
 
 #across periods for 1 quad what is predicted value in each bay
-plot(test2, facet=TRUE, add.data=FALSE,colors=c("red","black","blue") )
+plot(test2, facet=TRUE, add.data=TRUE,colors=c("red","black","blue") )
 #neat that works
 
-#the above works well for 4 quads and turning add.data = TRUE
+#the above works ok for mean number of quads and turning add.data = TRUE
 
 #below is for one Bay
 test3 = ggpredict(new.tmb2, terms = c("Period", "Bay[Apalachicola]","Num_quads[1]"), type = c('fe')) #for one project
@@ -560,6 +580,11 @@ pr <- plot_grid(
 #####################################################
 ##seeds from best model above
 ###below is best model TMB1
+
+##if you use this below, need to move the log term out of the data generator
+#and put it in the model line as above
+
+
 tmb1_seed <- glmmTMB(Sum_seed ~ Period + Bay + (1|Site) + offset(log(Num_quads)), data = d9, family="nbinom2") #converge
 summary(tmb1_seed)
 
