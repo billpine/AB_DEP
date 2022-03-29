@@ -44,6 +44,10 @@ max(d2$Seed)
 max(d2$Spat)
 ######
 
+#look at each bay or similar
+dx<-subset(d2,d2$Bay == "Apalachicola")
+#you see it is a mix of cultch and studies
+
 #count number of quadrats per period, site
 quad_sum<- d2 %>%
   dplyr::group_by(Period, Bay) %>%
@@ -502,20 +506,16 @@ new.tmb2 <- glmmTMB(Sum_spat ~ Period * Bay + offset(log(Num_quads)), data = new
 ##this is key plot
 #below is for all bays but 1 quad
 ggpredict(new.tmb2)
-test2 = ggpredict(new.tmb2, terms = c("Period", "Bay", "Num_quads[1]"), type = c('fe')) #for all Bays
+test2 = ggpredict(new.tmb2, terms = c("Period[14]", "Bay", "Num_quads[1]"), type = c('fe')) #for all Bays
 
 #across periods for 1 quad what is predicted value in each bay
-plot(test2, facet=TRUE, add.data=TRUE,colors=c("red","black","blue") )
+plot(test2, facet=TRUE, add.data=FALSE,colors=c("red","black","blue") )
 #neat that works
 
 #the above works ok for mean number of quads and turning add.data = TRUE
 
-#below is for one Bay
-test3 = ggpredict(new.tmb2, terms = c("Period", "Bay[Apalachicola]","Num_quads[1]"), type = c('fe')) #for one project
-plot(test3, facet=FALSE, add.data=FALSE,colors=c("red"))
-
-# # 
-# # ##Jennifer style
+## 
+## ##Jennifer style
 #using a model predicting for each Bay individually
 #for each period and 1 quadrat
 Pensacola<- subset(test2, test2$group == "Pensacola")
@@ -551,19 +551,13 @@ pr3 = ggplot(StAndrews, aes(x, predicted))+
   ylab("Count per quad") +
   xlab ("Period")+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
-  ggtitle("St. Andrews Live Spat by Period") 
+  ggtitle("St. Andrews Live Spat by Period")+
+  ylim(0,10000)
 
 plot_grid(pr1, pr2, pr3)
 
 ##look more at this
-#this is a great plot, but the predicted all decline
-#where as the fitted values to the data suggest slight
-#increase for pensacola and st. andrews
-#I think this is because the prediction is for a single quad
-#i looked more at this and if you predict by 4, and overplot
-#the data the fit visually looks good, and trends down
-#need to look at the original glm more
-#which is tmb4
+#this is a good plot
 
 pr <- plot_grid(
    pr1 + theme(legend.position="none"),
@@ -585,15 +579,15 @@ pr <- plot_grid(
 #and put it in the model line as above
 
 
-tmb1_seed <- glmmTMB(Sum_seed ~ Period + Bay + (1|Site) + offset(log(Num_quads)), data = d9, family="nbinom2") #converge
+tmb1_seed <- glmmTMB(Sum_seed ~ Period * Bay + (1|Site) + offset(log(Num_quads)), data = d4, family="nbinom2") #converge
 summary(tmb1_seed)
 
-new.dat_sub = data.frame(Sum_seed = d9$Sum_seed,
-                      Period = d9$Period,
-                      Bay = d9$Bay,
-                      Num_quads = log(d9$Num_quads))
+new.dat_sub = data.frame(Sum_seed = d4$Sum_seed,
+                      Period = d4$Period,
+                      Bay = d4$Bay,
+                      Num_quads = d4$Num_quads)
 
-new.tmb2_sub <- glmmTMB(Sum_seed ~ Period + Bay + offset(Num_quads), data = new.dat_sub, family="nbinom2") #converge
+new.tmb2_sub <- glmmTMB(Sum_seed ~ Period * Bay + offset(log(Num_quads)), data = new.dat_sub, family="nbinom2") #converge
 
 ##this is key plot
 #below is for all bays but 1 quad
@@ -606,20 +600,20 @@ plot(test2_sub, facet=TRUE, add.data=TRUE,colors=c("red","black","blue") )
 #####################################################
 ##LEGALS from best model above
 ###below is best model TMB1
-tmb1_legal <- glmmTMB(Sum_legal ~ Period + Bay + (1|Site) + offset(log(Num_quads)), data = d9, family="nbinom2") #converge
+tmb1_legal <- glmmTMB(Sum_legal ~ Period + Bay + (1|Site) + offset(log(Num_quads)), data = d4, family="nbinom2") #converge
 summary(tmb1_legal)
 
-new.dat_legal = data.frame(Sum_legal = d9$Sum_legal,
-                         Period = d9$Period,
-                         Bay = d9$Bay,
-                         Num_quads = log(d9$Num_quads))
+new.dat_legal = data.frame(Sum_legal = d4$Sum_legal,
+                         Period = d4$Period,
+                         Bay = d4$Bay,
+                         Num_quads = d4$Num_quads)
 
-new.tmb2_legal <- glmmTMB(Sum_legal ~ Period + Bay + offset(Num_quads), data = new.dat_legal, family="nbinom2") #converge
+new.tmb2_legal <- glmmTMB(Sum_legal ~ Period + Bay + offset(log(Num_quads)), data = new.dat_legal, family="nbinom2") #converge
 
 ##this is key plot
 #below is for all bays but 1 quad
 ggpredict(new.tmb2_legal)
-test2_legal = ggpredict(new.tmb2_legal, terms = c("Period", "Bay", "Num_quads[1]"), type = c('fe')) #for all Bays
+test2_legal = ggpredict(new.tmb2_legal, terms = c("Period[14]", "Bay", "Num_quads[1]"), type = c('fe')) #for all Bays
 plot(test2_legal, facet=TRUE, add.data=TRUE,colors=c("red","black","blue") )
 ######################################################################
 
