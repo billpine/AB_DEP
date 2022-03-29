@@ -15,7 +15,6 @@ library(AICcmodavg)
 library(ggeffects)
 library(cowplot)
 
-
 #now we will start merging the data sets
 #first the two DEP 4044 and 5077
 #then the FWC NFWF1 and NFWF 2021
@@ -44,7 +43,7 @@ d2$Project<-"NRDA_4044"
 
 d2.1 <- read.csv("~/Git/AB_DEP/20220327_Apalachicola_NRDA_to_merge.csv")
 
-d2.1$Bottom<-"Shell"
+d2.1$Bottom<-"Rock"
 d2.1$Cultch<-200
 d2.1$Project<-"NRDA_4044"
 
