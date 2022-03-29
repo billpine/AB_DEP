@@ -1,6 +1,10 @@
+#analyses of live oyster count data
+#bill pine
+#March 29, 2022
 
-#this is the DEP data from project 4044
-#but for all three bays (pensacola, east bay, apalach)
+#this file uses the DEP data for Pensacola and St. Andrews, but uses
+#FWC and DEP for Apalach.  Pensacola and St. Andrews are shell, but Apalach
+#is a mix of rock and shell
 
 d1 <- read.csv("~/GitHub/AB_DEP/20220326_merged_agency_data.csv")
 
