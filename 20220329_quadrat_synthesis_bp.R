@@ -1,6 +1,6 @@
 #Apalachicola oyster data from two DEP files and 1 FWC file 
 
-###REMEMBER THESE ARE ONLY APALACHICOLA DATA
+###REMEMBER I SUBSET BELOW TO JUST WORK WITH APALACHICOLA
 
 #data from quadrats
 #Bill Pine
@@ -20,7 +20,7 @@ library(ggeffects)
 library(cowplot)
 
 
-d0 <- read.csv("~/GitHub/AB_DEP/20220326_merged_agency_data.csv")
+d0 <- read.csv("~/Git/AB_DEP/20220326_merged_agency_data.csv")
 
 #ok, change Apalachicola Bay to Apalachicola
 d0.1<-d0 %>%
@@ -188,7 +188,7 @@ f5<-ggplot(d3, aes(Period, CPUE_Spat)) +
   ylab("Spat") +
   facet_wrap(~Site)
 
-  ggsave("spat.pdf", width = 10, height = 10)
+#ggsave("spat.pdf", width = 10, height = 10)
 
 f5.1<-ggplot(d3, aes(Period, CPUE_Seed)) +
   geom_point(size=2) +
@@ -367,7 +367,6 @@ r2<-ggplot(data = dp3.2[dp3.2$Project=="NFWF_1",], aes(Period, Sum_spat)) +
 #facet_wrap(~Project)
 
 
-
 dp3.2$Site<-as.factor(dp3.2$Site)
 ######################
 ######
@@ -382,7 +381,7 @@ library(bbmle)
 #it isn't really discharge as CFS, it is number of days
 #in a period below 12000 CFS @ JWLD
 
-Lowdays <- read.csv("~/GitHub/AB_DEP/below_12_threshold.csv")
+Lowdays <- read.csv("~/Git/AB_DEP/below_12_threshold.csv")
 dp4<-merge(dp3.2,Lowdays, by=c("Period"))
 for(i in 1:nrow(dp4))
 {dp4$lag1[i] <- Lowdays$Discharge[Lowdays$Period == (dp4$Period[i]-1)]}
@@ -406,37 +405,23 @@ z1<- ggplot(dp4, aes(x=Lowdays, y=Sum_spat))+
 
 names(dp4)
 
-
+#Period only
+tmb0 <- glmmTMB(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
+summary(tmb0)
 
 #this model is asking how period and project influence counts
 #using NB2 formulation (most common)
 tmb1 <- glmmTMB(Sum_spat ~ Period * Project + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
 summary(tmb1)
 
-#so the NFWF project is intercept 
+#so the NFWF 2021 project is intercept 
 
 ##don't forget to backtransform when looking at the summaries
 
-#tmb1.1 <- glmmTMB(Sum_spat ~ Period + Project + Period*Project + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
-#summary(tmb1.1)
 
 #here is a way to generate CI on parameters
 testci<-confint(tmb1)
 
-#same model using
-#NB1 formulation
-tmb2 <- glmmTMB(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom1") #converge
-summary(tmb2)
-
-#same model using ZIP
-#zero inflated poisson
-tmb3<- glmmTMB(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp4, ziformula=~1, family="poisson") #converge
-summary(tmb3)
-
-AICtab(tmb1,tmb2,tmb3)
-
-#tmb1 better fit to handle the family
-#So NB2. But not a fan of using AIC like this
 
 ################
 #now compare multiple models from same family
@@ -476,7 +461,7 @@ summary(tmb6)
 ####for several periods after building project
 
 
-AICtab(tmb1,tmb4,tmb5,tmb5.1,tmb6)
+AICtab(tmb0, tmb1,tmb4,tmb5,tmb5.1,tmb6)
 #This suggests project is really important from AIC
 #but is it what we are interested in right now?
 #maybe if we dig into what we can learn from each project
@@ -495,32 +480,34 @@ plot(pred_tmb1, facet=TRUE, colors=c("red","black","blue","orange"), add.data=TR
 
 
 ########
-#######trying to get ggpredict to predict for 1 period and quadrat
-
+#######ggpredict to predict for 1 period and quadrat
 #https://cran.r-project.org/web/packages/ggeffects/ggeffects.pdf
 
 
-##Jennifer approach updated March 3
+##Jennifer approach updated March 30
 
 
-#predict all projects combined
+#predict all projects 
 new.dat = data.frame(Sum_spat = dp4$Sum_spat,
                      Period = dp4$Period,
-                     Num_quads = log(dp4$Num_quads))
+                     Num_quads = dp4$Num_quads)
 
-new.tmb1 <- glmmTMB(Sum_spat ~ Period + offset(Num_quads), data = new.dat, family="nbinom2") #converge
+new.tmb1 <- glmmTMB(Sum_spat ~ Period + offset(log(Num_quads)), data = new.dat, family="nbinom2") #converge
 
 ggpredict(new.tmb1)
-test1 = ggpredict(new.tmb1, terms = c("Period[14]", "Num_quads[1]"), type = c('fe'))
+test1 = ggpredict(new.tmb1, terms = c("Period[14]", "Num_quads[1]"), type = c('fe')) #in draft
+test1.1 = ggpredict(new.tmb1, terms = c("Period[1]", "Num_quads[1]"), type = c('fe')) #in draft
+
+
 ############
 #below with project
 
 new.dat2 = data.frame(Sum_spat = dp4$Sum_spat,
                      Period = dp4$Period,
                      Project = dp4$Project,
-                     Num_quads = log(dp4$Num_quads))
+                     Num_quads = dp4$Num_quads)
 
-new.tmb2 <- glmmTMB(Sum_spat ~ Period + Project + offset(Num_quads), data = new.dat2, family="nbinom2") #converge
+new.tmb2 <- glmmTMB(Sum_spat ~ Period + Project + offset(log(Num_quads)), data = new.dat2, family="nbinom2") #converge
 
 ggpredict(new.tmb2)
 test2 = ggpredict(new.tmb2, terms = c("Period[14]", "Project", "Num_quads[1]"), type = c('fe')) #for all projects
@@ -533,24 +520,18 @@ test3 = ggpredict(new.tmb2, terms = c("Period[14]", "Project[NRDA_4044]","Num_qu
 new.dat3 = data.frame(Sum_spat = dp4$Sum_spat,
                       Period = dp4$Period,
                       Lowdays = dp4$Lowdays,
-                      Num_quads = log(dp4$Num_quads))
+                      Num_quads = dp4$Num_quads)
 
-new.tmb3 <- glmmTMB(Sum_spat ~ Period + Lowdays + offset(Num_quads), data = new.dat3, family="nbinom2") #converge
+new.tmb3 <- glmmTMB(Sum_spat ~ Period + Lowdays + offset(log(Num_quads)), data = new.dat3, family="nbinom2") #converge
 
 ggpredict(new.tmb3)
 test3 = ggpredict(new.tmb3, terms = c("Period[14]", "Num_quads[1]"), type = c('fe')) #for all projects
 #this is for the average number of low days.
 
 
-#this is just period
-
-ggpredict(tmb4)
-pred_tmb4 <- ggpredict(tmb4, c("Period"))
-plot(pred_tmb4, colors=c("green"), add.data=TRUE)
 
 
 #plot(pred_tmb5, facet=TRUE, colors=c("red","black","blue"), add.data=TRUE)
-
 
 #neat that works
 
@@ -661,8 +642,7 @@ p_pr1 = ggplot(pred_tmb4, aes(x, predicted))+
 #   summarise(mean=mean(Spat,na.rm=TRUE),
 #             std_dev=sd(Spat, na.rm=TRUE))
 # 
-# 
-# 
+#  
 # 
 # f1<-ggplot(d2, aes(Period, Spat)) +
 #   geom_point(size=4) +
