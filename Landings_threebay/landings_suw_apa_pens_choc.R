@@ -11,7 +11,7 @@
 #Choctawhatchee/St. Andrew = Ocaloosa and Walton
 
 
-setwd("~/Git/AB_DEP/Landings_threebay")
+setwd("~/GitHub/AB_DEP/Landings_threebay")
 
 library(dplyr)
 library(ggplot2)
@@ -195,18 +195,16 @@ land$num_LC_apa<-land$Vol_A_m3_2/LC
 land$num_LC_pens<-land$Vol_P_m3_2/LC
 land$num_LC_choc<-land$Vol_C_m3_2/LC
 
-
-# Calculate CPUE
-land$suw.CPUE<-land$Vol_S_m3_2/land$suw.trips
-land$apa.CPUE<-land$Vol_A_m3_2/land$apa.trips
-land$pens.CPUE<-land$Vol_P_m3_2/land$pens.trips
-land$choc.CPUE<-land$Vol_C_m3_2/land$choc.trips
+# Calculate CPUE, this is catch/trips
+land$suw.CPUE<-land$suw.pounds/land$suw.trips
+land$apa.CPUE<-land$apa.pounds/land$apa.trips
+land$pens.CPUE<-land$pens.pounds/land$pens.trips
+land$choc.CPUE<-land$choc.pounds/land$choc.trips
 
 
 #plots
 
 names(land)
-
 
 d1 <- land %>% 
   dplyr::select(Year, suw.pounds,suw.trips,suw.avg_price,suw.CPUE,Vol_S_m3_2)
@@ -233,51 +231,31 @@ s1<-ggplot(data = d1, aes(x = Year, y = suw.removed)) +
   labs(title = "Shell Material Removed",
        y = "Cubic Meters Removed")
 
-# 
-# #number of lone cabbages from Suwannee Sound
-# ggplot(data = land, aes(x = Year, y = num_LC_suw)) +
-#   
-#   geom_point(colour ="tomato", size=6) +
-#   theme_classic()+
-#   scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,
-#                                                   1995,2000, 2005, 2010,2015,2020, 2025)) +
-#   scale_y_continuous(limits=c(0,1),breaks=c(0.25, 0.5, 0.75, 1))+
-#   theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
-#                                                                 face="bold"),
-#         plot.title =element_text(size=16, face='bold', hjust = 0.5),
-#         axis.text.x = element_text(angle = 45, hjust = 1),
-#         panel.border = element_rect(color = "black", size = 1, fill = NA, 
-#                                     linetype="solid")) +
-#   labs(title = "Shell Material Removed from Suwannee Sound",
-#        y = "# Lone Cabbage Reefs Removed")
-# 
 
 #number of trips in suwannee sound
-(suw_trips_plot<-ggplot(data = land, aes(x = Year, y = suw.trips)) +
+s2<-ggplot(data = d1, aes(x = Year, y = suw.trips)) +
   
-  geom_point(colour ="tomato", size=6) +
+  geom_point(colour ="red", size=4) +
   theme_classic()+
   scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,
                                                   1995,2000, 2005, 2010,2015,2020, 2025)) +
-  scale_y_continuous(limits=c(0,12000),breaks=c(0,2000,4000,6000, 8000, 10000, 12000))+
+  scale_y_continuous(limits=c(0,15000),breaks=c(seq(0,15000, by= 1000))) +
   theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
                                                                 face="bold"),
         plot.title =element_text(size=16, face='bold', hjust = 0.5),
         axis.text.x = element_text(angle = 45, hjust = 1),
         panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                     linetype="solid")) +
-  labs(title = "Trips Taken",
-       y = "# of Trips"))
-
+  labs(title = "Commercial Trips",
+       y = "# of Trips")
 
 # CPUE for Suwannee Sound
-(suw_CPUE_plot<-ggplot(data=land, aes(x=Year, y=suw.CPUE))+
-  
-  geom_point(colour ="tomato", size=6) +
+s3<-ggplot(data=d1, aes(x=Year, y=suw.cpue))+
+  geom_point(colour ="red", size=4) +
   theme_classic()+
-  scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,
-                                                  1995,2000, 2005, 2010,2015,2020, 2025)) +
-  scale_y_continuous(limits=c(0,0.5),breaks=c(0,0.1,0.2,0.3,0.4,0.5))+
+  scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,1995,2000, 2005, 
+                                                  2010,2015,2020,2025)) +
+  scale_y_continuous(limits=c(0,400),breaks=c(0,50,100,150,200,250,300,350,400))+
   theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
                                                                 face="bold"),
         plot.title =element_text(size=16, face='bold', hjust = 0.5),
@@ -285,15 +263,16 @@ s1<-ggplot(data = d1, aes(x = Year, y = suw.removed)) +
         panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                     linetype="solid")) +
   labs(title = "Catch Per Unit Effort",
-       y = "CPUE"))
+       y = "CPUE")
 
 #landings in Suwannee sound
-suw_landings_plot<-ggplot(data = land, aes(x = Year, y = suw.pounds)) +
-    geom_point(colour ="tomato", size=6) +
+s4<-ggplot(data = d1, aes(x = Year, y = suw.pounds/1000)) +
+    geom_point(colour ="red", size=4) +
     theme_classic()+
-    scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,
-                                                    1995,2000, 2005, 2010,2015,2020, 2025)) +
-    scale_y_continuous(limits=c(0,20000),breaks=c(0,2000,4000,6000, 8000, 10000, 12000, 14000, 16000, 18000, 20000))+
+    scale_x_continuous(limits=c(1980,2025),breaks=c(1980,1985,1990, 1995, 2000, 2005, 
+                                                    2010,2015,2020,2025)) +
+    scale_y_continuous(limits=c(0,1200),breaks=c(0, 100, 200, 300, 400, 500, 600, 700, 
+                                                   800, 900, 1000, 1100, 1200))+
     theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
                                                                   face="bold"),
           plot.title =element_text(size=16, face='bold', hjust = 0.5),
@@ -301,85 +280,63 @@ suw_landings_plot<-ggplot(data = land, aes(x = Year, y = suw.pounds)) +
           panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                       linetype="solid")) +
     labs(title = "Pounds landed",
-         y = "# of Pounds")
+         y = "Pounds x 1000")
 
-suw_fig<-ggarrange(suw_m3_plot, suw_trips_plot, suw_CPUE_plot,suw_landings_plot, 
+suw_fig<-ggarrange(s1,s2,s3,s4, 
                     labels = c("A", "B", "C", "D"),
                     ncol = 2, nrow = 2)
 annotate_figure(suw_fig,
                 top = text_grob("Suwannee Sound", color = "black", face = "bold", size = 20))
 
-
-
-
-
-
-
 #### Apalachicola ####
-#volume in meters cubed of shell material removed from apalachicola
-(apa_m3_plot<-ggplot(data = land, aes(x = Year, y = Vol_A_m3_2)) +
-  
-  geom_point(colour ="tomato", size=6) +
+d2 <- land %>% 
+  dplyr::select(Year, apa.pounds,apa.trips,apa.avg_price,apa.CPUE,Vol_A_m3_2)
+
+names(d2) <- c("Year", "apa.pounds","apa.trips","apa.price","apa.cpue","apa.removed")
+
+names(d2)
+
+#### Plots for Apalachicola ####
+#number of cubic meters removed from Apalachicola sound
+a1<-ggplot(data = d2, aes(x = Year, y = apa.removed)) +
+  geom_point(colour ="red", size=4) +
   theme_classic()+
-  scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,
-                                                  1995,2000, 2005, 2010,2015,2020, 2025)) +
-  scale_y_continuous(limits=c(0,4000),breaks=c(0,800,1600,2400,3200,4000))+
-  theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
-                                                                face="bold"),
-        plot.title =element_text(size=16, face='bold', hjust = 0.5),
+  scale_x_continuous(limits=c(1980,2025),breaks=c(1980,1985,1990,1995,2000,2005,2010,2015,2020,2025))+
+  scale_y_continuous(limits=c(0,1400),breaks=c(0,200,400,600,800,1000,1200,1400))+
+  theme(axis.text=element_text(size=10),
+        axis.title=element_text(size=12),
+        plot.title =element_text(size=16, hjust = 0.5),
         axis.text.x = element_text(angle = 45, hjust = 1),
         panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                     linetype="solid")) +
   labs(title = "Shell Material Removed",
-       y = "Cubic Meters Removed"))
+       y = "Cubic Meters Removed")
 
 
-#number of lone cabbages from apalachicola
-ggplot(data = land, aes(x = Year, y = num_LC_apa)) +
+#number of trips in apalachicola
+a2<-ggplot(data = d2, aes(x = Year, y = apa.trips)) +
   
-  geom_point(colour ="tomato", size=6) +
+  geom_point(colour ="red", size=4) +
   theme_classic()+
   scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,
                                                   1995,2000, 2005, 2010,2015,2020, 2025)) +
-  scale_y_continuous(limits=c(0,1),breaks=c(0,0.25, 0.5,0.75,1))+
+  scale_y_continuous(limits=c(0,60000),breaks=c(0,10000,20000,30000,40000,50000)) +
   theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
                                                                 face="bold"),
         plot.title =element_text(size=16, face='bold', hjust = 0.5),
         axis.text.x = element_text(angle = 45, hjust = 1),
         panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                     linetype="solid")) +
-  labs(title = "Shell Material Removed",
-       y = "# Lone Cabbage Reefs Removed")
-
-
-
-
-#number of trips in Apalachicola
-(apa_trips_plot<-ggplot(data = land, aes(x = Year, y = apa.trips)) +
-  
-  geom_point(colour ="tomato", size=6) +
-  theme_classic()+
-  scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,
-                                                  1995,2000, 2005, 2010,2015,2020, 2025)) +
-  scale_y_continuous(limits=c(0,60000),breaks=c(0,10000,20000,30000,40000,50000,60000))+
-  theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
-                                                                face="bold"),
-        plot.title =element_text(size=16, face='bold', hjust = 0.5),
-        axis.text.x = element_text(angle = 45, hjust = 1),
-        panel.border = element_rect(color = "black", size = 1, fill = NA, 
-                                    linetype="solid")) +
-  labs(title = "Trips Taken",
-       y = "# of Trips"))
-
+  labs(title = "Commercial Trips",
+       y = "# of Trips")
 
 # CPUE for Apalachicola
-(apa_CPUE_plot<-ggplot(data=land, aes(x=Year, y=apa.CPUE))+
-  
-  geom_point(colour ="tomato", size=6) +
+a3<-ggplot(data=d2, aes(x=Year, y=apa.cpue))+
+  geom_point(colour ="red", size=4) +
   theme_classic()+
-  scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,
-                                                  1995,2000, 2005, 2010,2015,2020, 2025)) +
-  scale_y_continuous(limits=c(0,0.2),breaks=c(0,0.1,0.2,0.3,0.4,0.5))+
+  scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,1995,2000, 2005, 
+                                                  2010,2015,2020,2025)) +
+  scale_y_continuous(limits=c(0,600),breaks=c(0,50,100,150,200,250,300,350,400))+
   theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
                                                                 face="bold"),
         plot.title =element_text(size=16, face='bold', hjust = 0.5),
@@ -387,15 +344,30 @@ ggplot(data = land, aes(x = Year, y = num_LC_apa)) +
         panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                     linetype="solid")) +
   labs(title = "Catch Per Unit Effort",
-       y = "CPUE"))
+       y = "CPUE")
 
-apa_fig<-ggarrange(apa_m3_plot, apa_trips_plot, apa_CPUE_plot, 
-                    labels = c("A", "B", "C"),
-                    ncol = 3, nrow = 1)
+#landings in Apalachicola
+a4<-ggplot(data = d2, aes(x = Year, y = apa.pounds/1000)) +
+  geom_point(colour ="red", size=4) +
+  theme_classic()+
+  scale_x_continuous(limits=c(1980,2025),breaks=c(1980,1985,1990, 1995, 2000, 2005, 
+                                                  2010,2015,2020,2025)) +
+  scale_y_continuous(limits=c(0,1200),breaks=c(0, 100, 200, 300, 400, 500, 600, 700, 
+                                               800, 900, 1000, 1100, 1200))+
+  theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
+                                                                face="bold"),
+        plot.title =element_text(size=16, face='bold', hjust = 0.5),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        panel.border = element_rect(color = "black", size = 1, fill = NA, 
+                                    linetype="solid")) +
+  labs(title = "Pounds landed",
+       y = "Pounds x 1000")
+
+apa_fig<-ggarrange(s1,s2,s3,s4, 
+                   labels = c("A", "B", "C", "D"),
+                   ncol = 2, nrow = 2)
 annotate_figure(apa_fig,
                 top = text_grob("Apalachicola", color = "black", face = "bold", size = 20))
-
-
 
 
 
