@@ -282,7 +282,7 @@ s4<-ggplot(data = d1, aes(x = Year, y = suw.pounds/1000)) +
     labs(title = "Pounds landed",
          y = "Pounds x 1000")
 
-suw_fig<-ggarrange(s1,s2,s3,s4, 
+suw_fig<-ggarrange(s2,s3,s4, 
                     labels = c("A", "B", "C", "D"),
                     ncol = 2, nrow = 2)
 annotate_figure(suw_fig,
@@ -363,14 +363,11 @@ a4<-ggplot(data = d2, aes(x = Year, y = apa.pounds/1000)) +
   labs(title = "Pounds landed",
        y = "Pounds x 1000")
 
-apa_fig<-ggarrange(s1,s2,s3,s4, 
+apa_fig<-ggarrange(s2,s3,s4, 
                    labels = c("A", "B", "C", "D"),
                    ncol = 2, nrow = 2)
 annotate_figure(apa_fig,
                 top = text_grob("Apalachicola", color = "black", face = "bold", size = 20))
-
-
-
 
 #### Pensacola ####
 #volume in meters cubed of shell material removed from Pensacola
@@ -378,8 +375,6 @@ d3 <- land %>%
   dplyr::select(Year, pens.pounds,pens.trips,pens.avg_price,pens.CPUE,Vol_A_m3_2)
 
 names(d3) <- c("Year", "pen.pounds","pen.trips","pen.price","pen.cpue","pen.removed")
-
-
 
 #### Plots for pensacola ####
 #number of cubic meters removed from pensacola sound
@@ -396,7 +391,6 @@ p1<-ggplot(data = d3, aes(x = Year, y = pen.removed)) +
                                     linetype="solid")) +
   labs(title = "Shell Material Removed",
        y = "Cubic Meters Removed")
-
 
 #number of trips in pensacola
 p2<-ggplot(data = d3, aes(x = Year, y = pen.trips)) +
@@ -453,7 +447,6 @@ pen_fig<-ggarrange(s2,s3,s4,
                    ncol = 2, nrow = 2)
 annotate_figure(pen_fig,
                 top = text_grob("Pensacola", color = "black", face = "bold", size = 20))
-
 
 #### Choctawhatchee ####
 d4 <- land %>% 
@@ -530,4 +523,3 @@ s4<-ggplot(data = d4, aes(x = Year, y = choc.pounds/1000)) +
                                          ncol = 2, nrow = 2)
                      annotate_figure(choc_fig,
                                      top = text_grob("St. Andrews", color = "black", face = "bold", size = 20))
-                     
