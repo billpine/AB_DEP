@@ -388,7 +388,6 @@ for(i in 1:nrow(dp4))
 
 names(dp4)
 
-
 #plot(dp4$Sum_spat~dp4$Lowdays)
 
 #####################
@@ -507,10 +506,10 @@ new.dat2 = data.frame(Sum_spat = dp4$Sum_spat,
                      Project = dp4$Project,
                      Num_quads = dp4$Num_quads)
 
-new.tmb2 <- glmmTMB(Sum_spat ~ Period + Project + offset(log(Num_quads)), data = new.dat2, family="nbinom2") #converge
+new.tmb2 <- glmmTMB(Sum_spat ~ Period * Project + offset(log(Num_quads)), data = new.dat2, family="nbinom2") #converge
 
 ggpredict(new.tmb2)
-test2 = ggpredict(new.tmb2, terms = c("Period[14]", "Project", "Num_quads[1]"), type = c('fe')) #for all projects
+test2 = ggpredict(new.tmb2, terms = c("Period", "Project", "Num_quads[1]"), type = c('fe')) #for all projects
 
 #below is for one project
 test3 = ggpredict(new.tmb2, terms = c("Period[14]", "Project[NRDA_4044]","Num_quads[1]"), type = c('fe')) #for one project
@@ -537,51 +536,53 @@ test3 = ggpredict(new.tmb3, terms = c("Period[14]", "Num_quads[1]"), type = c('f
 
 #now make the Jennifer style plot with group and period
 
-nfwf_pred<- subset(pred_tmb1, pred_tmb1$group == "NFWF_1")
-DEP_4044<- subset(pred_tmb1, pred_tmb1$group == "NRDA_4044")
-DEP_5007<- subset(pred_tmb1, pred_tmb1$group == "NRDA_5007")
-FWC_2021<- subset(pred_tmb1, pred_tmb1$group == "FWC_2021")
+nfwf_pred<- subset(test2, test2$group == "NFWF_1")
+DEP_4044<- subset(test2, test2$group == "NRDA_4044")
+DEP_5007<- subset(test2, test2$group == "NRDA_5007")
+FWC_2021<- subset(test2, pred_tmb1$group == "FWC_2021")
 
 pr1 = ggplot(nfwf_pred, aes(x, predicted))+
   geom_line(size=2)+
-  ylab("Live oyster count per quad") +
+  ylab("Live oyster per quad") +
   xlab ("Period")+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
     ggtitle("NFWF Apalachicola Spat by Period") +
-  geom_point(data = dp3.2[dp3.2$Project == "NFWF_1",], mapping = aes(Period, Sum_spat), size = 2)+
+  #geom_point(data = dp3.2[dp3.2$Project == "NFWF_1",], mapping = aes(Period, Sum_spat), size = 2)+
   scale_x_continuous(breaks=seq(1,14,1))
 #+
 #  scale_y_continuous(breaks=seq(0,100000,1000))
 
 pr2 = ggplot(DEP_4044, aes(x, predicted))+
   geom_line(size=2)+
-  ylab("Live oyster count per quad") +
+  ylab("Live oyster per quad") +
   xlab ("Period")+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
   ggtitle("DEP 4044 Spat by Period") +
-  geom_point(data = dp3.2[dp3.2$Project == "NRDA_4044",], mapping = aes(Period, Sum_spat), size = 2)+
+  #geom_point(data = dp3.2[dp3.2$Project == "NRDA_4044",], mapping = aes(Period, Sum_spat), size = 2)+
   scale_x_continuous(breaks=seq(1,14,1))
 
 pr3 = ggplot(DEP_5007, aes(x, predicted))+
   geom_line(size=2)+
-  ylab("Live oyster count per quad") +
+  ylab("Live oyster per quad") +
   xlab ("Period")+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
   ggtitle("DEP 5007 Spat by Period") +
-  geom_point(data = dp3.2[dp3.2$Project == "NRDA_5007",], mapping = aes(Period, Sum_spat), size = 2)+
+  #geom_point(data = dp3.2[dp3.2$Project == "NRDA_5007",], mapping = aes(Period, Sum_spat), size = 2)+
   scale_x_continuous(breaks=seq(1,14,1))
 
 pr4 = ggplot(FWC_2021, aes(x, predicted))+
   geom_line(size=2)+
-  ylab("Live oyster count per quad") +
+  ylab("Live oyster per quad") +
   xlab ("Period")+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
   ggtitle("FWC 2021 Spat by Period") +
-  geom_point(data = dp3.2[dp3.2$Project == "FWC_2021",], mapping = aes(Period, Sum_spat), size = 2)+
+  #geom_point(data = dp3.2[dp3.2$Project == "FWC_2021",], mapping = aes(Period, Sum_spat), size = 2)+
   scale_x_continuous(breaks=seq(1,14,1))
 
 plot_grid(pr1,pr2,pr3,pr4)
-plot_grid(pr1,pr2,pr3)
+ggsave("pred_apalach_1quad.png", width=10, height=10)
+
+
 
 ############
 #now Jennifer style but just period. this is what
