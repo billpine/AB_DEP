@@ -29,9 +29,9 @@ d0 <- read.csv("~/Git/AB_DEP/20220326_merged_agency_data.csv")
 d0.1<-d0 %>%
   mutate(Bay = replace(Bay,Bay == "Apalachicola Bay", "Apalachicola"))
 
-d1<- d0.1
+#d1<- d0.1
 
-#d1<- subset(d0.1, d0.1$Bay == "Apalachicola")
+d1<- subset(d0.1, d0.1$Bay == "Apalachicola")
 
 #the FWC data have been modified per Matt at FWC to
 #do the proportions based on size for the number per size category
@@ -196,7 +196,7 @@ pr1 = ggplot(dNFWF_2_pred, aes(x, predicted))+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
   ggtitle("Predicted NFWF_1 Cultch (Shell) Weight by Period - 1 quadrat")+
   #scale_x_continuous(breaks=seq(1,14,1))+
-  ylim(0,30)+
+  ylim(0,10)+
   xlim(1,14)
 
 
@@ -243,7 +243,7 @@ pr2 = ggplot(dFWC_2_pred, aes(x, predicted))+
   xlab ("Period")+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
   ggtitle("Predicted FWC_2021 Cultch (Rock) Weight by Period - 1 quadrat") +
-  ylim(0,30)+
+  ylim(0,10)+
   xlim(1,14)
 
 #no need to include the data on single quadrat plots because the data are from
@@ -295,7 +295,7 @@ pr3 = ggplot(dNRDA_4044_2_pred, aes(x, predicted))+
   xlab ("Period")+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
   ggtitle("Predicted NRDA 4044 Cultch (Shell) Weight by Period - 1 quadrat")+
-  ylim(0,30)+
+  ylim(0,10)+
   xlim(1,14)
 
 #########NRDA 5007 only#################
@@ -333,13 +333,13 @@ pr4 = ggplot(dNRDA_5007_2_pred, aes(x, predicted))+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
   ggtitle("Predicted Restore 5007 Cultch (Rock) Weight by Period - 1 quadrat") +
   #scale_x_continuous(breaks=seq(2,14,1))+
-  ylim(0,30)+
+  ylim(0,10)+
   xlim(1,14)
   
 
 plot_grid(pr1,pr2,pr3,pr4)
 
-ggsave("predicted_weight.pdf", width = 10, height = 10)  
+ggsave("AB_predicted_weight.png", width = 10, height = 10)  
 
 
 #next standardize x and y axis. Yeah!
