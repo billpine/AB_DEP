@@ -339,12 +339,26 @@ qqnorm(dp3.2$Sum_legal)
 #this is by site and study
 r0<-ggplot(dp3.2, aes(Period, Sum_spat,color=Project)) +
   geom_point(size=4) +
+  ggtitle("Spat per Period") +
+  xlab("Period") +
+  ylab("Total Spat")
+ggsave("apalach spat per period.png", width=10, height=10)
+
+#+
+#  facet_wrap(~Site)
+
+#this is by study on one plot on log scale
+
+r0.1<-ggplot(dp3.2, aes(Period, Sum_spat,color=Project)) +
+  geom_point(size=4) +
   ggtitle("Spat per Period by Site") +
   xlab("Period") +
   ylab("Total Spat")+
+  scale_y_log10()+
   facet_wrap(~Site)
+#ggsave("SSSS.png", width=10, height=10)
 
-#this is by study on one plot on log scale
+
 r1<-ggplot(data = dp3.2[dp3.2$Project=="NFWF_1",], aes(Period, Sum_spat)) +
   geom_point(size=3) +
   geom_point(data = dp3.2[dp3.2$Project=="NRDA_4044",], mapping = aes(Period, Sum_spat, color="red"), size = 3)+
@@ -535,6 +549,8 @@ test3 = ggpredict(new.tmb3, terms = c("Period[14]", "Num_quads[1]"), type = c('f
 #neat that works
 
 #now make the Jennifer style plot with group and period
+
+##this is in the paper, figure 6 i think
 
 nfwf_pred<- subset(test2, test2$group == "NFWF_1")
 DEP_4044<- subset(test2, test2$group == "NRDA_4044")
