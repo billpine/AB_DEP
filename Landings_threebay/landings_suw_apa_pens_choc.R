@@ -11,7 +11,7 @@
 #Choctawhatchee/St. Andrew = Ocaloosa and Walton
 
 
-setwd("~/GitHub/AB_DEP/Landings_threebay")
+setwd("~/Git/AB_DEP/Landings_threebay")
 
 library(dplyr)
 library(ggplot2)
@@ -374,69 +374,54 @@ annotate_figure(apa_fig,
 
 #### Pensacola ####
 #volume in meters cubed of shell material removed from Pensacola
-(pens_m3_plot<-ggplot(data = land, aes(x = Year, y = Vol_P_m3_2)) +
-  
-  geom_point(colour ="tomato", size=6) +
+d3 <- land %>% 
+  dplyr::select(Year, pens.pounds,pens.trips,pens.avg_price,pens.CPUE,Vol_A_m3_2)
+
+names(d3) <- c("Year", "pen.pounds","pen.trips","pen.price","pen.cpue","pen.removed")
+
+
+
+#### Plots for pensacola ####
+#number of cubic meters removed from pensacola sound
+p1<-ggplot(data = d3, aes(x = Year, y = pen.removed)) +
+  geom_point(colour ="red", size=4) +
   theme_classic()+
-  scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,
-                                                  1995,2000, 2005, 2010,2015,2020, 2025)) +
-  scale_y_continuous(limits=c(0,600),breaks=c(0,100,200,300,400,500,600))+
-  theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
-                                                                face="bold"),
-        plot.title =element_text(size=16, face='bold', hjust = 0.5),
+  scale_x_continuous(limits=c(1980,2025),breaks=c(1980,1985,1990,1995,2000,2005,2010,2015,2020,2025))+
+  scale_y_continuous(limits=c(0,4000),breaks=c(0,500,1000,1500,2000,2500,3000,3500,4000))+
+  theme(axis.text=element_text(size=10),
+        axis.title=element_text(size=12),
+        plot.title =element_text(size=16, hjust = 0.5),
         axis.text.x = element_text(angle = 45, hjust = 1),
         panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                     linetype="solid")) +
   labs(title = "Shell Material Removed",
-       y = "Cubic Meters Removed"))
+       y = "Cubic Meters Removed")
 
 
-#number of lone cabbages from Pensacola
-ggplot(data = land, aes(x = Year, y = num_LC_pens)) +
+#number of trips in pensacola
+p2<-ggplot(data = d3, aes(x = Year, y = pen.trips)) +
   
-  geom_point(colour ="tomato", size=6) +
+  geom_point(colour ="red", size=4) +
   theme_classic()+
   scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,
                                                   1995,2000, 2005, 2010,2015,2020, 2025)) +
-  scale_y_continuous(limits=c(0,1),breaks=c(0,0.25, 0.5,0.75,1))+
+  scale_y_continuous(limits=c(0,2000),breaks=c(0,250,500,750,1000,1250,1500,1750,2000)) +
   theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
                                                                 face="bold"),
         plot.title =element_text(size=16, face='bold', hjust = 0.5),
         axis.text.x = element_text(angle = 45, hjust = 1),
         panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                     linetype="solid")) +
-  labs(title = "Shell Material Removed",
-       y = "# Lone Cabbage Reefs Removed")
+  labs(title = "Commercial Trips",
+       y = "# of Trips")
 
-
-
-
-#number of trips in Pensacola
-(pens_trips_plot<-ggplot(data = land, aes(x = Year, y = pens.trips)) +
-  
-  geom_point(colour ="tomato", size=6) +
+# CPUE for pensacola
+p3<-ggplot(data=d3, aes(x=Year, y=pen.cpue))+
+  geom_point(colour ="red", size=4) +
   theme_classic()+
-  scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,
-                                                  1995,2000, 2005, 2010,2015,2020, 2025)) +
-  scale_y_continuous(limits=c(0,1600),breaks=c(0,200,400,600,800,1000,1200,1400,1600))+
-  theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
-                                                                face="bold"),
-        plot.title =element_text(size=16, face='bold', hjust = 0.5),
-        axis.text.x = element_text(angle = 45, hjust = 1),
-        panel.border = element_rect(color = "black", size = 1, fill = NA, 
-                                    linetype="solid")) +
-  labs(title = "Trips Taken",
-       y = "# of Trips"))
-
-
-# CPUE for Pensacola
-(pens_CPUE_plot<-ggplot(data=land, aes(x=Year, y=pens.CPUE))+
-  
-  geom_point(colour ="tomato", size=6) +
-  theme_classic()+
-  scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,
-                                                  1995,2000, 2005, 2010,2015,2020, 2025)) +
-  scale_y_continuous(limits=c(0,0.7),breaks=c(0,0.1,0.2,0.3,0.4,0.5,0.6,0.7))+
+  scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,1995,2000, 2005, 
+                                                  2010,2015,2020,2025)) +
+  scale_y_continuous(limits=c(0,600),breaks=c(0,50,100,150,200,250,300,350,400, 450,500,550,600))+
   theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
                                                                 face="bold"),
         plot.title =element_text(size=16, face='bold', hjust = 0.5),
@@ -444,82 +429,77 @@ ggplot(data = land, aes(x = Year, y = num_LC_pens)) +
         panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                     linetype="solid")) +
   labs(title = "Catch Per Unit Effort",
-       y = "CPUE"))
+       y = "CPUE")
 
-pens_fig<-ggarrange(pens_m3_plot, pens_trips_plot, pens_CPUE_plot, 
-                    labels = c("A", "B", "C"),
-                    ncol = 3, nrow = 1)
-annotate_figure(pens_fig,
+#landings in pensacola
+p4<-ggplot(data = d3, aes(x = Year, y = pen.pounds/1000)) +
+  geom_point(colour ="red", size=4) +
+  theme_classic()+
+  scale_x_continuous(limits=c(1980,2025),breaks=c(1980,1985,1990, 1995, 2000, 2005, 
+                                                  2010,2015,2020,2025)) +
+  scale_y_continuous(limits=c(0,1200),breaks=c(0, 100, 200, 300, 400, 500, 600, 700, 
+                                               800, 900, 1000, 1100, 1200))+
+  theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
+                                                                face="bold"),
+        plot.title =element_text(size=16, face='bold', hjust = 0.5),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        panel.border = element_rect(color = "black", size = 1, fill = NA, 
+                                    linetype="solid")) +
+  labs(title = "Pounds landed",
+       y = "Pounds x 1000")
+
+pen_fig<-ggarrange(s2,s3,s4, 
+                   labels = c("A", "B", "C", "D"),
+                   ncol = 2, nrow = 2)
+annotate_figure(pen_fig,
                 top = text_grob("Pensacola", color = "black", face = "bold", size = 20))
 
 
-
-
 #### Choctawhatchee ####
-#volume in meters cubed of shell material removed from Choctawhatchee
-(choc_m3_plot<-ggplot(data = land, aes(x = Year, y = Vol_C_m3_2)) +
-  
-  geom_point(colour ="tomato", size=6) +
+d4 <- land %>% 
+  dplyr::select(Year, choc.pounds,choc.trips,choc.avg_price,choc.CPUE,Vol_A_m3_2)
+
+names(d4) <- c("Year", "choc.pounds","choc.trips","choc.price","choc.cpue","choc.removed")
+
+#### Plots for St. Andrews ####
+#number of cubic meters removed from St. Andrews sound
+s1<-ggplot(data = d4, aes(x = Year, y = choc.removed)) +
+  geom_point(colour ="red", size=4) +
   theme_classic()+
-  scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,
-                                                  1995,2000, 2005, 2010,2015,2020, 2025)) +
-  scale_y_continuous(limits=c(0,14),breaks=c(0,2,4,6,8,10,12,14))+
-  theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
-                                                                face="bold"),
-        plot.title =element_text(size=16, face='bold', hjust = 0.5),
+  scale_x_continuous(limits=c(1980,2025),breaks=c(1980,1985,1990,1995,2000,2005,2010,2015,2020,2025))+
+  scale_y_continuous(limits=c(0,4000),breaks=c(0,500,1000,1500,2000,2500,3000,3500,4000))+
+  theme(axis.text=element_text(size=10),
+        axis.title=element_text(size=12),
+        plot.title =element_text(size=16, hjust = 0.5),
         axis.text.x = element_text(angle = 45, hjust = 1),
         panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                     linetype="solid")) +
   labs(title = "Shell Material Removed",
-       y = "Cubic Meters Removed"))
+       y = "Cubic Meters Removed")
 
-
-#number of lone cabbages from Choctawhatchee
-ggplot(data = land, aes(x = Year, y = num_LC_choc)) +
-  
-  geom_point(colour ="tomato", size=6) +
+#number of trips in St. Andrews
+s2<-ggplot(data = d4, aes(x = Year, y = choc.trips)) +
+  geom_point(colour ="red", size=4) +
   theme_classic()+
   scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,
                                                   1995,2000, 2005, 2010,2015,2020, 2025)) +
-  scale_y_continuous(limits=c(0,1),breaks=c(0,0.25, 0.5,0.75,1))+
+  scale_y_continuous(limits=c(0,200),breaks=c(0,50,100,150,200)) +
   theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
                                                                 face="bold"),
         plot.title =element_text(size=16, face='bold', hjust = 0.5),
         axis.text.x = element_text(angle = 45, hjust = 1),
         panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                     linetype="solid")) +
-  labs(title = "Shell Material Removed",
-       y = "# Lone Cabbage Reefs Removed")
+  labs(title = "Commercial Trips",
+       y = "# of Trips")
 
-
-
-
-#number of trips in Choctawhatchee
-(choc_trips_plot<-ggplot(data = land, aes(x = Year, y = choc.trips)) +
-  
-  geom_point(colour ="tomato", size=6) +
+# CPUE for St. Andrews
+s3<-ggplot(data=d4, aes(x=Year, y=choc.cpue))+
+  geom_point(colour ="red", size=4) +
   theme_classic()+
-  scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,
-                                                  1995,2000, 2005, 2010,2015,2020, 2025)) +
-  scale_y_continuous(limits=c(0,150),breaks=c(0,30,60,90,120,150))+
-  theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
-                                                                face="bold"),
-        plot.title =element_text(size=16, face='bold', hjust = 0.5),
-        axis.text.x = element_text(angle = 45, hjust = 1),
-        panel.border = element_rect(color = "black", size = 1, fill = NA, 
-                                    linetype="solid")) +
-  labs(title = "Trips Taken",
-       y = "# of Trips"))
-
-
-# CPUE for Choctawhatchee
-(choc_CPUE_plot<-ggplot(data=land, aes(x=Year, y=choc.CPUE))+
-  
-  geom_point(colour ="tomato", size=6) +
-  theme_classic()+
-  scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,
-                                                  1995,2000, 2005, 2010,2015,2020, 2025)) +
-  scale_y_continuous(limits=c(0,0.25),breaks=c(0,0.05,0.1,0.15,0.2,0.25))+
+  scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,1995,2000, 2005, 
+                                                  2010,2015,2020,2025)) +
+  scale_y_continuous(limits=c(0,200),breaks=c(0,50,100,150,200,250))+
   theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
                                                                 face="bold"),
         plot.title =element_text(size=16, face='bold', hjust = 0.5),
@@ -527,40 +507,27 @@ ggplot(data = land, aes(x = Year, y = num_LC_choc)) +
         panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                     linetype="solid")) +
   labs(title = "Catch Per Unit Effort",
-       y = "CPUE"))
+       y = "CPUE")
 
-choc_fig<-ggarrange(choc_m3_plot, choc_trips_plot, choc_CPUE_plot, 
-          labels = c("A", "B", "C"),
-          ncol = 3, nrow = 1)
-annotate_figure(choc_fig,
-                top = text_grob("Choctawhatchee", color = "black", face = "bold", size = 20))
-
-
-
-
-
-
-#######
-# Number of Lone cabbage reefs removed in Suwannee, Apalachicola, Pensacola, Choctawhatchee
-LC_suw<-data.frame(numLC=land$num_LC_suw, Location=c("Suwannee"), Year=land$Year)
-LC_app<-data.frame(numLC=land$num_LC_app, Location=c("Apalachicola"), Year=land$Year)
-LC_pens<-data.frame(numLC=land$num_LC_pens, Location=c("Pensacola"), Year=land$Year)
-LC_choc<-data.frame(numLC=land$num_LC_choc, Location=c("Choctawhatchee"), Year=land$Year)
-numLCR<-rbind(LC_suw,LC_app,LC_pens,LC_choc)
-
-ggplot(data = numLCR, aes(x = Year, y = numLC, color=Location)) +
-  
-  geom_point(size=6) +
-  scale_color_manual(values=c("#E69F00", "#56B4E9", "#009E73", "#F0E442"))+
+#landings in St. Andrews
+s4<-ggplot(data = d4, aes(x = Year, y = choc.pounds/1000)) +
+  geom_point(colour ="red", size=4) +
   theme_classic()+
-  scale_x_continuous(limits=c(1980,2022),breaks=c(1980, 1985, 1990,
-                                                  1995,2000, 2005, 2010,2015,2020, 2025)) +
-  scale_y_continuous(limits=c(0,1),breaks=c(0,0.25, 0.5,0.75,1))+
-  theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
-                                                                face="bold"),
-        plot.title =element_text(size=16, face='bold', hjust = 0.5),
-        axis.text.x = element_text(angle = 45, hjust = 1),
-        panel.border = element_rect(color = "black", size = 1, fill = NA, 
-                                    linetype="solid")) +
-  labs(title = "Shell Material Removed",
-       y = "# Lone Cabbage Reefs Removed")
+  scale_x_continuous(limits=c(1980,2025),breaks=c(1980,1985,1990, 1995, 2000, 2005, 
+                                                  2010,2015,2020,2025)) +
+  scale_y_continuous(limits=c(0,12),breaks=c(0, 2, 4, 6, 8, 10, 12))+
+                       theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
+                                                                                     face="bold"),
+                             plot.title =element_text(size=16, face='bold', hjust = 0.5),
+                             axis.text.x = element_text(angle = 45, hjust = 1),
+                             panel.border = element_rect(color = "black", size = 1, fill = NA, 
+                                                         linetype="solid")) +
+                       labs(title = "Pounds landed",
+                            y = "Pounds x 1000")
+                     
+                     choc_fig<-ggarrange(s2,s3,s4, 
+                                         labels = c("A", "B", "C", "D"),
+                                         ncol = 2, nrow = 2)
+                     annotate_figure(choc_fig,
+                                     top = text_grob("St. Andrews", color = "black", face = "bold", size = 20))
+                     
