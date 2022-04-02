@@ -6,7 +6,7 @@
 #FWC and DEP for Apalach.  Pensacola and St. Andrews are shell, but Apalach
 #is a mix of rock and shell
 
-d1 <- read.csv("~/GitHub/AB_DEP/20220326_merged_agency_data.csv")
+d1 <- read.csv("~/Git/AB_DEP/20220326_merged_agency_data.csv")
 
 library(readxl)
 library(tidyverse)
@@ -328,6 +328,9 @@ s4<-ggplot(d5, aes(Period, CPUE_Spat, color=Bay)) +
   xlab("Period") +
   ylab("Spat CPUE")
 
+ggsave("dep_allbays_site.png", width = 10, height = 10)
+
+
 #########
 ##ok move away from CPUE and work on the GLMs
 #########
@@ -510,7 +513,7 @@ new.tmb2 <- glmmTMB(Sum_spat ~ Period * Bay + offset(log(Num_quads)), data = new
 ##this is key plot
 #below is for all bays but 1 quad
 ggpredict(new.tmb2)
-test2 = ggpredict(new.tmb2, terms = c("Period[14]", "Bay", "Num_quads[1]"), type = c('fe')) #for all Bays
+test2 = ggpredict(new.tmb2, terms = c("Period", "Bay", "Num_quads[1]"), type = c('fe')) #for all Bays
 
 #across periods for 1 quad what is predicted value in each bay
 plot(test2, facet=TRUE, add.data=FALSE,colors=c("red","black","blue") )
@@ -560,8 +563,11 @@ pr3 = ggplot(StAndrews, aes(x, predicted))+
 
 plot_grid(pr1, pr2, pr3)
 
+ggsave("by_bay_predicted_period.png", width=10, height=10)
+
+
 ##look more at this
-#this is a good plot
+#this is a good plot must go in paper
 
 pr <- plot_grid(
    pr1 + theme(legend.position="none"),
