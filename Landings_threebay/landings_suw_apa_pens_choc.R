@@ -239,7 +239,7 @@ s2<-ggplot(data = d1, aes(x = Year, y = suw.trips)) +
   theme_classic()+
   scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,
                                                   1995,2000, 2005, 2010,2015,2020, 2025)) +
-  scale_y_continuous(limits=c(0,15000),breaks=c(seq(0,15000, by= 1000))) +
+  scale_y_continuous(limits=c(0,12000),breaks=c(seq(0,12000, by= 1000))) +
   theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
                                                                 face="bold"),
         plot.title =element_text(size=16, face='bold', hjust = 0.5),
@@ -287,6 +287,8 @@ suw_fig<-ggarrange(s2,s3,s4,
                     ncol = 2, nrow = 2)
 annotate_figure(suw_fig,
                 top = text_grob("Suwannee Sound", color = "black", face = "bold", size = 20))
+
+ggsave("suwannee_dependent.pdf", width = 10, height = 10)
 
 #### Apalachicola ####
 d2 <- land %>% 
@@ -336,7 +338,7 @@ a3<-ggplot(data=d2, aes(x=Year, y=apa.cpue))+
   theme_classic()+
   scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,1995,2000, 2005, 
                                                   2010,2015,2020,2025)) +
-  scale_y_continuous(limits=c(0,600),breaks=c(0,50,100,150,200,250,300,350,400))+
+  scale_y_continuous(limits=c(0,200),breaks=c(0,50,100,150,200))+
   theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
                                                                 face="bold"),
         plot.title =element_text(size=16, face='bold', hjust = 0.5),
@@ -352,8 +354,8 @@ a4<-ggplot(data = d2, aes(x = Year, y = apa.pounds/1000)) +
   theme_classic()+
   scale_x_continuous(limits=c(1980,2025),breaks=c(1980,1985,1990, 1995, 2000, 2005, 
                                                   2010,2015,2020,2025)) +
-  scale_y_continuous(limits=c(0,1200),breaks=c(0, 100, 200, 300, 400, 500, 600, 700, 
-                                               800, 900, 1000, 1100, 1200))+
+  scale_y_continuous(limits=c(0,4000),breaks=c(0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 
+                                               4000))+
   theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
                                                                 face="bold"),
         plot.title =element_text(size=16, face='bold', hjust = 0.5),
@@ -363,11 +365,14 @@ a4<-ggplot(data = d2, aes(x = Year, y = apa.pounds/1000)) +
   labs(title = "Pounds landed",
        y = "Pounds x 1000")
 
-apa_fig<-ggarrange(s2,s3,s4, 
+apa_fig<-ggarrange(a2,a3,a4, 
                    labels = c("A", "B", "C", "D"),
                    ncol = 2, nrow = 2)
 annotate_figure(apa_fig,
                 top = text_grob("Apalachicola", color = "black", face = "bold", size = 20))
+
+ggsave("apalach_dependent.pdf", width = 10, height = 10)
+
 
 #### Pensacola ####
 #volume in meters cubed of shell material removed from Pensacola
@@ -382,7 +387,7 @@ p1<-ggplot(data = d3, aes(x = Year, y = pen.removed)) +
   geom_point(colour ="red", size=4) +
   theme_classic()+
   scale_x_continuous(limits=c(1980,2025),breaks=c(1980,1985,1990,1995,2000,2005,2010,2015,2020,2025))+
-  scale_y_continuous(limits=c(0,4000),breaks=c(0,500,1000,1500,2000,2500,3000,3500,4000))+
+  scale_y_continuous(limits=c(0,4000),breaks=c(seq(0,4000, by= 500)))+
   theme(axis.text=element_text(size=10),
         axis.title=element_text(size=12),
         plot.title =element_text(size=16, hjust = 0.5),
@@ -399,7 +404,7 @@ p2<-ggplot(data = d3, aes(x = Year, y = pen.trips)) +
   theme_classic()+
   scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,
                                                   1995,2000, 2005, 2010,2015,2020, 2025)) +
-  scale_y_continuous(limits=c(0,2000),breaks=c(0,250,500,750,1000,1250,1500,1750,2000)) +
+  scale_y_continuous(limits=c(0,2000),breaks=c(seq(0,2000, by= 500))) +
   theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
                                                                 face="bold"),
         plot.title =element_text(size=16, face='bold', hjust = 0.5),
@@ -415,7 +420,7 @@ p3<-ggplot(data=d3, aes(x=Year, y=pen.cpue))+
   theme_classic()+
   scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,1995,2000, 2005, 
                                                   2010,2015,2020,2025)) +
-  scale_y_continuous(limits=c(0,600),breaks=c(0,50,100,150,200,250,300,350,400, 450,500,550,600))+
+  scale_y_continuous(limits=c(0,600),breaks=c(seq(0,600, by= 50)))+
   theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
                                                                 face="bold"),
         plot.title =element_text(size=16, face='bold', hjust = 0.5),
@@ -431,8 +436,7 @@ p4<-ggplot(data = d3, aes(x = Year, y = pen.pounds/1000)) +
   theme_classic()+
   scale_x_continuous(limits=c(1980,2025),breaks=c(1980,1985,1990, 1995, 2000, 2005, 
                                                   2010,2015,2020,2025)) +
-  scale_y_continuous(limits=c(0,1200),breaks=c(0, 100, 200, 300, 400, 500, 600, 700, 
-                                               800, 900, 1000, 1100, 1200))+
+  scale_y_continuous(limits=c(0,600),breaks=c(seq(0,600, by= 100)))+
   theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
                                                                 face="bold"),
         plot.title =element_text(size=16, face='bold', hjust = 0.5),
@@ -442,11 +446,14 @@ p4<-ggplot(data = d3, aes(x = Year, y = pen.pounds/1000)) +
   labs(title = "Pounds landed",
        y = "Pounds x 1000")
 
-pen_fig<-ggarrange(s2,s3,s4, 
+pen_fig<-ggarrange(p2,p3,p4, 
                    labels = c("A", "B", "C", "D"),
                    ncol = 2, nrow = 2)
 annotate_figure(pen_fig,
                 top = text_grob("Pensacola", color = "black", face = "bold", size = 20))
+
+ggsave("pensacola_dependent.pdf", width = 10, height = 10)
+
 
 #### Choctawhatchee ####
 d4 <- land %>% 
@@ -518,8 +525,11 @@ s4<-ggplot(data = d4, aes(x = Year, y = choc.pounds/1000)) +
                        labs(title = "Pounds landed",
                             y = "Pounds x 1000")
                      
-                     choc_fig<-ggarrange(s2,s3,s4, 
-                                         labels = c("A", "B", "C", "D"),
-                                         ncol = 2, nrow = 2)
-                     annotate_figure(choc_fig,
-                                     top = text_grob("St. Andrews", color = "black", face = "bold", size = 20))
+choc_fig<-ggarrange(s2,s3,s4, 
+       labels = c("A", "B", "C", "D"),
+       ncol = 2, nrow = 2)
+   
+annotate_figure(choc_fig,
+                top = text_grob("St. Andrews", color = "black", face = "bold", size = 20))
+
+ggsave("standrews_dependent.pdf", width = 10, height = 10)
