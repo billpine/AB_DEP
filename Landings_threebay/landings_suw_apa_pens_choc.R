@@ -223,8 +223,8 @@ s1<-ggplot(data = d1, aes(x = Year, y = suw.removed)) +
                                                   1995,2000, 2005, 2010,2015,2020, 2025)) +
   scale_y_continuous(limits=c(0,1400),breaks=c(0,200,400,600, 800, 1000, 1200, 1400))+
   theme(axis.text=element_text(size=10),
-        axis.title=element_text(size=12),
-        plot.title =element_text(size=16, hjust = 0.5),
+        axis.title=element_text(size=10),
+        plot.title =element_text(size=10, hjust = 0.5),
         axis.text.x = element_text(angle = 45, hjust = 1),
         panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                     linetype="solid")) +
@@ -240,9 +240,9 @@ s2<-ggplot(data = d1, aes(x = Year, y = suw.trips)) +
   scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,
                                                   1995,2000, 2005, 2010,2015,2020, 2025)) +
   scale_y_continuous(limits=c(0,12000),breaks=c(seq(0,12000, by= 1000))) +
-  theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
+  theme(axis.text=element_text(size=10),axis.title=element_text(size=10,
                                                                 face="bold"),
-        plot.title =element_text(size=16, face='bold', hjust = 0.5),
+        plot.title =element_text(size=10, face='bold', hjust = 0.5),
         axis.text.x = element_text(angle = 45, hjust = 1),
         panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                     linetype="solid")) +
@@ -256,9 +256,9 @@ s3<-ggplot(data=d1, aes(x=Year, y=suw.cpue))+
   scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,1995,2000, 2005, 
                                                   2010,2015,2020,2025)) +
   scale_y_continuous(limits=c(0,400),breaks=c(0,50,100,150,200,250,300,350,400))+
-  theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
+  theme(axis.text=element_text(size=10),axis.title=element_text(size=10,
                                                                 face="bold"),
-        plot.title =element_text(size=16, face='bold', hjust = 0.5),
+        plot.title =element_text(size=10, face='bold', hjust = 0.5),
         axis.text.x = element_text(angle = 45, hjust = 1),
         panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                     linetype="solid")) +
@@ -273,9 +273,9 @@ s4<-ggplot(data = d1, aes(x = Year, y = suw.pounds/1000)) +
                                                     2010,2015,2020,2025)) +
     scale_y_continuous(limits=c(0,1200),breaks=c(0, 100, 200, 300, 400, 500, 600, 700, 
                                                    800, 900, 1000, 1100, 1200))+
-    theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
+    theme(axis.text=element_text(size=10),axis.title=element_text(size=10,
                                                                   face="bold"),
-          plot.title =element_text(size=16, face='bold', hjust = 0.5),
+          plot.title =element_text(size=10, face='bold', hjust = 0.5),
           axis.text.x = element_text(angle = 45, hjust = 1),
           panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                       linetype="solid")) +
@@ -288,7 +288,7 @@ suw_fig<-ggarrange(s2,s3,s4,
 annotate_figure(suw_fig,
                 top = text_grob("Suwannee Sound", color = "black", face = "bold", size = 20))
 
-ggsave("suwannee_dependent.pdf", width = 10, height = 10)
+#ggsave("suwannee_dependent.pdf", width = 10, height = 10)
 
 #### Apalachicola ####
 d2 <- land %>% 
@@ -306,8 +306,8 @@ a1<-ggplot(data = d2, aes(x = Year, y = apa.removed)) +
   scale_x_continuous(limits=c(1980,2025),breaks=c(1980,1985,1990,1995,2000,2005,2010,2015,2020,2025))+
   scale_y_continuous(limits=c(0,1400),breaks=c(0,200,400,600,800,1000,1200,1400))+
   theme(axis.text=element_text(size=10),
-        axis.title=element_text(size=12),
-        plot.title =element_text(size=16, hjust = 0.5),
+        axis.title=element_text(size=10),
+        plot.title =element_text(size=10, hjust = 0.5),
         axis.text.x = element_text(angle = 45, hjust = 1),
         panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                     linetype="solid")) +
@@ -322,14 +322,14 @@ a2<-ggplot(data = d2, aes(x = Year, y = apa.trips)) +
   theme_classic()+
   scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,
                                                   1995,2000, 2005, 2010,2015,2020, 2025)) +
-  scale_y_continuous(limits=c(0,60000),breaks=c(0,10000,20000,30000,40000,50000)) +
-  theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
+  scale_y_continuous(limits=c(0,60000),breaks=c(0,10000,20000,30000,40000,50000, 60000)) +
+  theme(axis.text=element_text(size=10),axis.title=element_text(size=10,
                                                                 face="bold"),
-        plot.title =element_text(size=16, face='bold', hjust = 0.5),
+        plot.title =element_text(size=10, face='bold', hjust = 0.5),
         axis.text.x = element_text(angle = 45, hjust = 1),
         panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                     linetype="solid")) +
-  labs(title = "Commercial Trips",
+  labs(title = "Apalachicola Commercial Trips",
        y = "# of Trips")
 
 # CPUE for Apalachicola
@@ -339,13 +339,13 @@ a3<-ggplot(data=d2, aes(x=Year, y=apa.cpue))+
   scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,1995,2000, 2005, 
                                                   2010,2015,2020,2025)) +
   scale_y_continuous(limits=c(0,200),breaks=c(0,50,100,150,200))+
-  theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
+  theme(axis.text=element_text(size=10),axis.title=element_text(size=10,
                                                                 face="bold"),
-        plot.title =element_text(size=16, face='bold', hjust = 0.5),
+        plot.title =element_text(size=10, face='bold', hjust = 0.5),
         axis.text.x = element_text(angle = 45, hjust = 1),
         panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                     linetype="solid")) +
-  labs(title = "Catch Per Unit Effort",
+  labs(title = "Apalachicola CPUE",
        y = "CPUE")
 
 #landings in Apalachicola
@@ -356,13 +356,13 @@ a4<-ggplot(data = d2, aes(x = Year, y = apa.pounds/1000)) +
                                                   2010,2015,2020,2025)) +
   scale_y_continuous(limits=c(0,4000),breaks=c(0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 
                                                4000))+
-  theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
+  theme(axis.text=element_text(size=10),axis.title=element_text(size=10,
                                                                 face="bold"),
-        plot.title =element_text(size=16, face='bold', hjust = 0.5),
+        plot.title =element_text(size=10, face='bold', hjust = 0.5),
         axis.text.x = element_text(angle = 45, hjust = 1),
         panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                     linetype="solid")) +
-  labs(title = "Pounds landed",
+  labs(title = "Apalachicola Landings (lbs)",
        y = "Pounds x 1000")
 
 apa_fig<-ggarrange(a2,a3,a4, 
@@ -389,8 +389,8 @@ p1<-ggplot(data = d3, aes(x = Year, y = pen.removed)) +
   scale_x_continuous(limits=c(1980,2025),breaks=c(1980,1985,1990,1995,2000,2005,2010,2015,2020,2025))+
   scale_y_continuous(limits=c(0,4000),breaks=c(seq(0,4000, by= 500)))+
   theme(axis.text=element_text(size=10),
-        axis.title=element_text(size=12),
-        plot.title =element_text(size=16, hjust = 0.5),
+        axis.title=element_text(size=10),
+        plot.title =element_text(size=10, hjust = 0.5),
         axis.text.x = element_text(angle = 45, hjust = 1),
         panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                     linetype="solid")) +
@@ -405,13 +405,13 @@ p2<-ggplot(data = d3, aes(x = Year, y = pen.trips)) +
   scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,
                                                   1995,2000, 2005, 2010,2015,2020, 2025)) +
   scale_y_continuous(limits=c(0,2000),breaks=c(seq(0,2000, by= 500))) +
-  theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
+  theme(axis.text=element_text(size=10),axis.title=element_text(size=10,
                                                                 face="bold"),
-        plot.title =element_text(size=16, face='bold', hjust = 0.5),
+        plot.title =element_text(size=10, face='bold', hjust = 0.5),
         axis.text.x = element_text(angle = 45, hjust = 1),
         panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                     linetype="solid")) +
-  labs(title = "Commercial Trips",
+  labs(title = "Pensacola Commercial Trips",
        y = "# of Trips")
 
 # CPUE for pensacola
@@ -420,14 +420,14 @@ p3<-ggplot(data=d3, aes(x=Year, y=pen.cpue))+
   theme_classic()+
   scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,1995,2000, 2005, 
                                                   2010,2015,2020,2025)) +
-  scale_y_continuous(limits=c(0,600),breaks=c(seq(0,600, by= 50)))+
-  theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
+  scale_y_continuous(limits=c(0,600),breaks=c(seq(0,600, by= 100)))+
+  theme(axis.text=element_text(size=10),axis.title=element_text(size=10,
                                                                 face="bold"),
-        plot.title =element_text(size=16, face='bold', hjust = 0.5),
+        plot.title =element_text(size=10, face='bold', hjust = 0.5),
         axis.text.x = element_text(angle = 45, hjust = 1),
         panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                     linetype="solid")) +
-  labs(title = "Catch Per Unit Effort",
+  labs(title = "Pensacola CPUE",
        y = "CPUE")
 
 #landings in pensacola
@@ -437,13 +437,13 @@ p4<-ggplot(data = d3, aes(x = Year, y = pen.pounds/1000)) +
   scale_x_continuous(limits=c(1980,2025),breaks=c(1980,1985,1990, 1995, 2000, 2005, 
                                                   2010,2015,2020,2025)) +
   scale_y_continuous(limits=c(0,600),breaks=c(seq(0,600, by= 100)))+
-  theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
+  theme(axis.text=element_text(size=10),axis.title=element_text(size=10,
                                                                 face="bold"),
-        plot.title =element_text(size=16, face='bold', hjust = 0.5),
+        plot.title =element_text(size=10, face='bold', hjust = 0.5),
         axis.text.x = element_text(angle = 45, hjust = 1),
         panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                     linetype="solid")) +
-  labs(title = "Pounds landed",
+  labs(title = "Pensacola landings (lbs)",
        y = "Pounds x 1000")
 
 pen_fig<-ggarrange(p2,p3,p4, 
@@ -469,8 +469,8 @@ s1<-ggplot(data = d4, aes(x = Year, y = choc.removed)) +
   scale_x_continuous(limits=c(1980,2025),breaks=c(1980,1985,1990,1995,2000,2005,2010,2015,2020,2025))+
   scale_y_continuous(limits=c(0,4000),breaks=c(0,500,1000,1500,2000,2500,3000,3500,4000))+
   theme(axis.text=element_text(size=10),
-        axis.title=element_text(size=12),
-        plot.title =element_text(size=16, hjust = 0.5),
+        axis.title=element_text(size=10),
+        plot.title =element_text(size=10, hjust = 0.5),
         axis.text.x = element_text(angle = 45, hjust = 1),
         panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                     linetype="solid")) +
@@ -484,13 +484,13 @@ s2<-ggplot(data = d4, aes(x = Year, y = choc.trips)) +
   scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,
                                                   1995,2000, 2005, 2010,2015,2020, 2025)) +
   scale_y_continuous(limits=c(0,200),breaks=c(0,50,100,150,200)) +
-  theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
+  theme(axis.text=element_text(size=10),axis.title=element_text(size=10,
                                                                 face="bold"),
-        plot.title =element_text(size=16, face='bold', hjust = 0.5),
+        plot.title =element_text(size=10, face='bold', hjust = 0.5),
         axis.text.x = element_text(angle = 45, hjust = 1),
         panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                     linetype="solid")) +
-  labs(title = "Commercial Trips",
+  labs(title = "St. Andrews Commercial Trips",
        y = "# of Trips")
 
 # CPUE for St. Andrews
@@ -500,13 +500,13 @@ s3<-ggplot(data=d4, aes(x=Year, y=choc.cpue))+
   scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,1995,2000, 2005, 
                                                   2010,2015,2020,2025)) +
   scale_y_continuous(limits=c(0,200),breaks=c(0,50,100,150,200,250))+
-  theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
+  theme(axis.text=element_text(size=10),axis.title=element_text(size=10,
                                                                 face="bold"),
-        plot.title =element_text(size=16, face='bold', hjust = 0.5),
+        plot.title =element_text(size=10, face='bold', hjust = 0.5),
         axis.text.x = element_text(angle = 45, hjust = 1),
         panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                     linetype="solid")) +
-  labs(title = "Catch Per Unit Effort",
+  labs(title = "St. Andrews CPUE",
        y = "CPUE")
 
 #landings in St. Andrews
@@ -516,14 +516,14 @@ s4<-ggplot(data = d4, aes(x = Year, y = choc.pounds/1000)) +
   scale_x_continuous(limits=c(1980,2025),breaks=c(1980,1985,1990, 1995, 2000, 2005, 
                                                   2010,2015,2020,2025)) +
   scale_y_continuous(limits=c(0,12),breaks=c(0, 2, 4, 6, 8, 10, 12))+
-                       theme(axis.text=element_text(size=10),axis.title=element_text(size=12,
+                       theme(axis.text=element_text(size=10),axis.title=element_text(size=10,
                                                                                      face="bold"),
-                             plot.title =element_text(size=16, face='bold', hjust = 0.5),
+                             plot.title =element_text(size=10, face='bold', hjust = 0.5),
                              axis.text.x = element_text(angle = 45, hjust = 1),
                              panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                                          linetype="solid")) +
-                       labs(title = "Pounds landed",
-                            y = "Pounds x 1000")
+labs(title = "St. Andrews Landings (lbs)",
+y = "Pounds x 1000")
                      
 choc_fig<-ggarrange(s2,s3,s4, 
        labels = c("A", "B", "C", "D"),
@@ -533,3 +533,16 @@ annotate_figure(choc_fig,
                 top = text_grob("St. Andrews", color = "black", face = "bold", size = 20))
 
 ggsave("standrews_dependent.pdf", width = 10, height = 10)
+
+######
+#all arrange
+all_fig<-ggarrange(a2,a3,a4,p2,p3,p4,s2,s3,s4, 
+                    labels = c("A", "B", "C", "D", "E",
+                               "F","G","H","I"),
+                    ncol = 3, nrow = 3)
+
+annotate_figure(all_fig,
+                top = text_grob("Fisheries Dependent", color = "black", face = "bold", size = 20))
+
+ggsave("all_dependent.png", width = 10, height = 10)
+
