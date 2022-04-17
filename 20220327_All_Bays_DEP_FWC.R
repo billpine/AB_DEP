@@ -109,9 +109,14 @@ d6$CPUE_Legal<-d6$Sum_legal/d6$Num_quads
 f1<-ggplot(d6, aes(Period, CPUE_Spat)) +
   geom_point(size=4) +
   ggtitle("Spat CPUE by Period") +
+  scale_x_continuous(limits=c(2,13),breaks=c(2,3,4,5,6,7,8,9,10,11,12,
+                                             13)) +
   xlab("Period") +
-  ylab("Spat") +
+  ylab("Spat per quadrat") +
   facet_wrap(~Bay)
+
+ggsave("three_bay_spat_CPUE.png", width = 10, height = 10)
+
 
 f2<-ggplot(d6, aes(Period, CPUE_Seed)) +
   geom_point(size=4) +
@@ -325,6 +330,10 @@ plot_grid(s1,s2,s3)
 s4<-ggplot(d5, aes(Period, CPUE_Spat, color=Bay)) +
   geom_point(size=4) +
   ggtitle("Spat CPUE by Period") +
+  scale_x_continuous(limits=c(2,13),breaks=c(2,3,4,5,6,7,8,9,10,11,
+                                             12,13)) +
+  scale_y_continuous(limits=c(0,600),breaks=c(0,100,200,300,400,500,600)) +
+  
   xlab("Period") +
   ylab("Spat CPUE")
 
