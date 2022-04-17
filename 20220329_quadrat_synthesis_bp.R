@@ -188,7 +188,7 @@ f5<-ggplot(d3, aes(Period, CPUE_Spat)) +
   ylab("Spat") +
   facet_wrap(~Site)
 
-#ggsave("spat.pdf", width = 10, height = 10)
+ggsave("AB_spat_period_site.pdf", width = 10, height = 10)
 
 f5.1<-ggplot(d3, aes(Period, CPUE_Seed)) +
   geom_point(size=2) +
@@ -287,11 +287,12 @@ plot(dp3.2$Period,dp3.2$CPUE_Legal)
 spat_study<-ggplot(dp3.2, aes(Period, CPUE_Spat)) +
   geom_point(size=2) +
   ggtitle("CPUE Spat by Period") +
+  scale_x_continuous(breaks=seq(2,13,1))+
   xlab("Period") +
   ylab("CPUE Spat") +
   facet_wrap(~Project)
 
-#ggsave("spat_study.pdf", width = 10, height = 10)
+ggsave("AB_spat_study.png", width = 10, height = 10)
 
 sub_study<-ggplot(dp3.2, aes(Period, CPUE_Seed,color=Project)) +
   geom_point(size=2) +
@@ -341,6 +342,7 @@ r0<-ggplot(dp3.2, aes(Period, Sum_spat,color=Project)) +
   geom_point(size=4) +
   ggtitle("Spat per Period") +
   xlab("Period") +
+  scale_x_continuous(breaks=seq(2,13,1))+
   ylab("Total Spat")
 ggsave("apalach spat per period.png", width=10, height=10)
 
