@@ -156,6 +156,13 @@ dNFWF_1<-subset(d3,d3$Project =="NFWF_1") #only Apalach Bay
 dFWC_2021<-subset(d3,d3$Project =="FWC_2021") #only Apalach Bay
 dNRDA_4044<-subset(d3,d3$Project =="NRDA_4044") #Pensacola, St. Andrew, Apalach bay
 dNRDA_5007<-subset(d3,d3$Project =="NRDA_5007") #only Apalach Bay
+dPeriod<-2:13 
+
+#I'm adding dPeriod to have it predict over all periods
+#even if sampling was not done all periods. just for graphing
+#but I'm not sure this is the best way to do this forcing predictions
+#over periods not sampled
+
 
 #########NFWF_1 only#################
 #NFWF_1 this is working
@@ -164,7 +171,7 @@ summary(tmb_NFWF)
 
 
 dNFWF_1.new = data.frame(Roundwt = dNFWF_1$Roundwt,
-                         Period = dNFWF_1$Period,
+                         Period = dPeriod,
                          Project = dNFWF_1$Project,
                          Num_quads = dNFWF_1$Num_quads)
 
@@ -173,7 +180,7 @@ ggpredict(dNFWF_1.new.tmb1)
 
 
 #below is not specifying # quads so it just picks 3 values near the average
-dNFWF_1_pred = ggpredict(dNFWF_1.new.tmb1, terms = c("Period", "Num_quads"), type = c('fe')) #for all projects
+dNFWF_1_pred = ggpredict(dNFWF_1.new.tmb1, terms = c("Period", "Num_quads[150]"), type = c('fe')) #for all projects
 plot(dNFWF_1_pred, facet=FALSE, add.data=TRUE)
 
 #the above is a good demonstration the model is a decent fit to data
@@ -212,7 +219,7 @@ tmb_FWC_2021 <- glmmTMB(Roundwt ~ Period + (1|Site) + offset(log(Num_quads)), da
 summary(tmb_FWC_2021)
 
 dFWC_2021.new = data.frame(Roundwt = dFWC_2021$Roundwt,
-                           Period = dFWC_2021$Period,
+                           Period = dFWC_2021$Project,
                            Project = dFWC_2021$Project,
                            Num_quads = dFWC_2021$Num_quads)
 
@@ -227,7 +234,7 @@ plot(dFWC_2021_pred, facet=FALSE, add.data=TRUE)
 #the above is a good demonstration the model is a decent fit to data
 
 #this predicts with 1 quad which is how we will compare the 3 projects
-dFWC_2_pred = ggpredict(dFWC_2021.new.tmb1, terms = c("Period", "Num_quads[1]"), type = c('fe')) #for all projects
+dFWC_2_pred = ggpredict(dFWC_2021.new.tmb1, terms = c("Period[2:13]", "Num_quads[1]"), type = c('fe')) #for all projects
 plot(dFWC_2_pred, facet=FALSE, colors=c("red"), add.data=FALSE)
 
 #note this matches the data well if you predict for 1-3 quads

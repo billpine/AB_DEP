@@ -76,7 +76,9 @@ spat_sum <- d2 %>%
 #  write.table(spat_sum, file = "spat_count_yr_mnth_station.txt", row.names = FALSE,
 #              col.names = TRUE,sep = ",")
   
+
   
+    
 # #OK parking the summary stats function here
 # options(scipen = 2)
 # sumstats = function(x){ 
@@ -223,6 +225,10 @@ count_legal2 <- dplyr::rename(count_legal2,Project=Project,Period=Period,Site=Si
 count_quads2=aggregate(Spat~Project+Period+Site,data=d2,length)
 count_quads_spat2 <- dplyr::rename(count_quads2,Project=Project,Period=Period,Site=Site,Num_quads=Spat)
 
+count_quadsxx=aggregate(Spat~Period,data=d2,length)
+count_quads_spatxx <- dplyr::rename(count_quadsxx,Period=Period,Num_quads=Spat)
+
+
 #merge spat live count total data frame with the tran_length total data frame
 dp3=merge(count_spat2,count_quads_spat2,by=c("Project","Period","Site"))
 dp3.1=merge(dp3,count_Seed2,by=c("Project", "Period","Site"))
@@ -284,7 +290,12 @@ plot(dp3.2$Period,dp3.2$CPUE_Legal)
 #but one problem is DEP is not sampled until 2 years after
 #cultch put out.
 
-spat_study<-ggplot(dp3.2, aes(Period, CPUE_Spat)) +
+#change order that it plots in facet
+dp3.2x <- dp3.2                              # Replicate data
+dp3.2x$Project <- factor(dp3.2x$Project,      # Reordering group factor levels
+                         levels = c("NFWF_1", "NRDA_4044", "NRDA_5007", "FWC_2021"))
+
+spat_study<-ggplot(dp3.2x, aes(Period, CPUE_Spat)) +
   geom_point(size=2) +
   ggtitle("CPUE Spat by Period") +
   scale_x_continuous(breaks=seq(2,13,1))+
@@ -418,6 +429,9 @@ z1<- ggplot(dp4, aes(x=Lowdays, y=Sum_spat))+
   xlab ("Days discharge < 12000 CFS")+
   ggtitle("Live oyster spat count and days river < 12000 CFS") 
 
+ggsave("low days and spat.png", width=10, height=10)
+
+
 names(dp4)
 
 #Period only
@@ -528,7 +542,14 @@ ggpredict(new.tmb2)
 test2 = ggpredict(new.tmb2, terms = c("Period", "Project", "Num_quads[1]"), type = c('fe')) #for all projects
 
 #below is for one project
-test3 = ggpredict(new.tmb2, terms = c("Period[14]", "Project[NRDA_4044]","Num_quads[1]"), type = c('fe')) #for one project
+
+#this is a decent example of model fit to data. About 150 quads done each time in NFWF1
+#this is an example for folks to review
+
+test3 = ggpredict(new.tmb2, terms = c("Period", "Project[NFWF_1]","Num_quads[150]"), type = c('fe')) #for one project
+plot(test3, facet=FALSE, add.data=TRUE)
+ggsave("pred_apalach_150quad.png", width=10, height=10)
+
                  
 #this is just lowdays (not significant on its own)
 
