@@ -333,11 +333,10 @@ s4<-ggplot(d5, aes(Period, CPUE_Spat, color=Bay)) +
   scale_x_continuous(limits=c(2,13),breaks=c(2,3,4,5,6,7,8,9,10,11,
                                              12,13)) +
   scale_y_continuous(limits=c(0,600),breaks=c(0,100,200,300,400,500,600)) +
-  
   xlab("Period") +
   ylab("Spat CPUE")
 
-ggsave("dep_allbays_site.png", width = 10, height = 10)
+ggsave("dep_allbays_spat_cpue.png", width = 10, height = 10)
 
 
 #########
@@ -543,8 +542,9 @@ pr1 = ggplot(Pensacola, aes(x, predicted))+
    geom_line(size=2)+
    ylab("Count per quad") +
    xlab ("Period")+
-   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
-   ggtitle("DEP Pensacola Live Spat by Period") 
+  scale_x_continuous(breaks=seq(2,13,1))+
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
+   ggtitle("Pensacola Live Spat by Period") 
 
 #below is how you would add the data, but because we are predicting from 1 quadrat the data don't line uo
 #well because in the field more than 1 quadrat was collected
@@ -559,6 +559,7 @@ pr2 = ggplot(Apalach, aes(x, predicted))+
   geom_line(size=2)+
   ylab("Count per quad") +
   xlab ("Period")+
+  scale_x_continuous(breaks=seq(2,13,1))+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
   ggtitle("Apalachicola Live Spat by Period") 
 
@@ -566,6 +567,7 @@ pr3 = ggplot(StAndrews, aes(x, predicted))+
   geom_line(size=2)+
   ylab("Count per quad") +
   xlab ("Period")+
+  scale_x_continuous(breaks=seq(2,13,1))+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
   ggtitle("St. Andrews Live Spat by Period")+
   ylim(0,10000)
