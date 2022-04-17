@@ -1,6 +1,5 @@
 #Apalachicola oyster data from three DEP files and 2 FWC file 
 
-###REMEMBER THESE ARE ONLY APALACHICOLA DATA
 
 #data from quadrats
 #Bill Pine
@@ -195,9 +194,9 @@ pr1 = ggplot(dNFWF_2_pred, aes(x, predicted))+
   xlab ("Period")+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
   ggtitle("Predicted NFWF_1 Cultch (Shell) Weight by Period - 1 quadrat")+
-  #scale_x_continuous(breaks=seq(1,14,1))+
-  ylim(0,10)+
-  xlim(1,14)
+  scale_x_continuous(breaks=seq(2,13,1))+
+  ylim(0,10)
+  
 
 
 #no need to include the data on single quadrat because the data are from
@@ -243,9 +242,9 @@ pr2 = ggplot(dFWC_2_pred, aes(x, predicted))+
   xlab ("Period")+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
   ggtitle("Predicted FWC_2021 Cultch (Rock) Weight by Period - 1 quadrat") +
-  ylim(0,10)+
-  xlim(1,14)
-
+  scale_x_continuous(breaks=seq(2,13,1))+
+  ylim(0,10)
+  
 #no need to include the data on single quadrat plots because the data are from
 #more than 1 quadrat
 # +
@@ -295,9 +294,9 @@ pr3 = ggplot(dNRDA_4044_2_pred, aes(x, predicted))+
   xlab ("Period")+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
   ggtitle("Predicted NRDA 4044 Cultch (Shell) Weight by Period - 1 quadrat")+
-  ylim(0,10)+
-  xlim(1,14)
-
+  scale_x_continuous(breaks=seq(2,13,1))+
+  ylim(0,10)
+  
 #########NRDA 5007 only#################
 
 tmb_NRDA_5007 <- glmmTMB(Roundwt ~ Period + (1|Site) + offset(log(Num_quads)), data = dNRDA_5007, family="nbinom2") #converge
@@ -332,10 +331,9 @@ pr4 = ggplot(dNRDA_5007_2_pred, aes(x, predicted))+
   xlab ("Period")+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
   ggtitle("Predicted Restore 5007 Cultch (Rock) Weight by Period - 1 quadrat") +
-  #scale_x_continuous(breaks=seq(2,14,1))+
-  ylim(0,10)+
-  xlim(1,14)
-  
+  scale_x_continuous(breaks=seq(2,13,1))+
+  ylim(0,10)
+
 
 plot_grid(pr1,pr2,pr3,pr4)
 
