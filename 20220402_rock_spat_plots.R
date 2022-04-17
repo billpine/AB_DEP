@@ -40,7 +40,8 @@ d1<- d0.1
 d2 <- d1
 d2$Spat[d2$Spat < -1] <- NA
 d2$Weight[d2$Weight < -1] <- NA
-d2$Sublegal[d2$Sublegal < -1] <- NA
+d2$Weight_kg[d2$Weight_kg < -1] <- NA
+d2$Seed[d2$Seed < -1] <- NA
 d2$Legal[d2$Legal < -1] <- NA
 
 data_sum<- d2 %>%
@@ -106,3 +107,24 @@ facet_wrap(~Period)
 
 ggsave("meanwt_meanspat.png", width=10, height=10)
 
+
+
+###ok now just plot the raw spat and raw weights, not the mean
+names(d2)
+
+r2<-ggplot(data = d2[d2$Bay=="Apalachicola",], aes(x=Weight, y=Spat, color=Project, na.rm=TRUE)) +
+  geom_point(size=2)+
+  facet_wrap(~Period)
+
+#now scale and limit y axis to 1000
+r3<-ggplot(data = d2[d2$Bay=="Apalachicola",], aes(x=Weight, y=Spat, color=Project, na.rm=TRUE)) +
+  geom_point(size=2)+
+  scale_y_continuous(breaks=seq(0,1000,200), limits=c(0,1000))+
+  facet_wrap(~Period)
+
+ggsave("r3_rawspat_rawweight.png", width=10, height=10)
+
+  
+plot_grid(r2, r3, labels = c('A', 'B'))
+
+ggsave("rawwt_rawspat.png", width=10, height=10)

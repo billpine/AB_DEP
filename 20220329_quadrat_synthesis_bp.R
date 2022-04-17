@@ -431,6 +431,16 @@ z1<- ggplot(dp4, aes(x=Lowdays, y=Sum_spat))+
 
 ggsave("low days and spat.png", width=10, height=10)
 
+z2<- ggplot(dp4, aes(x=Lowdays, y=CPUE_Spat))+
+  geom_point(size=3)+
+  ylab("Live oyster spat CPUE") +
+  xlab ("Days discharge < 12000 CFS")+
+  ggtitle("Live oyster spat CPUE and days discharge < 12000 CFS") 
+
+ggsave("low days and spat CPUE.png", width=10, height=10)
+
+
+
 
 names(dp4)
 
