@@ -65,20 +65,20 @@ names(quad_sum) <- c("Project", "Year", "Month","Period", "Site",
 
 ##summary number of oyster spat counted each month
 #by Project, Year, Month, Period, Site
-spat_sum <- d2 %>%
+spat_sum_z<-spat_sum <- d2 %>%
   dplyr::group_by(Project, Year, Month, Period, Site) %>%
   dplyr::summarise(sum=sum(Spat,na.rm=TRUE)) %>%
   dplyr::arrange(Project, Year, Month, Period, Site)
 
-  names(spat_sum) <- c("Project", "Year", "Month","Period", "Site",
+spat_sum_zz<-dplyr::arrange(spat_sum_z,Period)
+
+
+names(spat_sum_zz) <- c("Project", "Year", "Month","Period", "Site",
                      "Number Live Spat")
 
-#  write.table(spat_sum, file = "spat_count_yr_mnth_station.txt", row.names = FALSE,
+#  write.table(spat_sum_zz, file = "spat_count_yr_mnth_station.txt", row.names = FALSE,
 #              col.names = TRUE,sep = ",")
   
-
-  
-    
 # #OK parking the summary stats function here
 # options(scipen = 2)
 # sumstats = function(x){ 
@@ -182,12 +182,15 @@ plot_grid(f1,f2,f3,f4)
 
 
 ##maybe start here with FWC/FSU
+##this will show CPUE of spat, seed, legal by site over period
+
      
 f5<-ggplot(d3, aes(Period, CPUE_Spat)) +
   geom_point(size=2) +
   ggtitle("Spat CPUE by Period") +
   xlab("Period") +
   ylab("Spat") +
+  scale_x_continuous(breaks=seq(2,13,1))+
   facet_wrap(~Site)
 
 ggsave("AB_spat_period_site.pdf", width = 10, height = 10)
@@ -197,6 +200,7 @@ f5.1<-ggplot(d3, aes(Period, CPUE_Seed)) +
   ggtitle("Seed CPUE by Period") +
   xlab("Period") +
   ylab("Seed") +
+  scale_x_continuous(breaks=seq(2,13,1))+
   facet_wrap(~Site)
 #ggsave("Seed.pdf", width = 10, height = 10)
 
@@ -205,6 +209,7 @@ f5.2<-ggplot(d3, aes(Period, CPUE_Legal)) +
   ggtitle("Legal CPUE by Period") +
   xlab("Period") +
   ylab("Legal") +
+  scale_x_continuous(breaks=seq(2,13,1))+
   facet_wrap(~Site)
 #ggsave("legal.pdf", width = 10, height = 10)
 
@@ -282,7 +287,7 @@ plot(dp3.2$Period,dp3.2$CPUE_Legal)
 # 
 # 
 # plot_grid(f1,f2,f3,f4)
-
+#####################################################
 
 #ok this is a key plot below. Suggests
 #that spat differ by study
@@ -385,6 +390,7 @@ r1<-ggplot(data = dp3.2[dp3.2$Project=="NFWF_1",], aes(Period, Sum_spat)) +
 #this is by study on one plot not on log scale
 r2<-ggplot(data = dp3.2[dp3.2$Project=="NFWF_1",], aes(Period, Sum_spat)) +
   geom_point(size=3) +
+  geom_point(data = dp3.2[dp3.2$Project=="NFWF_1",], mapping = aes(Period, Sum_spat, color="NFWF 1"), size = 3)+
   geom_point(data = dp3.2[dp3.2$Project=="NRDA_4044",], mapping = aes(Period, Sum_spat, color="NRDA 4044"), size = 3)+
   geom_point(data = dp3.2[dp3.2$Project=="NRDA_5007",], mapping = aes(Period, Sum_spat, color="NRDA 5077"), size = 3)+
   geom_point(data = dp3.2[dp3.2$Project=="FWC_2021",], mapping = aes(Period, Sum_spat, color="FWC 2021"), size = 3)+
@@ -394,12 +400,14 @@ r2<-ggplot(data = dp3.2[dp3.2$Project=="NFWF_1",], aes(Period, Sum_spat)) +
 #facet_wrap(~Project)
 
 
-dp3.2$Site<-as.factor(dp3.2$Site)
 ######################
 ######
 #glmmTMB approach
 ######
 ######################
+
+dp3.2$Site<-as.factor(dp3.2$Site)
+
 
 library(glmmTMB)
 library(bbmle)
