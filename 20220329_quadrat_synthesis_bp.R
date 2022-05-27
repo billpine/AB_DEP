@@ -193,7 +193,7 @@ f5<-ggplot(d3, aes(Period, CPUE_Spat)) +
   scale_x_continuous(breaks=seq(2,13,1))+
   facet_wrap(~Site)
 
-ggsave("AB_spat_period_site.pdf", width = 10, height = 10)
+#ggsave("AB_spat_period_site.pdf", width = 10, height = 10)
 
 f5.1<-ggplot(d3, aes(Period, CPUE_Seed)) +
   geom_point(size=2) +
@@ -204,6 +204,9 @@ f5.1<-ggplot(d3, aes(Period, CPUE_Seed)) +
   facet_wrap(~Site)
 #ggsave("Seed.pdf", width = 10, height = 10)
 
+#Berrigan 1990 in Table 2 had about 98 per 1/4 m2 quadrat > 25-mm 18 months after restoration
+#and harvest season
+
 f5.2<-ggplot(d3, aes(Period, CPUE_Legal)) +
   geom_point(size=2) +
   ggtitle("Legal CPUE by Period") +
@@ -213,6 +216,8 @@ f5.2<-ggplot(d3, aes(Period, CPUE_Legal)) +
   facet_wrap(~Site)
 #ggsave("legal.pdf", width = 10, height = 10)
 
+#Berrigan 1990 in Table 2 had about 98 per 1/4 m2 quadrat > 25-mm 18 months after restoration
+#and harvest season
 
 ####now let's go back and see if this matters by study
 
@@ -308,7 +313,7 @@ spat_study<-ggplot(dp3.2x, aes(Period, CPUE_Spat)) +
   ylab("CPUE Spat") +
   facet_wrap(~Project)
 
-ggsave("AB_spat_study.png", width = 10, height = 10)
+#ggsave("AB_spat_study.png", width = 10, height = 10)
 
 sub_study<-ggplot(dp3.2, aes(Period, CPUE_Seed,color=Project)) +
   geom_point(size=2) +
@@ -360,32 +365,32 @@ r0<-ggplot(dp3.2, aes(Period, Sum_spat,color=Project)) +
   xlab("Period") +
   scale_x_continuous(breaks=seq(2,13,1))+
   ylab("Total Spat")
-ggsave("apalach spat per period.png", width=10, height=10)
+#ggsave("apalach spat per period.png", width=10, height=10)
 
 #+
 #  facet_wrap(~Site)
 
 #this is by study on one plot on log scale
 
-r0.1<-ggplot(dp3.2, aes(Period, Sum_spat,color=Project)) +
-  geom_point(size=4) +
-  ggtitle("Spat per Period by Site") +
-  xlab("Period") +
-  ylab("Total Spat")+
-  scale_y_log10()+
-  facet_wrap(~Site)
-#ggsave("SSSS.png", width=10, height=10)
-
-
-r1<-ggplot(data = dp3.2[dp3.2$Project=="NFWF_1",], aes(Period, Sum_spat)) +
-  geom_point(size=3) +
-  geom_point(data = dp3.2[dp3.2$Project=="NRDA_4044",], mapping = aes(Period, Sum_spat, color="red"), size = 3)+
-  geom_point(data = dp3.2[dp3.2$Project=="NRDA_5007",], mapping = aes(Period, Sum_spat, color="blue"), size = 3)+
-  ggtitle("Spat per Period by Study") +
-  scale_y_log10()+
-  xlab("Period") +
-  ylab("Total Spat")
-  #facet_wrap(~Project)
+# r0.1<-ggplot(dp3.2, aes(Period, Sum_spat,color=Project)) +
+#   geom_point(size=4) +
+#   ggtitle("Spat per Period by Site") +
+#   xlab("Period") +
+#   ylab("Total Spat")+
+#   scale_y_log10()+
+#   facet_wrap(~Site)
+# #ggsave("SSSS.png", width=10, height=10)
+# 
+# 
+# r1<-ggplot(data = dp3.2[dp3.2$Project=="NFWF_1",], aes(Period, Sum_spat)) +
+#   geom_point(size=3) +
+#   geom_point(data = dp3.2[dp3.2$Project=="NRDA_4044",], mapping = aes(Period, Sum_spat, color="red"), size = 3)+
+#   geom_point(data = dp3.2[dp3.2$Project=="NRDA_5007",], mapping = aes(Period, Sum_spat, color="blue"), size = 3)+
+#   ggtitle("Spat per Period by Study") +
+#   scale_y_log10()+
+#   xlab("Period") +
+#   ylab("Total Spat")
+#   #facet_wrap(~Project)
 
 #this is by study on one plot not on log scale
 r2<-ggplot(data = dp3.2[dp3.2$Project=="NFWF_1",], aes(Period, Sum_spat)) +
@@ -398,7 +403,6 @@ r2<-ggplot(data = dp3.2[dp3.2$Project=="NFWF_1",], aes(Period, Sum_spat)) +
   xlab("Period") +
   ylab("Total Spat")
 #facet_wrap(~Project)
-
 
 ######################
 ######
@@ -437,7 +441,7 @@ z1<- ggplot(dp4, aes(x=Lowdays, y=Sum_spat))+
   xlab ("Days discharge < 12000 CFS")+
   ggtitle("Live oyster spat count and days river < 12000 CFS") 
 
-ggsave("low days and spat.png", width=10, height=10)
+#ggsave("low days and spat.png", width=10, height=10)
 
 z2<- ggplot(dp4, aes(x=Lowdays, y=CPUE_Spat))+
   geom_point(size=3)+
@@ -445,10 +449,7 @@ z2<- ggplot(dp4, aes(x=Lowdays, y=CPUE_Spat))+
   xlab ("Days discharge < 12000 CFS")+
   ggtitle("Live oyster spat CPUE and days discharge < 12000 CFS") 
 
-ggsave("low days and spat CPUE.png", width=10, height=10)
-
-
-
+#ggsave("low days and spat CPUE.png", width=10, height=10)
 
 names(dp4)
 
@@ -547,6 +548,8 @@ test1.1 = ggpredict(new.tmb1, terms = c("Period[1]", "Num_quads[1]"), type = c('
 
 
 ############
+##this is a decent one to show how predict works, run test2
+
 #below with project
 
 new.dat2 = data.frame(Sum_spat = dp4$Sum_spat,
@@ -566,7 +569,7 @@ test2 = ggpredict(new.tmb2, terms = c("Period", "Project", "Num_quads[1]"), type
 
 test3 = ggpredict(new.tmb2, terms = c("Period", "Project[NFWF_1]","Num_quads[150]"), type = c('fe')) #for one project
 plot(test3, facet=FALSE, add.data=TRUE)
-ggsave("pred_apalach_150quad.png", width=10, height=10)
+#ggsave("pred_apalach_150quad.png", width=10, height=10)
 
                  
 #this is just lowdays (not significant on its own)
@@ -590,7 +593,6 @@ test3 = ggpredict(new.tmb3, terms = c("Period[14]", "Num_quads[1]"), type = c('f
 #neat that works
 
 #now make the Jennifer style plot with group and period
-
 ##this is in the paper, figure 6 i think
 
 nfwf_pred<- subset(test2, test2$group == "NFWF_1")
@@ -637,7 +639,7 @@ pr4 = ggplot(FWC_2021, aes(x, predicted))+
   scale_x_continuous(breaks=seq(1,14,1))
 
 plot_grid(pr1,pr2,pr3,pr4)
-ggsave("pred_apalach_1quad.png", width=10, height=10)
+#ggsave("pred_apalach_1quad.png", width=10, height=10)
 
 
 
