@@ -549,6 +549,7 @@ test1.1 = ggpredict(new.tmb1, terms = c("Period[1]", "Num_quads[1]"), type = c('
 
 ############
 ##this is a decent one to show how predict works, run test2
+##compare to Berrigan 1990 Table 1
 
 #below with project
 
