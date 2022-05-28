@@ -1,0 +1,37 @@
+###########
+Table 1
+
+This is a table that shows the projects summarized, the year of the sampling, the month, period, site, and the number of quadrats.  This is a good table to go over because people will have something in their hand to better understand the period.  Note that you sum the number of quadrats by period and site.  Discuss how the response we are interested in is the number of oysters by location over time, so we some by site and period.  
+
+
+Show d3 as data set, this has number spat, seed, legal plus CPUE of all
+
+
+show the removals vs. cultching plot
+
+###########
+Hi Bill,
+I analyzed the mineralogy off the two samples you dropped off. The sample with lots of encrusting oysters and barnacles called Ocala limestone is all dolomite. So might be Avon Park limestone instead of Ocala. The grayish sample you said is from Kentucky is calcite, dolomite, and a little quartz. I can tell you that the Kentucky sample was a bear to powder up. Very hard and dense and even kicked off a sulfur smell as I was smacking it with the mortar and pestle. The “Ocala” sample powdered easily. I have the XRD scans if you want them.
+
+Best,
+John
+###########
+
+Jamie summary stats
+Crate:
+mean = 152,710.1
+total cubic meters = 5,802,985
+max cubic meters = 331,310
+total LC = 474.4
+max LC = 27.1
+avg. LC = 12.5
+
+
+Rough:
+mean = 8,566.7 
+total cubic meters = 325,533.3
+max cubic meters = 18,585.7
+total LC = 26.6
+max LC = 1.5
+avg. LC = 0.7
+###############
