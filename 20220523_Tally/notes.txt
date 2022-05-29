@@ -42,7 +42,7 @@ You can show the prediction for 1 mode with line 567 (predicting for each projec
 Then you can end via the "Jennifer way" of predictions starting on 602 (run from 465 down to 602). This will result in the multi panel figure of predictions and CI for each project. NOTE HOW DIFFERENT THE Y AXIS ARE.  Really more useful to look at predicted values in 567.
 ########
 
-SWITCH TO ROCKS
+SWITCH TO CULTCH AS RESPONSE VARIABLE
 
 #############
 First plot could be line 112, r1
@@ -53,18 +53,14 @@ Then run down to 186 to show how NFWF degraded over time.
 ###########
 Then look at 287 to see how shell 4044 degraded and compared to rock on line 324 and 325
 ###########
-Switch to removals from fishing
+SWITCH TO REMOVALS FROM FISHING
+
+This is in the Jamie folder
 
 show the removals vs. cultching plot
 This is in the Jamie file or just show the figure
-
 ###########
-Hi Bill,
-I analyzed the mineralogy off the two samples you dropped off. The sample with lots of encrusting oysters and barnacles called Ocala limestone is all dolomite. So might be Avon Park limestone instead of Ocala. The grayish sample you said is from Kentucky is calcite, dolomite, and a little quartz. I can tell you that the Kentucky sample was a bear to powder up. Very hard and dense and even kicked off a sulfur smell as I was smacking it with the mortar and pestle. The “Ocala” sample powdered easily. I have the XRD scans if you want them.
-
-Best,
-John
-###########
+Estimates of amount of material removed the two assumed methods
 
 Jamie summary stats
 Crate:
@@ -83,4 +79,19 @@ max cubic meters = 18,585.7
 total LC = 26.6
 max LC = 1.5
 avg. LC = 0.7
+
+
+
+
+###########
+
+LET'S TALK ABOUT WHETHER THESE ROCKS ARE ACTUALLY THE SAME.
+
+Hi Bill,
+I analyzed the mineralogy off the two samples you dropped off. The sample with lots of encrusting oysters and barnacles called Ocala limestone is all dolomite. So might be Avon Park limestone instead of Ocala. The grayish sample you said is from Kentucky is calcite, dolomite, and a little quartz. I can tell you that the Kentucky sample was a bear to powder up. Very hard and dense and even kicked off a sulfur smell as I was smacking it with the mortar and pestle. The “Ocala” sample powdered easily. I have the XRD scans if you want them.
+
+Best,
+John
+###########
+
 ###############
