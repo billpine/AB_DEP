@@ -184,7 +184,6 @@ plot_grid(f1,f2,f3,f4)
 ##maybe start here with FWC/FSU
 ##this will show CPUE of spat, seed, legal by site over period
 
-     
 f5<-ggplot(d3, aes(Period, CPUE_Spat)) +
   geom_point(size=2) +
   ggtitle("Spat CPUE by Period") +
@@ -192,8 +191,9 @@ f5<-ggplot(d3, aes(Period, CPUE_Spat)) +
   ylab("Spat") +
   scale_x_continuous(breaks=seq(2,13,1))+
   facet_wrap(~Site)
-
 #ggsave("AB_spat_period_site.pdf", width = 10, height = 10)
+
+#now seed
 
 f5.1<-ggplot(d3, aes(Period, CPUE_Seed)) +
   geom_point(size=2) +
@@ -206,6 +206,8 @@ f5.1<-ggplot(d3, aes(Period, CPUE_Seed)) +
 
 #Berrigan 1990 in Table 2 had about 98 per 1/4 m2 quadrat > 25-mm 18 months after restoration
 #and harvest season
+
+#now legal
 
 f5.2<-ggplot(d3, aes(Period, CPUE_Legal)) +
   geom_point(size=2) +
@@ -315,11 +317,12 @@ spat_study<-ggplot(dp3.2x, aes(Period, CPUE_Spat)) +
 
 #ggsave("AB_spat_study.png", width = 10, height = 10)
 
-sub_study<-ggplot(dp3.2, aes(Period, CPUE_Seed,color=Project)) +
+seed_study<-ggplot(dp3.2, aes(Period, CPUE_Seed)) +
   geom_point(size=2) +
   ggtitle("Seed CPUE by Period") +
   xlab("Period") +
   ylab("Seed CPUE") +
+  scale_x_continuous(breaks=seq(2,13,1))+
   facet_wrap(~Project)
 #ggsave("sub_study.pdf", width = 10, height = 10)
 
@@ -599,7 +602,10 @@ test3 = ggpredict(new.tmb3, terms = c("Period[14]", "Num_quads[1]"), type = c('f
 nfwf_pred<- subset(test2, test2$group == "NFWF_1")
 DEP_4044<- subset(test2, test2$group == "NRDA_4044")
 DEP_5007<- subset(test2, test2$group == "NRDA_5007")
-FWC_2021<- subset(test2, pred_tmb1$group == "FWC_2021")
+FWC_2021<- subset(test2, test2$group == "FWC_2021")
+#FWC_2021<- subset(test2, pred_tmb1$group == "FWC_2021")
+#this one on 606 is how it was originally called in the draft. Not sure why
+#it wasn't called from test2$group
 
 pr1 = ggplot(nfwf_pred, aes(x, predicted))+
   geom_line(size=2)+
@@ -639,10 +645,11 @@ pr4 = ggplot(FWC_2021, aes(x, predicted))+
   #geom_point(data = dp3.2[dp3.2$Project == "FWC_2021",], mapping = aes(Period, Sum_spat), size = 2)+
   scale_x_continuous(breaks=seq(1,14,1))
 
+
 plot_grid(pr1,pr2,pr3,pr4)
 #ggsave("pred_apalach_1quad.png", width=10, height=10)
 
-
+####END####
 
 ############
 #now Jennifer style but just period. this is what
