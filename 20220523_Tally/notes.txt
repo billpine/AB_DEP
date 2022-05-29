@@ -1,13 +1,49 @@
 ###########
+This is how oyster size classes are defined: spat (<26-mm shell height), sublegal (locally termed “seed” oyster; 26-75-mm shell height), and legal to harvest (>76-mm shell height).
+
+###########
 Table 1
+This is a table that shows the projects summarized, the year of the sampling, the month, period, site, and the number of quadrats.  This is a good table to go over because people will have something in their hand to better understand the period.  Note that you sum the number of 1/4m2 quadrats by period and site.  Discuss how the response we are interested in is the number of oysters by location over time, so we sum by site and period.  
+###########
+Table 2
+This is the total spat summing the counts from the quadrats in Table 1
+###########
+Table 3
+This is the total seed summing the counts from the quadrats in Table 1
 
-This is a table that shows the projects summarized, the year of the sampling, the month, period, site, and the number of quadrats.  This is a good table to go over because people will have something in their hand to better understand the period.  Note that you sum the number of quadrats by period and site.  Discuss how the response we are interested in is the number of oysters by location over time, so we some by site and period.  
+#Berrigan 1990 in Table 2 had about 98 per 1/4 m2 quadrat > 25-mm 18 months after restoration and harvest season
 
+###########
+Table 4
+This is the total spat summing the counts from the quadrats in Table 1
+###########
+Then show f5, f5.1, f5.2.  These are plots across all sites of spat CPUE, then seed, then legal.
+###########
 
 Show d3 as data set, this has number spat, seed, legal plus CPUE of all
 
+###########
+
+Next go to line 310 and run "spat_study" this is the CPUE of spat by period wrapped by study
+
+####
+Moving into GLMs, so returning just to counts
+
+Run plot on line 365, this is plot r0, it shows the sum of spat by study with each study as a color.  This is what you are going to compare in GLMs. BUT remember we have to account for the differences in effort (table 1 handed out).  Effort offset - we change the model from modeling counts, to modeling a rate measured as the count/quadrat as the response variable
+
+This is just showing time (period)
+######
+Then you can drop down to 441 and run z1. This will show the "days discharge < 12000".  The more days with discharge < 12,000 are drier years.
+#######
+Then you can run a bunch of code down to 574 and this will show how well these GLM models fit the data. This is predicting for NFWF 1 and 150 quadrats.  Explain how the different projects all have different levels of effort, so you have to fit models to each data set, then predict for that model for a single unit of effort to compare the performance of each project.
+########
+You can show the prediction for 1 mode with line 567 (predicting for each project 1 quadrat.
+########
+Then you can end via the "Jennifer way" of predictions starting on 602 (run from 465 down to 602). This will result in the multi panel figure of predictions and CI for each project. NOTE HOW DIFFERENT THE Y AXIS ARE.  Really more useful to look at predicted values in 567.
+########
 
 show the removals vs. cultching plot
+This is in the Jamie file or just show the figure
 
 ###########
 Hi Bill,
