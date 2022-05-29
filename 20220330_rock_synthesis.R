@@ -201,11 +201,9 @@ pr1 = ggplot(dNFWF_2_pred, aes(x, predicted))+
   xlab ("Period")+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
   ggtitle("Predicted NFWF_1 Cultch (Shell) Weight by Period - 1 quadrat")+
-  scale_x_continuous(breaks=seq(2,13,1))+
+  #scale_x_continuous(breaks=seq(2,13,1))+
   ylim(0,10)
   
-
-
 #no need to include the data on single quadrat because the data are from
 #more than 1 quadrat
 # +
@@ -219,7 +217,7 @@ tmb_FWC_2021 <- glmmTMB(Roundwt ~ Period + (1|Site) + offset(log(Num_quads)), da
 summary(tmb_FWC_2021)
 
 dFWC_2021.new = data.frame(Roundwt = dFWC_2021$Roundwt,
-                           Period = dFWC_2021$Project,
+                           Period = dFWC_2021$Period,
                            Project = dFWC_2021$Project,
                            Num_quads = dFWC_2021$Num_quads)
 
@@ -249,7 +247,7 @@ pr2 = ggplot(dFWC_2_pred, aes(x, predicted))+
   xlab ("Period")+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
   ggtitle("Predicted FWC_2021 Cultch (Rock) Weight by Period - 1 quadrat") +
-  scale_x_continuous(breaks=seq(2,13,1))+
+  #scale_x_continuous(breaks=seq(2,13,1))+
   ylim(0,10)
   
 #no need to include the data on single quadrat plots because the data are from
@@ -301,7 +299,7 @@ pr3 = ggplot(dNRDA_4044_2_pred, aes(x, predicted))+
   xlab ("Period")+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
   ggtitle("Predicted NRDA 4044 Cultch (Shell) Weight by Period - 1 quadrat")+
-  scale_x_continuous(breaks=seq(2,13,1))+
+  #scale_x_continuous(breaks=seq(2,13,1))+
   ylim(0,10)
   
 #########NRDA 5007 only#################
@@ -324,7 +322,7 @@ plot(dNRDA_5007_pred, facet=FALSE, add.data=TRUE)
 
 #this predicts with 1 quad which is how we will compare the 3 projects
 dNRDA_5007_2_pred = ggpredict(dNRDA_5007.new.tmb1, terms = c("Period", "Num_quads[1]"), type = c('fe')) #for all projects
-plot(dNRDA_5007_2_pred, facet=FALSE, colors=c("red"), add.data=TRUE)
+plot(dNRDA_5007_2_pred, facet=FALSE, colors=c("red"), add.data=FALSE)
 
 #note this matches the data well if you predict for 1-3 quads
 #but to compare projects just predict for 1 quad.
@@ -338,7 +336,7 @@ pr4 = ggplot(dNRDA_5007_2_pred, aes(x, predicted))+
   xlab ("Period")+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
   ggtitle("Predicted Restore 5007 Cultch (Rock) Weight by Period - 1 quadrat") +
-  scale_x_continuous(breaks=seq(2,13,1))+
+  #scale_x_continuous(breaks=seq(2,13,1))+
   ylim(0,10)
 
 
@@ -350,7 +348,7 @@ ggsave("AB_predicted_weight.png", width = 10, height = 10)
 #next standardize x and y axis. Yeah!
 
 
-
+#####END###############
 
 #########################################
 
