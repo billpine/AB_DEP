@@ -324,7 +324,7 @@ seed_study<-ggplot(dp3.2, aes(Period, CPUE_Seed)) +
   ylab("Seed CPUE") +
   scale_x_continuous(breaks=seq(2,13,1))+
   facet_wrap(~Project)
-#ggsave("sub_study.pdf", width = 10, height = 10)
+ggsave("sub_study.png", width = 10, height = 10)
 
 legal_study<-ggplot(dp3.2, aes(Period, CPUE_Legal)) +
   geom_point(size=2) +
@@ -332,7 +332,9 @@ legal_study<-ggplot(dp3.2, aes(Period, CPUE_Legal)) +
   xlab("Period") +
   ylab("Legal CPUE") +
   facet_wrap(~Project)
-#ggsave("legal_study.pdf", width = 10, height = 10)
+ggsave("legal_study.png", width = 10, height = 10)
+
+
 
 ################
 ################
