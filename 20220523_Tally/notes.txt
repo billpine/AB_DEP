@@ -53,6 +53,11 @@ Then run down to 186 to show how NFWF degraded over time.
 ###########
 Then look at 287 to see how shell 4044 degraded and compared to rock on line 324 and 325
 ###########
+Here is a critical thing - I've seen this same lack of response from analyzing the DEP data from Pensacola and St. Andrews
+###########
+
+
+
 SWITCH TO REMOVALS FROM FISHING
 
 This is in the Jamie folder

@@ -1,0 +1,91 @@
+From:	Camp, Ed
+Sent:	Sunday, May 29, 2022 6:21 PM
+To:	Pine, Bill
+Subject:	panhandle ms skeleton
+Attachments:	panhandle_oyster_trends - SPG review_evc.docx
+
+Hi Bill,
+I read and reviewed the panhandle ms you drafted. I agree with the results, the majority of the 
+conclusions. I made comments in the attached but they got a little messy so I summarized them here in 
+a way that I think I’d find useful. Of course that may not be useful to you, but that is how I did it. I’m 
+happy to work on some of this if you’d like me to. Just let me know. 
+
+Also, I really didn’t find it that upsetting. Sure there were a couple places that it sounded more 
+judgmental than it probably needed to be, but I also think that stuff would get trimmed by editors 
+anyway because most of it was a bit beyond the scope of the ms as laid out. I thought it was super 
+helpful for “labeling” what has and has not occurred. If you wanted to, I think you could make more of 
+the multi-project assessment type, especially in light of the NAS 2022 report that focuses so much on 
+the larger, multi-project scale analyses. Like I think one of the things that it feels like maybe you pulled 
+punches on was pointing out how the way these projects were designed, even just in terms of 
+materials/densities/treatments (or lack of same!) really made it difficult to learn more about it. I think 
+you made that point a bit about AB, but it’s a bit glaring at the multiple project level too. Like, in the 
+takeaways, I think it could be pointed out that a lot of the characteristics of these projects that are 
+preventing greater learning (insufficient experimental design, questionable actual 
+construction/implementation, insufficient monitoring) are not rare or new—they’re pointed out over 
+and over again in lit and reports. 
+
+                1. Revise the methods section in a couple ways:
+                                a. possibly include an “approach” subheading that makes clear you’re going to do be 
+doing a couple different things, including
+                                                i. Assessing trends over space and time by looking a relatively simple models 
+to predict counts as a function of various interactions of bays and period. This would be done for three 
+separate LHS variables—spat, seed, and legals
+                                                ii. Assessing counts of at least spat as a function of discharge
+                                                iii. Assessing counts of at least spat as a function of restoration type
+                                                iv. Assessing material itself as function of time?
+                                b. Include subheadings for each of the three model types, and follow them through 
+the results
+                                c. Re-organize current methods text in the above order
+                                d. Add equations to each
+                                e. Move up some of the material from the results to the methods.
+
+                2. Organize results in those subheadings, cut some of the methods that will be moved.
+                3. A couple changes to the discussion. I made comments, but overall my approach would be:
+                                a. Mostly keep the first couple paragraph that highlight the decline & failure to 
+recover, overall
+                                b. Tweak or add a paragraph that highlights it’s really difficult to see any clear 
+differences among the restoration types or, to a lesser extent, the bays
+                                c. Make clear by adding in different topic sentences that the next 2-3 paragraph will be 
+about potential explanations as to why this might have been, including:
+                                                i. restoration/cultch material used may not have been good oyster 
+settlement/recruitment/survival—note different types used and keep comparison to other restoration 
+materials such as LCR (e.g., to note big differences in the material size)
+                                                ii. restoration/clutching height could matter—bars are almost certainly 
+“lower” (in terms of relief) than they’ve ever been before and so even if the densities per acre (which 
+might approximate height) were similar, it might not yield the same vertical relief or height off the 
+bottom
+                                                iii. restoration/clutching implementation and monitoring may obscured 
+assessment of response, even if it were done with appropriate material and appropriate height. I think 
+you kind of have this here already but it felt fuzzy to me and I think it’s critical for the 
+takeaway/conclusions to stand up.
+                                d. in takeaways or conclusion, consider something that effectively communicates that 
+with no clear positive response and small contrast due to process error (literally they put stuff down in a 
+way that makes it hard to distinguish, i.e. is there really a different between 200 and 400 when blowing 
+it off a barge?) observation error (monitoring may be insufficient or otherwise challenging), all we can 
+really say is that whatever has been done, has not yielded the results desired. So we know things aren’t 
+better, but we haven’t learned why because of some combination of sub-optimal design, 
+implementation & monitoring, or a deeper ecological ‘hole’ (alt stable state) than was expected. 
+                                e. Not sure if this is worth it or not, but I think it’s possible that you could point out 
+that the way things unfolded are consistent with the idea that the decision-makers new the system well. 
+The fact that most of the restoration types were (i) the same or similar types of material (ii) spread in 
+mostly very similar densities/heights (iii) except for one did not include specific experimentation i.e. 
+different treatments with good replication, all suggest decision-makers who were either negligent (we 
+don’t have to say that) or were really confident that they already “knew the formula for success”. The 
+latter seems especially believable given the long history of clutching in at least AB. But the fact that the 
+restoration was not temporally staged/spaced out, and evaluated in real time (again, stuff right out of 
+NAS 2022) meant that there was almost no chance the projects would learn from early mistakes. It also 
+suggests it may be necessary, especially when dealing with things known to have alt stable states like 
+oysters and pretty much every habitat forming organisms, to avoid making decisions as if we know 
+where the system state is. 
+
+Ed
+
+Edward Camp
+he/him
+Assistant Professor of Fisheries and Aquaculture Governance
+Fisheries and Aquatic Science Program
+School of Forest, Fisheries, and Geomatic Sciences
+Extension Specialist Florida Sea Grant
+University of Florida, Gainesville, FL USA 32606
+(352) 273 3652
+
