@@ -425,6 +425,8 @@ library(bbmle)
 #it isn't really discharge as CFS, it is number of days
 #in a period below 12000 CFS @ JWLD
 
+#there are two discharge files, one below 12000 CFS the other below 6000 CFS
+
 Lowdays <- read.csv("~/Git/AB_DEP/below_12_threshold.csv")
 dp4<-merge(dp3.2,Lowdays, by=c("Period"))
 for(i in 1:nrow(dp4))
