@@ -467,8 +467,8 @@ d4 <- land %>%
 
 names(d4) <- c("Year", "choc.pounds","choc.trips","choc.price","choc.cpue","choc.removed")
 
-#### Plots for St. Andrews ####
-#number of cubic meters removed from St. Andrews sound
+#### Plots for St. Andrew ####
+#number of cubic meters removed from St. Andrew sound
 s1<-ggplot(data = d4, aes(x = Year, y = choc.removed)) +
   geom_point(colour ="red", size=3) +   geom_line(colour ="red")+
   theme_classic()+
@@ -483,7 +483,7 @@ s1<-ggplot(data = d4, aes(x = Year, y = choc.removed)) +
   labs(title = "Shell Material Removed",
        y = "Cubic Meters Removed")
 
-#number of trips in St. Andrews
+#number of trips in St. Andrew
 s2<-ggplot(data = d4, aes(x = Year, y = choc.trips)) +
   geom_point(colour ="red", size=3) +   geom_line(colour ="red")+
   theme_classic()+
@@ -496,10 +496,10 @@ s2<-ggplot(data = d4, aes(x = Year, y = choc.trips)) +
         axis.text.x = element_text(angle = 45, hjust = 1),
         panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                     linetype="solid")) +
-  labs(title = "St. Andrews Commercial Trips",
+  labs(title = "St. Andrew Commercial Trips",
        y = "# of Trips")
 
-# CPUE for St. Andrews
+# CPUE for St. Andrew
 s3<-ggplot(data=d4, aes(x=Year, y=choc.cpue))+
   geom_point(colour ="red", size=3) +   geom_line(colour ="red")+
   theme_classic()+
@@ -512,10 +512,10 @@ s3<-ggplot(data=d4, aes(x=Year, y=choc.cpue))+
         axis.text.x = element_text(angle = 45, hjust = 1),
         panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                     linetype="solid")) +
-  labs(title = "St. Andrews CPUE",
+  labs(title = "St. Andrew CPUE",
        y = "CPUE")
 
-#landings in St. Andrews
+#landings in St. Andrew
 s4<-ggplot(data = d4, aes(x = Year, y = choc.pounds/1000)) +
   geom_point(colour ="red", size=3) +   geom_line(colour ="red")+
   geom_line(colour ="red")+
@@ -529,7 +529,7 @@ s4<-ggplot(data = d4, aes(x = Year, y = choc.pounds/1000)) +
                              axis.text.x = element_text(angle = 45, hjust = 1),
                              panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                                          linetype="solid")) +
-labs(title = "St. Andrews Landings (lbs)",
+labs(title = "St. Andrew Landings (lbs)",
 y = "Pounds x 1000")
                      
 choc_fig<-ggarrange(s2,s3,s4, 
@@ -537,9 +537,9 @@ choc_fig<-ggarrange(s2,s3,s4,
        ncol = 2, nrow = 2)
    
 annotate_figure(choc_fig,
-                top = text_grob("St. Andrews", color = "black", face = "bold", size = 20))
+                top = text_grob("St. Andrew", color = "black", face = "bold", size = 20))
 
-ggsave("standrews_dependent.pdf", width = 10, height = 10)
+ggsave("stAndrew_dependent.pdf", width = 10, height = 10)
 
 ######
 #all arrange
