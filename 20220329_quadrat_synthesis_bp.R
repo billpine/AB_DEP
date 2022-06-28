@@ -550,7 +550,7 @@ new.dat = data.frame(Sum_spat = dp4$Sum_spat,
 new.tmb1 <- glmmTMB(Sum_spat ~ Period + offset(log(Num_quads)), data = new.dat, family="nbinom2") #converge
 
 ggpredict(new.tmb1)
-test1 = ggpredict(new.tmb1, terms = c("Period[14]", "Num_quads[1]"), type = c('fe')) #in draft
+test1 = ggpredict(new.tmb1, terms = c("Period[13]", "Num_quads[1]"), type = c('fe')) #in draft
 test1.1 = ggpredict(new.tmb1, terms = c("Period[1]", "Num_quads[1]"), type = c('fe')) #in draft
 
 
@@ -570,6 +570,7 @@ new.tmb2 <- glmmTMB(Sum_spat ~ Period * Project + offset(log(Num_quads)), data =
 ggpredict(new.tmb2)
 test2 = ggpredict(new.tmb2, terms = c("Period", "Project", "Num_quads[1]"), type = c('fe')) #for all projects
 
+
 #below is for one project
 
 #this is a decent example of model fit to data. About 150 quads done each time in NFWF1
@@ -579,7 +580,20 @@ test3 = ggpredict(new.tmb2, terms = c("Period", "Project[NFWF_1]","Num_quads[150
 plot(test3, facet=FALSE, add.data=TRUE)
 #ggsave("pred_apalach_150quad.png", width=10, height=10)
 
-                 
+  
+#now let's predict for last period = 13, by study, for 1 quad
+#this is in the paper
+unique(new.dat2$Project)
+#"NFWF_1"    "NRDA_4044" "NRDA_5007" "FWC_2021" 
+
+ggpredict(new.tmb2)
+test4.nfwf1 = ggpredict(new.tmb2, terms = c("Period[13]", "Project[NFWF_1]", "Num_quads[1]"), type = c('fe')) 
+test4.nrda4044 = ggpredict(new.tmb2, terms = c("Period[13]", "Project[NRDA_4044]", "Num_quads[1]"), type = c('fe')) 
+test4.nrda5077 = ggpredict(new.tmb2, terms = c("Period[13]", "Project[NRDA_5007]", "Num_quads[1]"), type = c('fe')) 
+test4.fwc2021 = ggpredict(new.tmb2, terms = c("Period[13]", "Project[FWC_2021]", "Num_quads[1]"), type = c('fe')) 
+
+
+               
 #this is just lowdays (not significant on its own)
 
 new.dat3 = data.frame(Sum_spat = dp4$Sum_spat,
@@ -590,7 +604,7 @@ new.dat3 = data.frame(Sum_spat = dp4$Sum_spat,
 new.tmb3 <- glmmTMB(Sum_spat ~ Period + Lowdays + offset(log(Num_quads)), data = new.dat3, family="nbinom2") #converge
 
 ggpredict(new.tmb3)
-test3 = ggpredict(new.tmb3, terms = c("Period[14]", "Num_quads[1]"), type = c('fe')) #for all projects
+test3 = ggpredict(new.tmb3, terms = c("Period[13]", "Num_quads[1]"), type = c('fe')) #for all projects
 #this is for the average number of low days.
 
 
