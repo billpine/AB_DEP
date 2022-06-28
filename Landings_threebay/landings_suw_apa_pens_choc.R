@@ -21,6 +21,10 @@ library(ggpubr)
 
 post_1984 <- read.csv("oyster_landings_by_county_84to22.csv", header = TRUE)
 
+pst2<- subset(post_1984, post_1984$Year > 1985)
+
+post_1984 <- pst2
+
 #post_1984 <- select(post_1984, Year, County_Landed, Pounds)
 
 #Suwannee
@@ -206,6 +210,8 @@ land$choc.CPUE<-land$choc.pounds/land$choc.trips
 
 names(land)
 
+
+
 d1 <- land %>% 
   dplyr::select(Year, suw.pounds,suw.trips,suw.avg_price,suw.CPUE,Vol_S_m3_2)
 
@@ -217,9 +223,9 @@ names(d1)
 #### Plots for Suwannee Sound ####
 #number of cubic meters removed from suwannee sound
 s1<-ggplot(data = d1, aes(x = Year, y = suw.removed)) +
-  geom_point(colour ="red", size=4) +
+  geom_point(colour ="red", size=3) +   geom_line(colour ="red")+
   theme_classic()+
-  scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,
+  scale_x_continuous(limits=c(1985,2025),breaks=c(1985, 1985, 1990,
                                                   1995,2000, 2005, 2010,2015,2020, 2025)) +
   scale_y_continuous(limits=c(0,1400),breaks=c(0,200,400,600, 800, 1000, 1200, 1400))+
   theme(axis.text=element_text(size=10),
@@ -235,9 +241,9 @@ s1<-ggplot(data = d1, aes(x = Year, y = suw.removed)) +
 #number of trips in suwannee sound
 s2<-ggplot(data = d1, aes(x = Year, y = suw.trips)) +
   
-  geom_point(colour ="red", size=4) +
+  geom_point(colour ="red", size=3) +   geom_line(colour ="red")+
   theme_classic()+
-  scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,
+  scale_x_continuous(limits=c(1985,2025),breaks=c(1985, 1985, 1990,
                                                   1995,2000, 2005, 2010,2015,2020, 2025)) +
   scale_y_continuous(limits=c(0,12000),breaks=c(seq(0,12000, by= 1000))) +
   theme(axis.text=element_text(size=10),axis.title=element_text(size=10,
@@ -251,9 +257,9 @@ s2<-ggplot(data = d1, aes(x = Year, y = suw.trips)) +
 
 # CPUE for Suwannee Sound
 s3<-ggplot(data=d1, aes(x=Year, y=suw.cpue))+
-  geom_point(colour ="red", size=4) +
+  geom_point(colour ="red", size=3) +   geom_line(colour ="red")+
   theme_classic()+
-  scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,1995,2000, 2005, 
+  scale_x_continuous(limits=c(1985,2025),breaks=c(1985, 1985, 1990,1995,2000, 2005, 
                                                   2010,2015,2020,2025)) +
   scale_y_continuous(limits=c(0,400),breaks=c(0,50,100,150,200,250,300,350,400))+
   theme(axis.text=element_text(size=10),axis.title=element_text(size=10,
@@ -267,9 +273,9 @@ s3<-ggplot(data=d1, aes(x=Year, y=suw.cpue))+
 
 #landings in Suwannee sound
 s4<-ggplot(data = d1, aes(x = Year, y = suw.pounds/1000)) +
-    geom_point(colour ="red", size=4) +
+    geom_point(colour ="red", size=3) +   geom_line(colour ="red")+
     theme_classic()+
-    scale_x_continuous(limits=c(1980,2025),breaks=c(1980,1985,1990, 1995, 2000, 2005, 
+    scale_x_continuous(limits=c(1985,2025),breaks=c(1985,1990, 1995, 2000, 2005, 
                                                     2010,2015,2020,2025)) +
     scale_y_continuous(limits=c(0,1200),breaks=c(0, 100, 200, 300, 400, 500, 600, 700, 
                                                    800, 900, 1000, 1100, 1200))+
@@ -301,9 +307,9 @@ names(d2)
 #### Plots for Apalachicola ####
 #number of cubic meters removed from Apalachicola sound
 a1<-ggplot(data = d2, aes(x = Year, y = apa.removed)) +
-  geom_point(colour ="red", size=4) +
+  geom_point(colour ="red", size=3) +   geom_line(colour ="red")+
   theme_classic()+
-  scale_x_continuous(limits=c(1980,2025),breaks=c(1980,1985,1990,1995,2000,2005,2010,2015,2020,2025))+
+  scale_x_continuous(limits=c(1985,2025),breaks=c(1985,1985,1990,1995,2000,2005,2010,2015,2020,2025))+
   scale_y_continuous(limits=c(0,1400),breaks=c(0,200,400,600,800,1000,1200,1400))+
   theme(axis.text=element_text(size=10),
         axis.title=element_text(size=10),
@@ -318,9 +324,9 @@ a1<-ggplot(data = d2, aes(x = Year, y = apa.removed)) +
 #number of trips in apalachicola
 a2<-ggplot(data = d2, aes(x = Year, y = apa.trips)) +
   
-  geom_point(colour ="red", size=4) +
+  geom_point(colour ="red", size=3) +   geom_line(colour ="red")+
   theme_classic()+
-  scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,
+  scale_x_continuous(limits=c(1985,2025),breaks=c(1985, 1985, 1990,
                                                   1995,2000, 2005, 2010,2015,2020, 2025)) +
   scale_y_continuous(limits=c(0,60000),breaks=c(0,10000,20000,30000,40000,50000, 60000)) +
   theme(axis.text=element_text(size=10),axis.title=element_text(size=10,
@@ -334,9 +340,9 @@ a2<-ggplot(data = d2, aes(x = Year, y = apa.trips)) +
 
 # CPUE for Apalachicola
 a3<-ggplot(data=d2, aes(x=Year, y=apa.cpue))+
-  geom_point(colour ="red", size=4) +
+  geom_point(colour ="red", size=3) +   geom_line(colour ="red")+
   theme_classic()+
-  scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,1995,2000, 2005, 
+  scale_x_continuous(limits=c(1985,2025),breaks=c(1985, 1985, 1990,1995,2000, 2005, 
                                                   2010,2015,2020,2025)) +
   scale_y_continuous(limits=c(0,200),breaks=c(0,50,100,150,200))+
   theme(axis.text=element_text(size=10),axis.title=element_text(size=10,
@@ -350,9 +356,9 @@ a3<-ggplot(data=d2, aes(x=Year, y=apa.cpue))+
 
 #landings in Apalachicola
 a4<-ggplot(data = d2, aes(x = Year, y = apa.pounds/1000)) +
-  geom_point(colour ="red", size=4) +
+  geom_point(colour ="red", size=3) +   geom_line(colour ="red")+
   theme_classic()+
-  scale_x_continuous(limits=c(1980,2025),breaks=c(1980,1985,1990, 1995, 2000, 2005, 
+  scale_x_continuous(limits=c(1985,2025),breaks=c(1985,1990, 1995, 2000, 2005, 
                                                   2010,2015,2020,2025)) +
   scale_y_continuous(limits=c(0,4000),breaks=c(0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 
                                                4000))+
@@ -384,9 +390,9 @@ names(d3) <- c("Year", "pen.pounds","pen.trips","pen.price","pen.cpue","pen.remo
 #### Plots for pensacola ####
 #number of cubic meters removed from pensacola sound
 p1<-ggplot(data = d3, aes(x = Year, y = pen.removed)) +
-  geom_point(colour ="red", size=4) +
+  geom_point(colour ="red", size=3) +   geom_line(colour ="red")+
   theme_classic()+
-  scale_x_continuous(limits=c(1980,2025),breaks=c(1980,1985,1990,1995,2000,2005,2010,2015,2020,2025))+
+  scale_x_continuous(limits=c(1985,2025),breaks=c(1985,1985,1990,1995,2000,2005,2010,2015,2020,2025))+
   scale_y_continuous(limits=c(0,4000),breaks=c(seq(0,4000, by= 500)))+
   theme(axis.text=element_text(size=10),
         axis.title=element_text(size=10),
@@ -400,9 +406,9 @@ p1<-ggplot(data = d3, aes(x = Year, y = pen.removed)) +
 #number of trips in pensacola
 p2<-ggplot(data = d3, aes(x = Year, y = pen.trips)) +
   
-  geom_point(colour ="red", size=4) +
+  geom_point(colour ="red", size=3) +   geom_line(colour ="red")+
   theme_classic()+
-  scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,
+  scale_x_continuous(limits=c(1985,2025),breaks=c(1985, 1985, 1990,
                                                   1995,2000, 2005, 2010,2015,2020, 2025)) +
   scale_y_continuous(limits=c(0,2000),breaks=c(seq(0,2000, by= 500))) +
   theme(axis.text=element_text(size=10),axis.title=element_text(size=10,
@@ -416,9 +422,9 @@ p2<-ggplot(data = d3, aes(x = Year, y = pen.trips)) +
 
 # CPUE for pensacola
 p3<-ggplot(data=d3, aes(x=Year, y=pen.cpue))+
-  geom_point(colour ="red", size=4) +
+  geom_point(colour ="red", size=3) +   geom_line(colour ="red")+
   theme_classic()+
-  scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,1995,2000, 2005, 
+  scale_x_continuous(limits=c(1985,2025),breaks=c(1985, 1985, 1990,1995,2000, 2005, 
                                                   2010,2015,2020,2025)) +
   scale_y_continuous(limits=c(0,600),breaks=c(seq(0,600, by= 100)))+
   theme(axis.text=element_text(size=10),axis.title=element_text(size=10,
@@ -432,9 +438,9 @@ p3<-ggplot(data=d3, aes(x=Year, y=pen.cpue))+
 
 #landings in pensacola
 p4<-ggplot(data = d3, aes(x = Year, y = pen.pounds/1000)) +
-  geom_point(colour ="red", size=4) +
+  geom_point(colour ="red", size=3) +   geom_line(colour ="red")+
   theme_classic()+
-  scale_x_continuous(limits=c(1980,2025),breaks=c(1980,1985,1990, 1995, 2000, 2005, 
+  scale_x_continuous(limits=c(1985,2025),breaks=c(1985,1990, 1995, 2000, 2005, 
                                                   2010,2015,2020,2025)) +
   scale_y_continuous(limits=c(0,600),breaks=c(seq(0,600, by= 100)))+
   theme(axis.text=element_text(size=10),axis.title=element_text(size=10,
@@ -464,9 +470,9 @@ names(d4) <- c("Year", "choc.pounds","choc.trips","choc.price","choc.cpue","choc
 #### Plots for St. Andrews ####
 #number of cubic meters removed from St. Andrews sound
 s1<-ggplot(data = d4, aes(x = Year, y = choc.removed)) +
-  geom_point(colour ="red", size=4) +
+  geom_point(colour ="red", size=3) +   geom_line(colour ="red")+
   theme_classic()+
-  scale_x_continuous(limits=c(1980,2025),breaks=c(1980,1985,1990,1995,2000,2005,2010,2015,2020,2025))+
+  scale_x_continuous(limits=c(1985,2025),breaks=c(1985,1985,1990,1995,2000,2005,2010,2015,2020,2025))+
   scale_y_continuous(limits=c(0,4000),breaks=c(0,500,1000,1500,2000,2500,3000,3500,4000))+
   theme(axis.text=element_text(size=10),
         axis.title=element_text(size=10),
@@ -479,9 +485,9 @@ s1<-ggplot(data = d4, aes(x = Year, y = choc.removed)) +
 
 #number of trips in St. Andrews
 s2<-ggplot(data = d4, aes(x = Year, y = choc.trips)) +
-  geom_point(colour ="red", size=4) +
+  geom_point(colour ="red", size=3) +   geom_line(colour ="red")+
   theme_classic()+
-  scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,
+  scale_x_continuous(limits=c(1985,2025),breaks=c(1985, 1985, 1990,
                                                   1995,2000, 2005, 2010,2015,2020, 2025)) +
   scale_y_continuous(limits=c(0,200),breaks=c(0,50,100,150,200)) +
   theme(axis.text=element_text(size=10),axis.title=element_text(size=10,
@@ -495,9 +501,9 @@ s2<-ggplot(data = d4, aes(x = Year, y = choc.trips)) +
 
 # CPUE for St. Andrews
 s3<-ggplot(data=d4, aes(x=Year, y=choc.cpue))+
-  geom_point(colour ="red", size=4) +
+  geom_point(colour ="red", size=3) +   geom_line(colour ="red")+
   theme_classic()+
-  scale_x_continuous(limits=c(1980,2025),breaks=c(1980, 1985, 1990,1995,2000, 2005, 
+  scale_x_continuous(limits=c(1985,2025),breaks=c(1985, 1985, 1990,1995,2000, 2005, 
                                                   2010,2015,2020,2025)) +
   scale_y_continuous(limits=c(0,200),breaks=c(0,50,100,150,200,250))+
   theme(axis.text=element_text(size=10),axis.title=element_text(size=10,
@@ -511,9 +517,10 @@ s3<-ggplot(data=d4, aes(x=Year, y=choc.cpue))+
 
 #landings in St. Andrews
 s4<-ggplot(data = d4, aes(x = Year, y = choc.pounds/1000)) +
-  geom_point(colour ="red", size=4) +
+  geom_point(colour ="red", size=3) +   geom_line(colour ="red")+
+  geom_line(colour ="red")+
   theme_classic()+
-  scale_x_continuous(limits=c(1980,2025),breaks=c(1980,1985,1990, 1995, 2000, 2005, 
+  scale_x_continuous(limits=c(1985,2025),breaks=c(1985,1990, 1995, 2000, 2005, 
                                                   2010,2015,2020,2025)) +
   scale_y_continuous(limits=c(0,12),breaks=c(0, 2, 4, 6, 8, 10, 12))+
                        theme(axis.text=element_text(size=10),axis.title=element_text(size=10,
