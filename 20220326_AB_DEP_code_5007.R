@@ -78,10 +78,10 @@ for(i in unique(years)){
 }
 
 d3$Season <- "Winter"
-d3$Season[d3$Period == 1 | d3$Period == 3 | d3$Period == 5 | d3$Period == 7 | d3$Period == 9] <- "Summer"
+d3$Season[d3$Period == 1 | d3$Period == 3 | d3$Period == 5 | d3$Period == 7 | d3$Period == 9 | d3$Period == 11 | d3$Period == 13] <- "Summer"
 
 unique(d3$Period)
-#periods 1, 3, 6, 7 only
+#just to check
 
 #ok what are our site names?
 unique(d3$Site)
