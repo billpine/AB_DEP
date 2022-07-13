@@ -63,7 +63,7 @@ d4 <- read.csv("~/Git/AB_DEP/5007_to_merge.csv")
 d4$Bay<-"Apalachicola"
 d4$Bottom<-"Rock"
 d4$Cultch<-300
-d4$Project<-"NRDA_5007"
+d4$Project<-"GEBF_5007"
 
 d4 <- dplyr::rename(d4,Seed=Sublegal)
 d4 <- dplyr::rename(d4,Weight_kg=Weight)
