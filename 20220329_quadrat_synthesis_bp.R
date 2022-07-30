@@ -184,14 +184,16 @@ plot_grid(f1,f2,f3,f4)
 ##maybe start here with FWC/FSU
 ##this will show CPUE of spat, seed, legal by site over period
 
+#d3x<- subset(d3, d3$Site == "Bulkhead")
+
 f5<-ggplot(d3, aes(Period, CPUE_Spat)) +
-  geom_point(size=2) +
+  geom_point(size=4) +
   ggtitle("Spat CPUE by Period") +
   xlab("Period") +
   ylab("Spat") +
   scale_x_continuous(breaks=seq(2,13,1))+
   facet_wrap(~Site)
-#ggsave("AB_spat_period_site.pdf", width = 10, height = 10)
+ggsave("Bulkhead.jpg", width = 10, height = 10)
 
 #now seed
 
