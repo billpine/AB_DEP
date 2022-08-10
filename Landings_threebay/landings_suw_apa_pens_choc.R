@@ -368,7 +368,7 @@ a4<-ggplot(data = d2, aes(x = Year, y = apa.pounds/1000)) +
         axis.text.x = element_text(angle = 45, hjust = 1),
         panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                     linetype="solid")) +
-  labs(title = "Apalachicola Landings (lbs)",
+  labs(title = "Apalachicola Landings",
        y = "Pounds x 1000")
 
 apa_fig<-ggarrange(a2,a3,a4, 
@@ -449,7 +449,7 @@ p4<-ggplot(data = d3, aes(x = Year, y = pen.pounds/1000)) +
         axis.text.x = element_text(angle = 45, hjust = 1),
         panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                     linetype="solid")) +
-  labs(title = "Pensacola landings (lbs)",
+  labs(title = "Pensacola landings",
        y = "Pounds x 1000")
 
 pen_fig<-ggarrange(p2,p3,p4, 
@@ -529,7 +529,7 @@ s4<-ggplot(data = d4, aes(x = Year, y = choc.pounds/1000)) +
                              axis.text.x = element_text(angle = 45, hjust = 1),
                              panel.border = element_rect(color = "black", size = 1, fill = NA, 
                                                          linetype="solid")) +
-labs(title = "St. Andrew Landings (lbs)",
+labs(title = "St. Andrew Landings",
 y = "Pounds x 1000")
                      
 choc_fig<-ggarrange(s2,s3,s4, 
@@ -543,13 +543,18 @@ ggsave("stAndrew_dependent.pdf", width = 10, height = 10)
 
 ######
 #all arrange
-all_fig<-ggarrange(a2,a3,a4,p2,p3,p4,s2,s3,s4, 
-                    labels = c("A", "B", "C", "D", "E",
-                               "F","G","H","I"),
-                    ncol = 3, nrow = 3)
+# all_fig<-ggarrange(a2,a3,a4,p2,p3,p4,s2,s3,s4, 
+#                     labels = c("A", "B", "C", "D", "E",
+#                                "F","G","H","I"),
+#                     ncol = 3, nrow = 3)
 
-annotate_figure(all_fig,
-                top = text_grob("Fisheries Dependent", color = "black", face = "bold", size = 20))
+#annotate_figure(all_fig,
+#                top = text_grob("Fisheries Dependent", color = "black", face = "bold", size = 20))
 
-ggsave("all_dependent.png", width = 10, height = 10)
+#all arrange
+ all_fig<-ggarrange(a2,a3,a4,p2,p3,p4,s2,s3,s4, 
+                          ncol = 3, nrow = 3)
+
+
+ggsave("all_dependent_fig.png", width = 10, height = 10)
 
