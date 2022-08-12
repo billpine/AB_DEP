@@ -113,11 +113,12 @@ d6$CPUE_Legal<-d6$Sum_legal/d6$Num_quads
 
 f1<-ggplot(d6, aes(Period, CPUE_Spat)) +
   geom_point(size=4) +
-  ggtitle("Spat CPUE by Period") +
+  #ggtitle("Spat CPUE by Period") +
   scale_x_continuous(limits=c(2,13),breaks=c(2,3,4,5,6,7,8,9,10,11,12,
                                              13)) +
   xlab("Period") +
   ylab("Spat per quadrat") +
+  theme(text = element_text(size = 18))+ 
   facet_wrap(~Bay)
 
 ggsave("three_bay_spat_CPUE.png", width = 10, height = 10)
@@ -178,8 +179,8 @@ plot_grid(f4,f5,f6)
 mean(d6$Sum_spat)
 var(d6$Sum_spat)
 
-mean(d6$Sum_sublegal)
-var(d6$Sum_sublegal)
+mean(d6$Sum_seed)
+var(d6$Sum_seed)
 
 mean(d6$Sum_legal)
 var(d6$Sum_legal)
@@ -192,7 +193,7 @@ var(d6$Sum_legal)
 names(d6)
 
 qqnorm(d6$Sum_spat)
-qqnorm(d6$Sum_sublegal)
+qqnorm(d6$Sum_seed)
 qqnorm(d6$Sum_legal)
 
 #qqnorms look overdispersed
@@ -237,9 +238,9 @@ d6$Bay <- as.factor(d6$Bay)
 # 
 # #results suggests for spat bays are different
 # 
-# m1.1 <- glm.nb(Sum_sublegal ~ Bay + offset(log(Num_quads)), data = d6) 
-# m2.1 <- glm.nb(Sum_sublegal ~ Bay + Period + offset(log(Num_quads)), data = d6) 
-# m3.1 <- glm.nb(Sum_sublegal ~ Bay * Period + offset(log(Num_quads)), data = d6) 
+# m1.1 <- glm.nb(Sum_seed ~ Bay + offset(log(Num_quads)), data = d6) 
+# m2.1 <- glm.nb(Sum_seed ~ Bay + Period + offset(log(Num_quads)), data = d6) 
+# m3.1 <- glm.nb(Sum_seed ~ Bay * Period + offset(log(Num_quads)), data = d6) 
 # 
 # cand.set2 = list(m1.1,m2.1,m3.1)
 # modnames2 = c("bay", "bay+period", "bay*period")

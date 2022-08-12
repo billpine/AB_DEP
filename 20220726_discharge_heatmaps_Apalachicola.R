@@ -28,7 +28,7 @@ dis$year    = as.numeric(strftime(dis$dates,format="%Y"))
 dis$month   = as.numeric(strftime(dis$dates,format="%m")) 
 
 #make dataset from epochs, 
-disE  = dis[dis$dates>='1930-10-01' & dis$dates<='2022-07-25',]  
+disE  = dis[dis$dates>='1930-10-01' & dis$dates<='2022-08-01',]  
 
 #get monthly sum, mean, sd, and var
 #discharge

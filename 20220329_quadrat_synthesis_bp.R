@@ -26,7 +26,16 @@ d0 <- read.csv("~/Git/AB_DEP/20220326_merged_agency_data.csv")
 d0.1<-d0 %>%
   mutate(Bay = replace(Bay,Bay == "Apalachicola Bay", "Apalachicola"))
 
-d1<- subset(d0.1, d0.1$Bay == "Apalachicola")
+d0.2<-d0.1 %>%
+  mutate(Project = replace(Project,Project == "FWC_2021", "NFWF-2021"))
+d0.3<-d0.2 %>%
+  mutate(Project = replace(Project,Project == "NFWF_1", "NFWF-1"))
+d0.4<-d0.3 %>%
+  mutate(Project = replace(Project,Project == "GEBF_5007", "GEBF-5007"))
+d0.5<-d0.4 %>%
+  mutate(Project = replace(Project,Project == "NRDA_4044", "NRDA-4044"))
+
+d1<- subset(d0.5, d0.5$Bay == "Apalachicola")
 
 
 #the FWC data have been modified per Matt at FWC to
@@ -307,7 +316,7 @@ plot(dp3.2$Period,dp3.2$CPUE_Legal)
 #change order that it plots in facet
 dp3.2x <- dp3.2                              # Replicate data
 dp3.2x$Project <- factor(dp3.2x$Project,      # Reordering group factor levels
-                         levels = c("NFWF_1", "NRDA_4044", "NRDA_5007", "FWC_2021"))
+                         levels = c("NFWF-1", "NRDA-4044", "GEBF-5007", "FWC-2021"))
 
 spat_study<-ggplot(dp3.2x, aes(Period, CPUE_Spat)) +
   geom_point(size=2) +
