@@ -25,7 +25,7 @@ d1 <- read.csv("~/Git/AB_DEP/20220324_Pensacola_NRDA_to_merge.csv")
 
 d1$Bottom<-"Shell"
 d1$Cultch<-200 #from jonathan and reports
-d1$Project<-"NRDA_4044"
+d1$Project<-"NRDA-4044"
 
 names(d1)
 unique(d1$Bay)
@@ -37,7 +37,7 @@ d2 <- read.csv("~/Git/AB_DEP/20220324_StAndrews_NRDA_to_merge.csv")
 
 d2$Bottom<-"Shell"
 d2$Cultch<-200
-d2$Project<-"NRDA_4044"
+d2$Project<-"NRDA-4044"
 
 #now Apalach
 
@@ -45,7 +45,14 @@ d2.1 <- read.csv("~/Git/AB_DEP/20220327_Apalachicola_NRDA_to_merge.csv")
 
 d2.1$Bottom<-"Rock"
 d2.1$Cultch<-200
-d2.1$Project<-"NRDA_4044"
+d2.1$Project<-"NRDA-4044"
+
+str(d1)
+names(d1)
+str(d2)
+names(d2)
+
+names(d2.1)
 
 
 ##merge Pensacola and St. Andrews and Apalch NRDA
@@ -103,7 +110,7 @@ names(d6)
 #by the proportion of oysters < 26 mm
 
 d6$Bottom<-"Shell"
-d6$Project<-"NFWF_1"
+d6$Project<-"NFWF-1"
 d6$Bay<-"Apalachicola"
 
 
@@ -216,7 +223,7 @@ names(e1)
 #by the proportion of oysters < 26 mm
 
 e1$Bottom<-"Rock"
-e1$Project<-"FWC_2021"
+e1$Project<-"FWC-2021"
 e1$Cultch<-999
 e1$Bay<-"Apalachicola"
 
