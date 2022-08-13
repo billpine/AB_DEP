@@ -24,8 +24,8 @@ library(readxl)
 
 d1 <- read_excel("StAndrewsNRDAMonitoringData_MASTER - Update.xlsx", 
                                              
-              sheet = "Round 1 Oyster Counts", col_types = c("text","date", "date", "text", "text", "text","text", "text", "numeric", "numeric", 
-                                                            "numeric", "text"))
+              sheet = "Round 1 Oyster Counts",na = ".", col_types = c("text","date", "date", "text", "text", "text","text", "text", "numeric", "numeric", 
+                                                            "numeric", "text", "text", "text", "text", "text"))
 
 str(d1)
 names(d1)
@@ -33,9 +33,14 @@ head(d1)
 
 d1$Date<-as.POSIXct(d1$Harvested, format="%Y-%m-%d")
 
-d1$Year<-format(d1$Date,format="%Y")
-d1$Month<-format(d1$Date,format="%m")
-d1$Day<-format(d1$Date,format="%d")
+d1.1 <- d1 %>%
+  mutate(Year = year(d1$Date),
+         Month = month(d1$Date),
+         Day = day(d1$Date))
+
+str(d1.1)
+
+d1<-d1.1
 
 names(d1)
 str(d1)
@@ -64,7 +69,7 @@ str(d1.1)
 
 d2 <- read_excel("StAndrewsNRDAMonitoringData_MASTER - Update.xlsx", 
                  
-                 sheet = "Round 2 Oyster Counts", col_types = c("text","date", "date", "text", "text", "text","text", "text", "numeric", "numeric", 
+                 sheet = "Round 2 Oyster Counts",na = ".", col_types = c("text","date", "date", "text", "text", "text","text", "text", "numeric", "numeric", 
                                                                 "numeric", "numeric", "numeric","numeric", "numeric", "text"))
 
 str(d2)
@@ -73,9 +78,15 @@ head(d2)
 
 d2$Date<-as.POSIXct(d2$Harvested, format="%Y-%m-%d")
 
-d2$Year<-format(d2$Date,format="%Y")
-d2$Month<-format(d2$Date,format="%m")
-d2$Day<-format(d2$Date,format="%d")
+d2.1 <- d2 %>%
+  mutate(Year = year(d2$Date),
+         Month = month(d2$Date),
+         Day = day(d2$Date))
+
+str(d2.1)
+
+d2<-d2.1
+
 
 names(d2)
 str(d2)
@@ -107,7 +118,7 @@ as.numeric(d2.1$Day)
 
 d3 <- read_excel("StAndrewsNRDAMonitoringData_MASTER - Update.xlsx", 
                  
-                 sheet = "Round 3 Oyster Counts", col_types = c("text","date", "date", "text", "text", "text","text", "text", "numeric", "numeric", 
+                 sheet = "Round 3 Oyster Counts",na = ".", col_types = c("text","date", "date", "text", "text", "text","text", "text", "numeric", "numeric", 
                                                                 "numeric", "numeric", "numeric","numeric", "numeric", "text"))
 
 str(d3)
@@ -116,9 +127,14 @@ head(d3)
 
 d3$Date<-as.POSIXct(d3$Harvested, format="%Y-%m-%d")
 
-d3$Year<-format(d3$Date,format="%Y")
-d3$Month<-format(d3$Date,format="%m")
-d3$Day<-format(d3$Date,format="%d")
+d3.1 <- d3 %>%
+  mutate(Year = year(d3$Date),
+         Month = month(d3$Date),
+         Day = day(d3$Date))
+
+str(d3.1)
+
+d3<-d3.1
 
 names(d3)
 str(d3)
@@ -138,7 +154,7 @@ d3.1 <- d3 %>%
                 "Total Dead","Month","Day","Year","Date")
 
 str(d3.1)
-str(d2.1)
+str(d3.1)
 
 as.numeric(d3.1$Year)
 as.numeric(d3.1$Month)
@@ -146,6 +162,7 @@ as.numeric(d3.1$Day)
 
 str(d3.1)
 str(d2.1)
+str(d1.1)
 
 d4<-rbind(d3.1,d2.1,d1.1)
 
@@ -187,7 +204,7 @@ d4$Season <- "Winter"
 d4$Season[d4$Period == 1 | d4$Period == 3 | d4$Period == 5 | d4$Period == 7 | d4$Period == 9| d4$Period == 11| d4$Period == 13] <- "Summer"
 
 unique(d4$Period)
-#periods 10,8,6,4 only
+#periods 10  7  5 only
 
 #ok what are our site names?
 unique(d4$Site)
@@ -201,7 +218,7 @@ d4.1<-d4 %>%
 
 d5<-d4.1
 
-#ok let's now write d5 (Pensacola) to a file and then that will be the file
+#ok let's now write d5 (st andrew) to a file and then that will be the file
 #we merge with the others
 
 write.table(d5, file = "20220324_StAndrews_NRDA_to_merge.csv", row.names = FALSE,col.names = TRUE,sep = ",")
