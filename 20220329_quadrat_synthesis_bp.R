@@ -27,13 +27,13 @@ d0.1<-d0 %>%
   mutate(Bay = replace(Bay,Bay == "Apalachicola Bay", "Apalachicola"))
 
 d0.2<-d0.1 %>%
-  mutate(Project = replace(Project,Project == "FWC_2021", "NFWF-2021"))
+  mutate(Project = replace(Project,Project == "FWC-2021", "NFWF-2021"))
 d0.3<-d0.2 %>%
-  mutate(Project = replace(Project,Project == "NFWF_1", "NFWF-1"))
+  mutate(Project = replace(Project,Project == "NFWF-1", "NFWF-1"))
 d0.4<-d0.3 %>%
-  mutate(Project = replace(Project,Project == "GEBF_5007", "GEBF-5007"))
+  mutate(Project = replace(Project,Project == "GEBF-5007", "GEBF-5007"))
 d0.5<-d0.4 %>%
-  mutate(Project = replace(Project,Project == "NRDA_4044", "NRDA-4044"))
+  mutate(Project = replace(Project,Project == "NRDA-4044", "NRDA-4044"))
 
 d1<- subset(d0.5, d0.5$Bay == "Apalachicola")
 
@@ -200,7 +200,7 @@ f5<-ggplot(d3, aes(Period, CPUE_Spat)) +
   ggtitle("Spat CPUE by Period") +
   xlab("Period") +
   ylab("Spat") +
-  scale_x_continuous(breaks=seq(2,13,1))+
+  scale_x_continuous(breaks=seq(2,14,1))+
   facet_wrap(~Site)
 ggsave("Bulkhead.jpg", width = 10, height = 10)
 
@@ -211,7 +211,7 @@ f5.1<-ggplot(d3, aes(Period, CPUE_Seed)) +
   ggtitle("Seed CPUE by Period") +
   xlab("Period") +
   ylab("Seed") +
-  scale_x_continuous(breaks=seq(2,13,1))+
+  scale_x_continuous(breaks=seq(2,14,1))+
   facet_wrap(~Site)
 #ggsave("Seed.pdf", width = 10, height = 10)
 
@@ -225,7 +225,7 @@ f5.2<-ggplot(d3, aes(Period, CPUE_Legal)) +
   ggtitle("Legal CPUE by Period") +
   xlab("Period") +
   ylab("Legal") +
-  scale_x_continuous(breaks=seq(2,13,1))+
+  scale_x_continuous(breaks=seq(2,14,1))+
   facet_wrap(~Site)
 #ggsave("legal.pdf", width = 10, height = 10)
 
@@ -321,7 +321,7 @@ dp3.2x$Project <- factor(dp3.2x$Project,      # Reordering group factor levels
 spat_study<-ggplot(dp3.2x, aes(Period, CPUE_Spat)) +
   geom_point(size=2) +
   ggtitle("CPUE Spat by Period") +
-  scale_x_continuous(breaks=seq(2,13,1))+
+  scale_x_continuous(breaks=seq(2,14,1))+
   xlab("Period") +
   ylab("CPUE Spat") +
   facet_wrap(~Project)
@@ -333,9 +333,9 @@ seed_study<-ggplot(dp3.2, aes(Period, CPUE_Seed)) +
   ggtitle("Seed CPUE by Period") +
   xlab("Period") +
   ylab("Seed CPUE") +
-  scale_x_continuous(breaks=seq(2,13,1))+
+  scale_x_continuous(breaks=seq(2,14,1))+
   facet_wrap(~Project)
-ggsave("sub_study.png", width = 10, height = 10)
+#ggsave("sub_study.png", width = 10, height = 10)
 
 legal_study<-ggplot(dp3.2, aes(Period, CPUE_Legal)) +
   geom_point(size=2) +
@@ -343,9 +343,7 @@ legal_study<-ggplot(dp3.2, aes(Period, CPUE_Legal)) +
   xlab("Period") +
   ylab("Legal CPUE") +
   facet_wrap(~Project)
-ggsave("legal_study.png", width = 10, height = 10)
-
-
+#ggsave("legal_study.png", width = 10, height = 10)
 
 ################
 ################
@@ -357,9 +355,9 @@ names(dp3.2)
 
 
 
-qqnorm(dp3.2$Sum_spat)
-qqnorm(dp3.2$Sum_Seed)
-qqnorm(dp3.2$Sum_legal)
+#qqnorm(dp3.2$Sum_spat)
+#qqnorm(dp3.2$Sum_Seed)
+#qqnorm(dp3.2$Sum_legal)
 
 #yes overdispersed
 
@@ -379,7 +377,7 @@ r0<-ggplot(dp3.2, aes(Period, Sum_spat,color=Project)) +
   geom_point(size=4) +
   ggtitle("Spat per Period") +
   xlab("Period") +
-  scale_x_continuous(breaks=seq(2,13,1))+
+  scale_x_continuous(breaks=seq(2,14,1))+
   ylab("Total Spat")
 #ggsave("apalach spat per period.png", width=10, height=10)
 
@@ -398,9 +396,9 @@ r0<-ggplot(dp3.2, aes(Period, Sum_spat,color=Project)) +
 # #ggsave("SSSS.png", width=10, height=10)
 # 
 # 
-# r1<-ggplot(data = dp3.2[dp3.2$Project=="NFWF_1",], aes(Period, Sum_spat)) +
+# r1<-ggplot(data = dp3.2[dp3.2$Project=="NFWF-1",], aes(Period, Sum_spat)) +
 #   geom_point(size=3) +
-#   geom_point(data = dp3.2[dp3.2$Project=="NRDA_4044",], mapping = aes(Period, Sum_spat, color="red"), size = 3)+
+#   geom_point(data = dp3.2[dp3.2$Project=="NRDA-4044",], mapping = aes(Period, Sum_spat, color="red"), size = 3)+
 #   geom_point(data = dp3.2[dp3.2$Project=="NRDA_5007",], mapping = aes(Period, Sum_spat, color="blue"), size = 3)+
 #   ggtitle("Spat per Period by Study") +
 #   scale_y_log10()+
@@ -409,12 +407,12 @@ r0<-ggplot(dp3.2, aes(Period, Sum_spat,color=Project)) +
 #   #facet_wrap(~Project)
 
 #this is by study on one plot not on log scale
-r2<-ggplot(data = dp3.2[dp3.2$Project=="NFWF_1",], aes(Period, Sum_spat)) +
+r2<-ggplot(data = dp3.2[dp3.2$Project=="NFWF-1",], aes(Period, Sum_spat)) +
   geom_point(size=3) +
-  geom_point(data = dp3.2[dp3.2$Project=="NFWF_1",], mapping = aes(Period, Sum_spat, color="NFWF 1"), size = 3)+
-  geom_point(data = dp3.2[dp3.2$Project=="NRDA_4044",], mapping = aes(Period, Sum_spat, color="NRDA 4044"), size = 3)+
+  geom_point(data = dp3.2[dp3.2$Project=="NFWF-1",], mapping = aes(Period, Sum_spat, color="NFWF 1"), size = 3)+
+  geom_point(data = dp3.2[dp3.2$Project=="NRDA-4044",], mapping = aes(Period, Sum_spat, color="NRDA 4044"), size = 3)+
   geom_point(data = dp3.2[dp3.2$Project=="NRDA_5007",], mapping = aes(Period, Sum_spat, color="NRDA 5077"), size = 3)+
-  geom_point(data = dp3.2[dp3.2$Project=="FWC_2021",], mapping = aes(Period, Sum_spat, color="FWC 2021"), size = 3)+
+  geom_point(data = dp3.2[dp3.2$Project=="FWC-2021",], mapping = aes(Period, Sum_spat, color="FWC 2021"), size = 3)+
   ggtitle("Spat per Period by Study") +
   xlab("Period") +
   ylab("Total Spat")
@@ -474,6 +472,14 @@ names(dp4)
 #Period only
 tmb0 <- glmmTMB(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
 summary(tmb0)
+
+library(DHARMa)
+res <- simulateResiduals(tmb0)
+plot(res)
+testDispersion(res)
+
+
+#https://cran.r-project.org/web/packages/DHARMa/vignettes/DHARMa.html#owl-example-count-data
 
 #this model is asking how period and project influence counts
 #using NB2 formulation (most common)
@@ -561,7 +567,7 @@ new.dat = data.frame(Sum_spat = dp4$Sum_spat,
 new.tmb1 <- glmmTMB(Sum_spat ~ Period + offset(log(Num_quads)), data = new.dat, family="nbinom2") #converge
 
 ggpredict(new.tmb1)
-test1 = ggpredict(new.tmb1, terms = c("Period[13]", "Num_quads[1]"), type = c('fe')) #in draft
+test1 = ggpredict(new.tmb1, terms = c("Period[15]", "Num_quads[1]"), type = c('fe')) #in draft
 test1.1 = ggpredict(new.tmb1, terms = c("Period[1]", "Num_quads[1]"), type = c('fe')) #in draft
 
 
@@ -587,21 +593,21 @@ test2 = ggpredict(new.tmb2, terms = c("Period", "Project", "Num_quads[1]"), type
 #this is a decent example of model fit to data. About 150 quads done each time in NFWF1
 #this is an example for folks to review
 
-test3 = ggpredict(new.tmb2, terms = c("Period", "Project[NFWF_1]","Num_quads[150]"), type = c('fe')) #for one project
+test3 = ggpredict(new.tmb2, terms = c("Period", "Project[NFWF-1]","Num_quads[150]"), type = c('fe')) #for one project
 plot(test3, facet=FALSE, add.data=TRUE)
 #ggsave("pred_apalach_150quad.png", width=10, height=10)
 
   
-#now let's predict for last period = 13, by study, for 1 quad
+#now let's predict for last period = 14, by study, for 1 quad
 #this is in the paper
 unique(new.dat2$Project)
-#"NFWF_1"    "NRDA_4044" "NRDA_5007" "FWC_2021" 
+#"NFWF-1"    "NRDA-4044" "NRDA_5007" "FWC-2021" 
 
 ggpredict(new.tmb2)
-test4.nfwf1 = ggpredict(new.tmb2, terms = c("Period[13]", "Project[NFWF_1]", "Num_quads[1]"), type = c('fe')) 
-test4.nrda4044 = ggpredict(new.tmb2, terms = c("Period[13]", "Project[NRDA_4044]", "Num_quads[1]"), type = c('fe')) 
-test4.nrda5077 = ggpredict(new.tmb2, terms = c("Period[13]", "Project[NRDA_5007]", "Num_quads[1]"), type = c('fe')) 
-test4.fwc2021 = ggpredict(new.tmb2, terms = c("Period[13]", "Project[FWC_2021]", "Num_quads[1]"), type = c('fe')) 
+test4.nfwf1 = ggpredict(new.tmb2, terms = c("Period[14]", "Project[NFWF-1]", "Num_quads[1]"), type = c('fe')) 
+test4.nrda4044 = ggpredict(new.tmb2, terms = c("Period[14]", "Project[NRDA-4044]", "Num_quads[1]"), type = c('fe')) 
+test4.nrda5077 = ggpredict(new.tmb2, terms = c("Period[14]", "Project[NRDA-5007]", "Num_quads[1]"), type = c('fe')) 
+test4.fwc2021 = ggpredict(new.tmb2, terms = c("Period[13]", "Project[FWC-2021]", "Num_quads[1]"), type = c('fe')) 
 
 
                
@@ -628,11 +634,11 @@ test3 = ggpredict(new.tmb3, terms = c("Period[13]", "Num_quads[1]"), type = c('f
 #now make the Jennifer style plot with group and period
 ##this is in the paper, figure 6 i think
 
-nfwf_pred<- subset(test2, test2$group == "NFWF_1")
-DEP_4044<- subset(test2, test2$group == "NRDA_4044")
-DEP_5007<- subset(test2, test2$group == "NRDA_5007")
-FWC_2021<- subset(test2, test2$group == "FWC_2021")
-#FWC_2021<- subset(test2, pred_tmb1$group == "FWC_2021")
+nfwf_pred<- subset(test2, test2$group == "NFWF-1")
+DEP_4044<- subset(test2, test2$group == "NRDA-4044")
+DEP_5007<- subset(test2, test2$group == "NRDA-5007")
+FWC-2021<- subset(test2, test2$group == "FWC-2021")
+#FWC-2021<- subset(test2, pred_tmb1$group == "FWC-2021")
 #this one on 606 is how it was originally called in the draft. Not sure why
 #it wasn't called from test2$group
 
@@ -642,7 +648,7 @@ pr1 = ggplot(nfwf_pred, aes(x, predicted))+
   xlab ("Period")+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
     ggtitle("NFWF Apalachicola Spat by Period") +
-  #geom_point(data = dp3.2[dp3.2$Project == "NFWF_1",], mapping = aes(Period, Sum_spat), size = 2)+
+  #geom_point(data = dp3.2[dp3.2$Project == "NFWF-1",], mapping = aes(Period, Sum_spat), size = 2)+
   scale_x_continuous(breaks=seq(1,14,1))
 #+
 #  scale_y_continuous(breaks=seq(0,100000,1000))
@@ -653,7 +659,7 @@ pr2 = ggplot(DEP_4044, aes(x, predicted))+
   xlab ("Period")+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
   ggtitle("DEP 4044 Spat by Period") +
-  #geom_point(data = dp3.2[dp3.2$Project == "NRDA_4044",], mapping = aes(Period, Sum_spat), size = 2)+
+  #geom_point(data = dp3.2[dp3.2$Project == "NRDA-4044",], mapping = aes(Period, Sum_spat), size = 2)+
   scale_x_continuous(breaks=seq(1,14,1))
 
 pr3 = ggplot(DEP_5007, aes(x, predicted))+
@@ -665,13 +671,13 @@ pr3 = ggplot(DEP_5007, aes(x, predicted))+
   #geom_point(data = dp3.2[dp3.2$Project == "NRDA_5007",], mapping = aes(Period, Sum_spat), size = 2)+
   scale_x_continuous(breaks=seq(1,14,1))
 
-pr4 = ggplot(FWC_2021, aes(x, predicted))+
+pr4 = ggplot(FWC-2021, aes(x, predicted))+
   geom_line(size=2)+
   ylab("Live oyster per quad") +
   xlab ("Period")+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
   ggtitle("FWC 2021 Spat by Period") +
-  #geom_point(data = dp3.2[dp3.2$Project == "FWC_2021",], mapping = aes(Period, Sum_spat), size = 2)+
+  #geom_point(data = dp3.2[dp3.2$Project == "FWC-2021",], mapping = aes(Period, Sum_spat), size = 2)+
   scale_x_continuous(breaks=seq(1,14,1))
 
 
