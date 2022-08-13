@@ -36,9 +36,15 @@ head(d1)
 
 d1$Date<-as.POSIXct(d1$Harvested, format="%Y-%m-%d")
 
-d1$Year<-format(d1$Date,format="%Y")
-d1$Month<-format(d1$Date,format="%m")
-d1$Day<-format(d1$Date,format="%d")
+d1.1 <- d1 %>%
+  mutate(Year = year(d1$Date),
+         Month = month(d1$Date),
+         Day = day(d1$Date))
+
+str(d1.1)
+
+d1<-d1.1
+
 
 names(d1)
 str(d1)
@@ -82,9 +88,14 @@ head(d2)
 
 d2$Date<-as.POSIXct(d2$Harvested, format="%Y-%m-%d")
 
-d2$Year<-format(d2$Date,format="%Y")
-d2$Month<-format(d2$Date,format="%m")
-d2$Day<-format(d2$Date,format="%d")
+d2.1 <- d2 %>%
+  mutate(Year = year(d2$Date),
+         Month = month(d2$Date),
+         Day = day(d2$Date))
+
+str(d2.1)
+
+d2<-d2.1
 
 names(d2)
 str(d2)
@@ -129,9 +140,14 @@ head(d3)
 
 d3$Date<-as.POSIXct(d3$Harvested, format="%Y-%m-%d")
 
-d3$Year<-format(d3$Date,format="%Y")
-d3$Month<-format(d3$Date,format="%m")
-d3$Day<-format(d3$Date,format="%d")
+d3.1 <- d3 %>%
+  mutate(Year = year(d3$Date),
+         Month = month(d3$Date),
+         Day = day(d3$Date))
+
+str(d3.1)
+
+d3<-d3.1
 
 names(d3)
 str(d3)
@@ -173,9 +189,14 @@ head(d4)
 
 d4$Date<-as.POSIXct(d4$Harvested, format="%Y-%m-%d")
 
-d4$Year<-format(d4$Date,format="%Y")
-d4$Month<-format(d4$Date,format="%m")
-d4$Day<-format(d4$Date,format="%d")
+d4.1 <- d4 %>%
+  mutate(Year = year(d4$Date),
+         Month = month(d4$Date),
+         Day = day(d4$Date))
+
+str(d4.1)
+
+d4<-d4.1
 
 names(d4)
 str(d4)
@@ -202,6 +223,8 @@ str(d4.1)
 
 #################
 d5<-rbind(d4.1,d3.1,d2.1,d1.1)
+
+str(d5)
 
 
 #let's create periods of time as we done in Lone Cabbage and just
@@ -241,7 +264,7 @@ d5$Season <- "Winter"
 d5$Season[d5$Period == 1 | d5$Period == 3 | d5$Period == 5 | d5$Period == 7 | d5$Period == 9| d5$Period == 11| d5$Period == 13] <- "Summer"
 
 unique(d5$Period)
-#periods 12,10,8,6,4,2 only
+#periods 13 14 10  9  6  7  5  3 only
 
 #ok what are our site names?
 unique(d5$Site)
