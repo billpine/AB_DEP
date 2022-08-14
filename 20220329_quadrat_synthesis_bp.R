@@ -202,7 +202,7 @@ f5<-ggplot(d3, aes(Period, CPUE_Spat)) +
   ylab("Spat") +
   scale_x_continuous(breaks=seq(2,14,1))+
   facet_wrap(~Site)
-ggsave("Bulkhead.jpg", width = 10, height = 10)
+#ggsave("Bulkhead.jpg", width = 10, height = 10)
 
 #now seed
 
@@ -426,17 +426,18 @@ r2<-ggplot(data = dp3.2[dp3.2$Project=="NFWF-1",], aes(Period, Sum_spat)) +
 
 dp3.2$Site<-as.factor(dp3.2$Site)
 
-
 library(glmmTMB)
 library(bbmle)
 
+#bring in a measure of discharge
+#below are just the river discharge covariates
 #bring in a measure of discharge
 #it isn't really discharge as CFS, it is number of days
 #in a period below 12000 CFS @ JWLD
 
 #there are two discharge files, one below 12000 CFS the other below 6000 CFS
 
-Lowdays <- read.csv("~/Git/AB_DEP/below_12_threshold.csv")
+Lowdays <- read.csv("below_12_threshold.csv")
 dp4<-merge(dp3.2,Lowdays, by=c("Period"))
 for(i in 1:nrow(dp4))
 {dp4$lag1[i] <- Lowdays$Discharge[Lowdays$Period == (dp4$Period[i]-1)]}
@@ -444,10 +445,6 @@ for(i in 1:nrow(dp4))
 names(dp4)
 
 #plot(dp4$Sum_spat~dp4$Lowdays)
-
-#####################
-#Show this to FWC/FSU
-#####################
 
 names(dp4)[names(dp4) == 'Discharge'] <- 'Lowdays'
 
@@ -468,32 +465,39 @@ z2<- ggplot(dp4, aes(x=Lowdays, y=CPUE_Spat))+
 #ggsave("low days and spat CPUE.png", width=10, height=10)
 
 names(dp4)
+##########################
+#####GLMM#################
+##########################
 
 #Period only
 tmb0 <- glmmTMB(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
 summary(tmb0)
 
-library(DHARMa)
+#ok need to address these autocorrelation questions
+#maybe with this library(DHARMa)?
+#https://cran.r-project.org/web/packages/DHARMa/vignettes/DHARMa.html#owl-example-count-data
+
 res <- simulateResiduals(tmb0)
 plot(res)
 testDispersion(res)
 
-
-#https://cran.r-project.org/web/packages/DHARMa/vignettes/DHARMa.html#owl-example-count-data
+unique(dp4$Project)
 
 #this model is asking how period and project influence counts
-#using NB2 formulation (most common)
+#using NB2 formulation (most common formulation)
 tmb1 <- glmmTMB(Sum_spat ~ Period * Project + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
 summary(tmb1)
 
-#so the NFWF 2021 project is intercept 
+#so the NFWF gebf 5007 project is intercept 
+
+tmb2 <- glmmTMB(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
+summary(tmb2)
 
 ##don't forget to backtransform when looking at the summaries
-
+##or work in predict
 
 #here is a way to generate CI on parameters
 testci<-confint(tmb1)
-
 
 ################
 #now compare multiple models from same family
@@ -504,9 +508,10 @@ testci<-confint(tmb1)
 #these sites nearly all received cultch
 #we could look more closely at project later since they are different materials (?)
 
+plot(dp4$Period,dp4$Sum_spat)
+
 tmb4 <- glmmTMB(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
 summary(tmb4)
-#and what the model above tells us is that over time spat counts are declining
 
 #now is that influenced by the number of low days?
 #more low days would be drier conditions
@@ -567,9 +572,8 @@ new.dat = data.frame(Sum_spat = dp4$Sum_spat,
 new.tmb1 <- glmmTMB(Sum_spat ~ Period + offset(log(Num_quads)), data = new.dat, family="nbinom2") #converge
 
 ggpredict(new.tmb1)
-test1 = ggpredict(new.tmb1, terms = c("Period[15]", "Num_quads[1]"), type = c('fe')) #in draft
+test1 = ggpredict(new.tmb1, terms = c("Period[14]", "Num_quads[1]"), type = c('fe')) #in draft
 test1.1 = ggpredict(new.tmb1, terms = c("Period[1]", "Num_quads[1]"), type = c('fe')) #in draft
-
 
 ############
 ##this is a decent one to show how predict works, run test2
@@ -578,15 +582,14 @@ test1.1 = ggpredict(new.tmb1, terms = c("Period[1]", "Num_quads[1]"), type = c('
 #below with project
 
 new.dat2 = data.frame(Sum_spat = dp4$Sum_spat,
-                     Period = dp4$Period,
-                     Project = dp4$Project,
-                     Num_quads = dp4$Num_quads)
+                      Period = dp4$Period,
+                      Project = dp4$Project,
+                      Num_quads = dp4$Num_quads)
 
 new.tmb2 <- glmmTMB(Sum_spat ~ Period * Project + offset(log(Num_quads)), data = new.dat2, family="nbinom2") #converge
 
 ggpredict(new.tmb2)
 test2 = ggpredict(new.tmb2, terms = c("Period", "Project", "Num_quads[1]"), type = c('fe')) #for all projects
-
 
 #below is for one project
 
@@ -597,20 +600,17 @@ test3 = ggpredict(new.tmb2, terms = c("Period", "Project[NFWF-1]","Num_quads[150
 plot(test3, facet=FALSE, add.data=TRUE)
 #ggsave("pred_apalach_150quad.png", width=10, height=10)
 
-  
 #now let's predict for last period = 14, by study, for 1 quad
 #this is in the paper
 unique(new.dat2$Project)
-#"NFWF-1"    "NRDA-4044" "NRDA_5007" "FWC-2021" 
+#"NFWF-1"    "NRDA-4044" "NRDA-5007" "FWC-2021" 
 
 ggpredict(new.tmb2)
 test4.nfwf1 = ggpredict(new.tmb2, terms = c("Period[14]", "Project[NFWF-1]", "Num_quads[1]"), type = c('fe')) 
 test4.nrda4044 = ggpredict(new.tmb2, terms = c("Period[14]", "Project[NRDA-4044]", "Num_quads[1]"), type = c('fe')) 
-test4.nrda5077 = ggpredict(new.tmb2, terms = c("Period[14]", "Project[NRDA-5007]", "Num_quads[1]"), type = c('fe')) 
-test4.fwc2021 = ggpredict(new.tmb2, terms = c("Period[13]", "Project[FWC-2021]", "Num_quads[1]"), type = c('fe')) 
+test4.nrda5077 = ggpredict(new.tmb2, terms = c("Period[14]", "Project[GEBF-5007]", "Num_quads[1]"), type = c('fe')) 
+test4.fwc2021 = ggpredict(new.tmb2, terms = c("Period[14]", "Project[NFWF-2021]", "Num_quads[1]"), type = c('fe')) 
 
-
-               
 #this is just lowdays (not significant on its own)
 
 new.dat3 = data.frame(Sum_spat = dp4$Sum_spat,
@@ -621,11 +621,8 @@ new.dat3 = data.frame(Sum_spat = dp4$Sum_spat,
 new.tmb3 <- glmmTMB(Sum_spat ~ Period + Lowdays + offset(log(Num_quads)), data = new.dat3, family="nbinom2") #converge
 
 ggpredict(new.tmb3)
-test3 = ggpredict(new.tmb3, terms = c("Period[13]", "Num_quads[1]"), type = c('fe')) #for all projects
+test3 = ggpredict(new.tmb3, terms = c("Period[14]", "Num_quads[1]"), type = c('fe')) #for all projects
 #this is for the average number of low days.
-
-
-
 
 #plot(pred_tmb5, facet=TRUE, colors=c("red","black","blue"), add.data=TRUE)
 
@@ -633,21 +630,19 @@ test3 = ggpredict(new.tmb3, terms = c("Period[13]", "Num_quads[1]"), type = c('f
 
 #now make the Jennifer style plot with group and period
 ##this is in the paper, figure 6 i think
+#"NFWF-1"    "NRDA-4044" "NRDA-5007" "FWC-2021"
 
 nfwf_pred<- subset(test2, test2$group == "NFWF-1")
 DEP_4044<- subset(test2, test2$group == "NRDA-4044")
-DEP_5007<- subset(test2, test2$group == "NRDA-5007")
-FWC-2021<- subset(test2, test2$group == "FWC-2021")
-#FWC-2021<- subset(test2, pred_tmb1$group == "FWC-2021")
-#this one on 606 is how it was originally called in the draft. Not sure why
-#it wasn't called from test2$group
+GEBF_5007<- subset(test2, test2$group == "GEBF-5007")
+NFWF_2021<- subset(test2, test2$group == "NFWF-2021")
 
 pr1 = ggplot(nfwf_pred, aes(x, predicted))+
   geom_line(size=2)+
   ylab("Live oyster per quad") +
   xlab ("Period")+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
-    ggtitle("NFWF Apalachicola Spat by Period") +
+  ggtitle("NFWF Apalachicola Spat by Period") +
   #geom_point(data = dp3.2[dp3.2$Project == "NFWF-1",], mapping = aes(Period, Sum_spat), size = 2)+
   scale_x_continuous(breaks=seq(1,14,1))
 #+
@@ -662,124 +657,25 @@ pr2 = ggplot(DEP_4044, aes(x, predicted))+
   #geom_point(data = dp3.2[dp3.2$Project == "NRDA-4044",], mapping = aes(Period, Sum_spat), size = 2)+
   scale_x_continuous(breaks=seq(1,14,1))
 
-pr3 = ggplot(DEP_5007, aes(x, predicted))+
+pr3 = ggplot(GEBF_5007, aes(x, predicted))+
   geom_line(size=2)+
   ylab("Live oyster per quad") +
   xlab ("Period")+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
-  ggtitle("DEP 5007 Spat by Period") +
+  ggtitle("GEBF 5007 Spat by Period") +
   #geom_point(data = dp3.2[dp3.2$Project == "NRDA_5007",], mapping = aes(Period, Sum_spat), size = 2)+
   scale_x_continuous(breaks=seq(1,14,1))
 
-pr4 = ggplot(FWC-2021, aes(x, predicted))+
+pr4 = ggplot(NFWF_2021, aes(x, predicted))+
   geom_line(size=2)+
   ylab("Live oyster per quad") +
   xlab ("Period")+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
-  ggtitle("FWC 2021 Spat by Period") +
+  ggtitle("NFWF 2021 Spat by Period") +
   #geom_point(data = dp3.2[dp3.2$Project == "FWC-2021",], mapping = aes(Period, Sum_spat), size = 2)+
   scale_x_continuous(breaks=seq(1,14,1))
-
 
 plot_grid(pr1,pr2,pr3,pr4)
 #ggsave("pred_apalach_1quad.png", width=10, height=10)
 
 ####END####
-
-############
-#now Jennifer style but just period. this is what
-#is out there
-
-p_pr1 = ggplot(pred_tmb4, aes(x, predicted))+
-  geom_line(size=2)+
-  ylab("Live oyster count per quad") +
-  xlab ("Period")+
-  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
-  geom_point(data = dp4, mapping = aes(Period, Sum_spat), size = 2)+
-  ggtitle("Spat by Period") +
-  scale_x_continuous(breaks=seq(1,14,1))
-#+
-#  scale_y_log10()
-#+
-#  scale_y_continuous(breaks=seq(0,100000,1000))
-
-
-
-
-
-########################
-
-#everything below is just on the bench and does not work
-# 
-# #some box plots
-# 
-# p1<-ggplot(data=d2) +
-#   labs(title="Counts of live spat") + 
-#   geom_boxplot(
-#     mapping = aes(
-#       x=Site,
-#       y=Spat))
-# p1
-# 
-# p1.1<-p1+  
-#   facet_grid(Year~.) +
-#   labs(title = "Boxplot by Year & Site")
-# p1.1
-# 
-# p2<-ggplot(data=d2) +
-#   labs(title="Counts of live spat") + 
-#   aes(x=Spat,
-#       color=Site)+
-#   stat_density(aes(group = Site), position="stack",geom="line", 
-#                size= 1.5)
-# p2
-# 
-# p2.1<-p2+  
-#   facet_grid(Period~.) +
-#   labs(title = "PDF live spat by period")
-# p2.1
-# 
-# #by period & station
-# summary1<-d2%>%
-#   group_by(Period,Site)%>%
-#   summarise(mean=mean(Spat,na.rm=TRUE),
-#             std_dev=sd(Spat, na.rm=TRUE))
-# 
-#  
-# 
-# f1<-ggplot(d2, aes(Period, Spat)) +
-#   geom_point(size=4) +
-#   ggtitle("Live Spat by Period") +
-#   xlab("Period") +
-#   ylab("Live Spat") +
-#   facet_wrap(Project)
-#   
-#   stat_summary(fun = mean, geom = "point", size=1.5, aes(group= Period), color="gold") +
-#   stat_summary(fun.data = "mean_cl_boot",aes(group= Period), size = 1.5, geom = "errorbar", width = 0.5, color="gold")
-# 
-# f1
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# names(d1)
-# as.numeric(d1$Period)
-# as.numeric(d1$Spat)
-# 
-# #plot
-# f1<-ggplot(d1, aes(x=Period, y= Spat, color=Bottom)) +
-#   geom_point(size=3.5, alpha =1)
-#   facet_wrap(d1$Project)
-# 
-# 
-#   ggtitle("Live Spat")
-# #+
-#   #ylim(0,30000)+
-#   xlab("Period") +
-#   ylab("Live oyster spat")+
-#   facet_wrap(~Project)
-# f1
-# 
