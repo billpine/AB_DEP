@@ -161,27 +161,27 @@ windows(record=TRUE)
 f1<-ggplot(CPUE_Cat, aes(Period, CPUE_Legal)) +
   geom_point(size=4) +
   ggtitle("Cat Point Legal") +
-  xlim(0,14)+
+  xlim(0,15)+
   xlab("Period") +
   ylab("CPUE Legal")
 
 f2<-ggplot(CPUE_Hotel, aes(Period, CPUE_Legal)) +
   geom_point(size=4) +
   ggtitle("Hotel Bar Legal") +
-  xlim(0,14)+
+  xlim(0,15)+
   xlab("Period") +
   ylab("CPUE Legal")
 
 f3<-ggplot(CPUE_Dry, aes(Period, CPUE_Legal)) +
   geom_point(size=4) +
-  xlim(0,14)+
+  xlim(0,15)+
   ggtitle("Dry Bar Legal") +
   xlab("Period") +
   ylab("CPUE Legal")
 
 f4<-ggplot(CPUE_Bulkhead, aes(Period, CPUE_Legal)) +
   geom_point(size=4) +
-  xlim(0,14)+
+  xlim(0,15)+
   ggtitle("Bulkhead") +
   xlab("Period") +
   ylab("CPUE Legal")
@@ -200,7 +200,7 @@ f5<-ggplot(d3, aes(Period, CPUE_Spat)) +
   ggtitle("Spat CPUE by Period") +
   xlab("Period") +
   ylab("Spat") +
-  scale_x_continuous(breaks=seq(2,14,1))+
+  scale_x_continuous(breaks=seq(2,15,1))+
   facet_wrap(~Site)
 #ggsave("Bulkhead.jpg", width = 10, height = 10)
 
@@ -211,7 +211,7 @@ f5.1<-ggplot(d3, aes(Period, CPUE_Seed)) +
   ggtitle("Seed CPUE by Period") +
   xlab("Period") +
   ylab("Seed") +
-  scale_x_continuous(breaks=seq(2,14,1))+
+  scale_x_continuous(breaks=seq(2,15,1))+
   facet_wrap(~Site)
 #ggsave("Seed.pdf", width = 10, height = 10)
 
@@ -225,7 +225,7 @@ f5.2<-ggplot(d3, aes(Period, CPUE_Legal)) +
   ggtitle("Legal CPUE by Period") +
   xlab("Period") +
   ylab("Legal") +
-  scale_x_continuous(breaks=seq(2,14,1))+
+  scale_x_continuous(breaks=seq(2,15,1))+
   facet_wrap(~Site)
 #ggsave("legal.pdf", width = 10, height = 10)
 
@@ -278,27 +278,27 @@ plot(dp3.2$Period,dp3.2$CPUE_Legal)
 # f1<-ggplot(CPUE_Cat, aes(Period, CPUE_Legal)) +
 #   geom_point(size=4) +
 #   ggtitle("Cat Point Legal") +
-#   xlim(0,14)+
+#   xlim(0,15)+
 #   xlab("Period") +
 #   ylab("CPUE Legal")
 # 
 # f2<-ggplot(CPUE_Hotel, aes(Period, CPUE_Legal)) +
 #   geom_point(size=4) +
 #   ggtitle("Hotel Bar Legal") +
-#   xlim(0,14)+
+#   xlim(0,15)+
 #   xlab("Period") +
 #   ylab("CPUE Legal")
 # 
 # f3<-ggplot(CPUE_Dry, aes(Period, CPUE_Legal)) +
 #   geom_point(size=4) +
-#   xlim(0,14)+
+#   xlim(0,15)+
 #   ggtitle("Dry Bar Legal") +
 #   xlab("Period") +
 #   ylab("CPUE Legal")
 # 
 # f4<-ggplot(CPUE_Bulkhead, aes(Period, CPUE_Legal)) +
 #   geom_point(size=4) +
-#   xlim(0,14)+
+#   xlim(0,15)+
 #   ggtitle("Bulkhead") +
 #   xlab("Period") +
 #   ylab("CPUE Legal")
@@ -321,7 +321,7 @@ dp3.2x$Project <- factor(dp3.2x$Project,      # Reordering group factor levels
 spat_study<-ggplot(dp3.2x, aes(Period, CPUE_Spat)) +
   geom_point(size=2) +
   ggtitle("CPUE Spat by Period") +
-  scale_x_continuous(breaks=seq(2,14,1))+
+  scale_x_continuous(breaks=seq(2,15,1))+
   xlab("Period") +
   ylab("CPUE Spat") +
   facet_wrap(~Project)
