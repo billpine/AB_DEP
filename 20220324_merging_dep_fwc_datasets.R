@@ -254,6 +254,8 @@ e1.6<-e1.5 %>%
 e1.7<-e1.6 %>%
   mutate(StationName = replace(StationName,StationName == "Hotel", "Hotel Bar"))
 
+head(e1.7)
+
 e1.8 <- dplyr::rename(e1.7,Site=StationName)
 
 unique(e1.8$Site)
@@ -261,12 +263,15 @@ unique(e1.8$Site)
 #Put columns in order
 e1.8<-e1.8[,c("Bay","Project","Year", "Month", "Day", "Site", "Period", "Season", "Bottom","Cultch", "Quadrat", "Weight_kg", "Spat", "Seed", "Legal")]
 
-#d7.28 is FWC and DEP (not FWC 2021 data, that is in e)
+#d7.26 is FWC and DEP data up to FWC 2022
+#but FWC 2022 brought in below and cleaned
 
 #str(d7.26)
 #str(e1.8)
 
+##########################################################
 #now bring in FWC 2022 that Matt Davis gave bp August 2022
+##########################################################
 
 ee1 <- read.csv("~/Git/AB_DEP/FWC_2022_to_merge.csv")
 
@@ -276,6 +281,7 @@ ee1$Cultch<-999
 ee1$Bay<-"Apalachicola"
 
 names(ee1)
+head(ee1)
 
 #some renaming 
 #Spat is TotalSpat from FWC-NFWF
@@ -283,27 +289,37 @@ ee1.1 <- dplyr::rename(ee1,Weight_kg=Weight_kg,Spat=TotalSpat, Seed=TotalSeed, L
 
 #subset the columns to the ones you want to work with
 ee1.2 <- ee1.1 %>% 
-  dplyr::select(Bay,Site, Quadrat, Weight_kg, Spat, Seed, Legal, Year, Month, Day, Period, Season, Bottom, Project,Cultch)
+  dplyr::select(Bay,StationName, Quadrat, Weight_kg, Spat, Seed, Legal, Year, Month, Day, Period, Season, Bottom, Project,Cultch)
 
-unique(ee1.2$Site)
+unique(ee1.2$StationName)
 
 ee1.3<-ee1.2 %>%
-  mutate(Site = replace(Site,Site == "Lighthouse", "Lighthouse Bar"))
-names(ee1.3)
+  mutate(StationName = replace(StationName,StationName == "Lighthouse", "Lighthouse Bar"))
 
-##stop here
+names(ee1.3)
+head(ee1.3)
+
+
 ee1.4 <- dplyr::rename(ee1.3,Site=StationName)
 
-names(ee1.3)
+unique(ee1.4$Site)
+
+#Put columns in order
+ee1.5<-ee1.4[,c("Bay","Project","Year", "Month", "Day", "Site", "Period", "Season", "Bottom","Cultch", "Quadrat", "Weight_kg", "Spat", "Seed", "Legal")]
+
+
 
 #############
-f1<-rbind(d7.26, e1.8)
 
-#this is the all of the DEP data (including 2021 from DEP directly)
-#and FWC 2021 from Estes
+#now bring in the FWC-DEP data (d7.26, then FWC 2021 e1.8 and then FWC 2022 ee1.5)
+
 #this includes working with the DEP data that were in error in SECAR and 
 #instead I use the updated files from Jonathan directly
 
+#The FWC data are through 2022 and are from Matt Davis directly
+
+
+f1<-rbind(d7.26, e1.8, ee1.5)
 
 #merged FWC and DEP
 write.table(f1, file = "~/Git/AB_DEP/20220326_merged_agency_data.csv", row.names = FALSE,col.names = TRUE,sep = ",")
