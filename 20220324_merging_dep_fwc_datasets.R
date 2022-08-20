@@ -70,7 +70,7 @@ d4 <- read.csv("~/Git/AB_DEP/5007_to_merge.csv")
 d4$Bay<-"Apalachicola"
 d4$Bottom<-"Rock"
 d4$Cultch<-300
-d4$Project<-"GEBF_5007"
+d4$Project<-"GEBF-5007"
 
 d4 <- dplyr::rename(d4,Seed=Sublegal)
 d4 <- dplyr::rename(d4,Weight_kg=Weight)
@@ -263,10 +263,40 @@ e1.8<-e1.8[,c("Bay","Project","Year", "Month", "Day", "Site", "Period", "Season"
 
 #d7.28 is FWC and DEP (not FWC 2021 data, that is in e)
 
-str(d7.26)
-str(e1.8)
+#str(d7.26)
+#str(e1.8)
 
+#now bring in FWC 2022 that Matt Davis gave bp August 2022
 
+ee1 <- read.csv("~/Git/AB_DEP/FWC_2022_to_merge.csv")
+
+ee1$Bottom<-"Rock"
+ee1$Project<-"FWC-2021"
+ee1$Cultch<-999
+ee1$Bay<-"Apalachicola"
+
+names(ee1)
+
+#some renaming 
+#Spat is TotalSpat from FWC-NFWF
+ee1.1 <- dplyr::rename(ee1,Weight_kg=Weight_kg,Spat=TotalSpat, Seed=TotalSeed, Legal=TotalLegal)
+
+#subset the columns to the ones you want to work with
+ee1.2 <- ee1.1 %>% 
+  dplyr::select(Bay,Site, Quadrat, Weight_kg, Spat, Seed, Legal, Year, Month, Day, Period, Season, Bottom, Project,Cultch)
+
+unique(ee1.2$Site)
+
+ee1.3<-ee1.2 %>%
+  mutate(Site = replace(Site,Site == "Lighthouse", "Lighthouse Bar"))
+names(ee1.3)
+
+##stop here
+ee1.4 <- dplyr::rename(ee1.3,Site=StationName)
+
+names(ee1.3)
+
+#############
 f1<-rbind(d7.26, e1.8)
 
 #this is the all of the DEP data (including 2021 from DEP directly)
