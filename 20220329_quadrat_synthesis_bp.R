@@ -316,7 +316,7 @@ plot(dp3.2$Period,dp3.2$CPUE_Legal)
 #change order that it plots in facet
 dp3.2x <- dp3.2                              # Replicate data
 dp3.2x$Project <- factor(dp3.2x$Project,      # Reordering group factor levels
-                         levels = c("NFWF-1", "NRDA-4044", "GEBF-5007", "FWC-2021"))
+                         levels = c("NFWF-1", "NRDA-4044", "GEBF-5007", "NFWF-2021"))
 
 spat_study<-ggplot(dp3.2x, aes(Period, CPUE_Spat)) +
   geom_point(size=2) +
@@ -333,7 +333,7 @@ seed_study<-ggplot(dp3.2, aes(Period, CPUE_Seed)) +
   ggtitle("Seed CPUE by Period") +
   xlab("Period") +
   ylab("Seed CPUE") +
-  scale_x_continuous(breaks=seq(2,14,1))+
+  scale_x_continuous(breaks=seq(2,15,1))+
   facet_wrap(~Project)
 #ggsave("sub_study.png", width = 10, height = 10)
 
@@ -377,7 +377,7 @@ r0<-ggplot(dp3.2, aes(Period, Sum_spat,color=Project)) +
   geom_point(size=4) +
   ggtitle("Spat per Period") +
   xlab("Period") +
-  scale_x_continuous(breaks=seq(2,14,1))+
+  scale_x_continuous(breaks=seq(2,15,1))+
   ylab("Total Spat")
 #ggsave("apalach spat per period.png", width=10, height=10)
 
@@ -412,7 +412,7 @@ r2<-ggplot(data = dp3.2[dp3.2$Project=="NFWF-1",], aes(Period, Sum_spat)) +
   geom_point(data = dp3.2[dp3.2$Project=="NFWF-1",], mapping = aes(Period, Sum_spat, color="NFWF 1"), size = 3)+
   geom_point(data = dp3.2[dp3.2$Project=="NRDA-4044",], mapping = aes(Period, Sum_spat, color="NRDA 4044"), size = 3)+
   geom_point(data = dp3.2[dp3.2$Project=="NRDA_5007",], mapping = aes(Period, Sum_spat, color="NRDA 5077"), size = 3)+
-  geom_point(data = dp3.2[dp3.2$Project=="FWC-2021",], mapping = aes(Period, Sum_spat, color="FWC 2021"), size = 3)+
+  geom_point(data = dp3.2[dp3.2$Project=="NFWF-2021",], mapping = aes(Period, Sum_spat, color="NFWF 2021"), size = 3)+
   ggtitle("Spat per Period by Study") +
   xlab("Period") +
   ylab("Total Spat")
@@ -572,7 +572,7 @@ new.dat = data.frame(Sum_spat = dp4$Sum_spat,
 new.tmb1 <- glmmTMB(Sum_spat ~ Period + offset(log(Num_quads)), data = new.dat, family="nbinom2") #converge
 
 ggpredict(new.tmb1)
-test1 = ggpredict(new.tmb1, terms = c("Period[14]", "Num_quads[1]"), type = c('fe')) #in draft
+test1 = ggpredict(new.tmb1, terms = c("Period[15]", "Num_quads[1]"), type = c('fe')) #in draft
 test1.1 = ggpredict(new.tmb1, terms = c("Period[1]", "Num_quads[1]"), type = c('fe')) #in draft
 
 ############
@@ -606,10 +606,10 @@ unique(new.dat2$Project)
 #"NFWF-1"    "NRDA-4044" "NRDA-5007" "FWC-2021" 
 
 ggpredict(new.tmb2)
-test4.nfwf1 = ggpredict(new.tmb2, terms = c("Period[14]", "Project[NFWF-1]", "Num_quads[1]"), type = c('fe')) 
-test4.nrda4044 = ggpredict(new.tmb2, terms = c("Period[14]", "Project[NRDA-4044]", "Num_quads[1]"), type = c('fe')) 
-test4.nrda5077 = ggpredict(new.tmb2, terms = c("Period[14]", "Project[GEBF-5007]", "Num_quads[1]"), type = c('fe')) 
-test4.fwc2021 = ggpredict(new.tmb2, terms = c("Period[14]", "Project[NFWF-2021]", "Num_quads[1]"), type = c('fe')) 
+test4.nfwf1 = ggpredict(new.tmb2, terms = c("Period[15]", "Project[NFWF-1]", "Num_quads[1]"), type = c('fe')) 
+test4.nrda4044 = ggpredict(new.tmb2, terms = c("Period[15]", "Project[NRDA-4044]", "Num_quads[1]"), type = c('fe')) 
+test4.nrda5077 = ggpredict(new.tmb2, terms = c("Period[15]", "Project[GEBF-5007]", "Num_quads[1]"), type = c('fe')) 
+test4.fwc2021 = ggpredict(new.tmb2, terms = c("Period[15]", "Project[NFWF-2021]", "Num_quads[1]"), type = c('fe')) 
 
 #this is just lowdays (not significant on its own)
 
@@ -621,7 +621,7 @@ new.dat3 = data.frame(Sum_spat = dp4$Sum_spat,
 new.tmb3 <- glmmTMB(Sum_spat ~ Period + Lowdays + offset(log(Num_quads)), data = new.dat3, family="nbinom2") #converge
 
 ggpredict(new.tmb3)
-test3 = ggpredict(new.tmb3, terms = c("Period[14]", "Num_quads[1]"), type = c('fe')) #for all projects
+test3 = ggpredict(new.tmb3, terms = c("Period[15]", "Num_quads[1]"), type = c('fe')) #for all projects
 #this is for the average number of low days.
 
 #plot(pred_tmb5, facet=TRUE, colors=c("red","black","blue"), add.data=TRUE)
@@ -644,7 +644,7 @@ pr1 = ggplot(nfwf_pred, aes(x, predicted))+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
   ggtitle("NFWF Apalachicola Spat by Period") +
   #geom_point(data = dp3.2[dp3.2$Project == "NFWF-1",], mapping = aes(Period, Sum_spat), size = 2)+
-  scale_x_continuous(breaks=seq(1,14,1))
+  scale_x_continuous(breaks=seq(1,15,1))
 #+
 #  scale_y_continuous(breaks=seq(0,100000,1000))
 
@@ -655,7 +655,7 @@ pr2 = ggplot(DEP_4044, aes(x, predicted))+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
   ggtitle("DEP 4044 Spat by Period") +
   #geom_point(data = dp3.2[dp3.2$Project == "NRDA-4044",], mapping = aes(Period, Sum_spat), size = 2)+
-  scale_x_continuous(breaks=seq(1,14,1))
+  scale_x_continuous(breaks=seq(1,15,1))
 
 pr3 = ggplot(GEBF_5007, aes(x, predicted))+
   geom_line(size=2)+
@@ -664,7 +664,7 @@ pr3 = ggplot(GEBF_5007, aes(x, predicted))+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
   ggtitle("GEBF 5007 Spat by Period") +
   #geom_point(data = dp3.2[dp3.2$Project == "NRDA_5007",], mapping = aes(Period, Sum_spat), size = 2)+
-  scale_x_continuous(breaks=seq(1,14,1))
+  scale_x_continuous(breaks=seq(1,15,1))
 
 pr4 = ggplot(NFWF_2021, aes(x, predicted))+
   geom_line(size=2)+
@@ -673,7 +673,7 @@ pr4 = ggplot(NFWF_2021, aes(x, predicted))+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
   ggtitle("NFWF 2021 Spat by Period") +
   #geom_point(data = dp3.2[dp3.2$Project == "FWC-2021",], mapping = aes(Period, Sum_spat), size = 2)+
-  scale_x_continuous(breaks=seq(1,14,1))
+  scale_x_continuous(breaks=seq(1,15,1))
 
 plot_grid(pr1,pr2,pr3,pr4)
 #ggsave("pred_apalach_1quad.png", width=10, height=10)
