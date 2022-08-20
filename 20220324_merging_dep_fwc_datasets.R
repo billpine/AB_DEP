@@ -19,7 +19,7 @@ library(cowplot)
 #first the two DEP 4044 and 5077
 #then the FWC NFWF1 and NFWF 2021
 
-#start with Pensacola
+#start with Pensacola, this includes data through 2022 from Jonathan
 
 d1 <- read.csv("~/Git/AB_DEP/20220324_Pensacola_NRDA_to_merge.csv")
 
@@ -246,7 +246,7 @@ unique(e1.2$StationName)
 e1.3<-e1.2 %>%
   mutate(StationName = replace(StationName,StationName == "Easthole #7", "East Hole"))
 e1.4<-e1.3 %>%
-  mutate(StationName = replace(StationName,StationName == "Lighthouse Bar", "Lighthouse Bar"))
+  mutate(StationName = replace(StationName,StationName == "Lighthouse", "Lighthouse Bar"))
 e1.5<-e1.4 %>%
   mutate(StationName = replace(StationName,StationName == "Hotel Bar 1", "Hotel Bar"))
 e1.6<-e1.5 %>%
@@ -320,5 +320,13 @@ ee1.5<-ee1.4[,c("Bay","Project","Year", "Month", "Day", "Site", "Period", "Seaso
 
 f1<-rbind(d7.26, e1.8, ee1.5)
 
+f1.1<-f1 %>%
+  mutate(Bay = replace(Bay,Bay == "Apalachicola Bay", "Apalachicola"))
+
+unique(f1.1$Site)
+
+table(f1.1$Period,f1.1$Season)
+
+
 #merged FWC and DEP
-write.table(f1, file = "~/Git/AB_DEP/20220326_merged_agency_data.csv", row.names = FALSE,col.names = TRUE,sep = ",")
+write.table(f1.1, file = "~/Git/AB_DEP/20220326_merged_agency_data.csv", row.names = FALSE,col.names = TRUE,sep = ",")
