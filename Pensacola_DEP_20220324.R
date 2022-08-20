@@ -1,8 +1,9 @@
 ##
 ##THIS IS the DEP project for Pensacola
-##I received this from DEP Mar 24, 2022 
+##I received this from DEP 
 #this file replaces the earlier Pensacola data from SECAR which
 #had errors
+#updated Aug 20 I added the 2022 data from Jonathan
 ##
 
 library(readxl)
@@ -23,9 +24,9 @@ library(readxl)
 #start round 1
 
 d1 <- read_excel("PensacolaNRDAMonitoringData_MASTER Update.xlsx", 
-                                             
-              sheet = "Round 1 Oyster Counts", col_types = c("text","date", "date", "text", "text", "text","text", "text", "numeric", "numeric", 
-                                                            "numeric", "numeric", "numeric","numeric", "numeric", "text"))
+                 
+                 sheet = "Round 1 Oyster Counts", col_types = c("text","date", "date", "text", "text", "text","text", "text", "numeric", "numeric", 
+                                                                "numeric", "numeric", "numeric","numeric", "numeric", "text"))
 
 str(d1)
 names(d1)
@@ -170,15 +171,71 @@ as.numeric(d3.1$Year)
 as.numeric(d3.1$Month)
 as.numeric(d3.1$Day)
 
+########
+#Bring in Round 4 which Jonathan emailed in August 2022
+##############
+#start round 3
+
+d4 <- read_excel("PensacolaNRDAMonitoringData_Round4.xlsx", 
+                 sheet = "Round 4 Oyster Counts", col_types = c("text", 
+                                                                "date", "date", "text", "text", "text", 
+                                                                "text", "text", "text", "text", "numeric", 
+                                                                "numeric", "numeric", "numeric", 
+                                                                "numeric", "numeric", "numeric", 
+                                                                "text"))
+str(d4)
+names(d4)
+head(d4)
+
+d4$Date<-as.POSIXct(d4$Harvested, format="%Y-%m-%d")
 
 
+d4.1 <- d4 %>%
+  mutate(Year = year(d4$Date),
+         Month = month(d4$Date),
+         Day = day(d4$Date))
+
+d4<-d4.1
+
+names(d4)
+str(d4)
+
+
+names(d4)
+
+names(d4)[12] <- "Weight_kg"
+names(d4)[13] <- "Adults"
+names(d4)[14] <- "Seed"
+names(d4)[15] <- "Spat"
+
+#subset the columns to the ones you want to work with
+d4.1 <- d4 %>% 
+  dplyr::select("Bay","Site","Quadrat","Weight_kg","Adults"
+                ,"Seed","Spat","Total Live",
+                "Total Dead","Month","Day","Year","Date")
+
+
+str(d4.1)
+str(d2.1)
+
+as.numeric(d4.1$Year)
+as.numeric(d4.1$Month)
+as.numeric(d4.1$Day)
+
+
+
+
+################
+##Put Pensacola together
+str(d4.1)
 str(d3.1)
 str(d2.1)
 str(d1.1)
 
-d4<-rbind(d3.1,d2.1,d1.1)
+d5<-rbind(d4.1,d3.1,d2.1,d1.1)
 
-unique(d4$Month)
+unique(d5$Month)
+str(d5)
 
 
 #let's create periods of time as we done in Lone Cabbage and just
@@ -190,38 +247,42 @@ unique(d4$Month)
 #add period to split the year like we do with Lone Cabbage
 #So April through September is summer and October through March is winter
 
-names(d4)
+names(d5)
 
-unique(d4$Year)
-unique(d4$Month)
+unique(d5$Year)
+unique(d5$Month)
 
 
 
-d4$Period <- NA
+d5$Period <- NA
 firstyear <- 2015 
 #this is the first year of the FWC NFWF, so doing this to match the periods
-endyear <- max(d4$Year)
+endyear <- max(d5$Year)
 
 years <- sort(rep(firstyear:endyear, times = 1, each = 2))
 
 for(i in unique(years)){
   y <- i #year
   p <- which(years == i) #period number - 2010 = 1 and 2, 2011 = 3 and 4, and so forth.
-  for(j in 1:nrow(d4)){
-    if(d4$Year[j] == y & d4$Month[j] > 3 & d4$Month[j] < 10) d4$Period[j] = p[1] #year i months 4-9
-    if(d4$Year[j] == y & d4$Month[j] > 9) d4$Period[j] = p[2] #year i months 10-12
-    if(d4$Year[j] == y+1 & d4$Month[j] < 4) d4$Period[j] = p[2] #year i+1 months 1-3
+  for(j in 1:nrow(d5)){
+    if(d5$Year[j] == y & d5$Month[j] > 3 & d5$Month[j] < 10) d5$Period[j] = p[1] #year i months 4-9
+    if(d5$Year[j] == y & d5$Month[j] > 9) d5$Period[j] = p[2] #year i months 10-12
+    if(d5$Year[j] == y+1 & d5$Month[j] < 4) d5$Period[j] = p[2] #year i+1 months 1-3
   }
 }
 
-d4$Season <- "Winter"
-d4$Season[d4$Period == 1 | d4$Period == 3 | d4$Period == 5 | d4$Period == 7 | d4$Period == 9| d4$Period == 11| d4$Period == 13] <- "Summer"
+d5$Season <- "Winter"
+d5$Season[d5$Period == 1 | d5$Period == 3 | d5$Period == 5 | d5$Period == 7 | d5$Period == 9| d5$Period == 11| d5$Period == 13| d5$Period == 15] <- "Summer"
 
-unique(d4$Period)
-#periods 10,7,5,6 only
+unique(d5$Period)
+#periods 15, 10,7,5,6 only
+
+#checking
+table(d5$Period,d5$Season)
+table(d5$Period,d5$Month)
 
 #ok what are our site names?
-unique(d4$Site)
+unique(d5$Site)
 #lots of sites
 
 ####
@@ -229,39 +290,42 @@ unique(d4$Site)
 
 
 
-d4.1<-d4 %>%
-   mutate(Site = replace(Site,Site == "East River #3", "East River"))
-d4.2<-d4.1 %>%
-   mutate(Site = replace(Site,Site == "East River #2", "East River"))
-d4.3<-d4.2 %>%
+d5.1<-d5 %>%
+  mutate(Site = replace(Site,Site == "East River #3", "East River"))
+d5.2<-d5.1 %>%
+  mutate(Site = replace(Site,Site == "East River #2", "East River"))
+d5.3<-d5.2 %>%
   mutate(Site = replace(Site,Site == "East River #1", "East River"))
-d4.4<-d4.3 %>%
+d5.4<-d5.3 %>%
   mutate(Site = replace(Site,Site == "Boathouse Lumps #1", "Boathouse Lumps"))
-d4.5<-d4.4 %>%
+d5.5<-d5.4 %>%
   mutate(Site = replace(Site,Site == "Boathouse Lumps #2", "Boathouse Lumps"))
-d4.6<-d4.5 %>%
+d5.6<-d5.5 %>%
   mutate(Site = replace(Site,Site == "White Point Bar #1", "White Point Bar"))
-d4.7<-d4.6 %>%
+d5.7<-d5.6 %>%
   mutate(Site = replace(Site,Site == "White Point Bar #2", "White Point Bar"))
-d4.8<-d4.7 %>%
+d5.8<-d5.7 %>%
   mutate(Site = replace(Site,Site == "White Point #1", "White Point Bar"))
-d4.9<-d4.8 %>%
+d5.9<-d5.8 %>%
   mutate(Site = replace(Site,Site == "White Point #2", "White Point Bar"))
-d4.10<-d4.9 %>%
+d5.10<-d5.9 %>%
   mutate(Site = replace(Site,Site == "Escribano Point #1", "Escribano Point"))
-d4.11<-d4.10 %>%
+d5.11<-d5.10 %>%
   mutate(Site = replace(Site,Site == "Escribano Point #2", "Escribano Point"))
-d4.12<-d4.11 %>%
+d5.12<-d5.11 %>%
   mutate(Site = replace(Site,Site == "Trout Bayou #1", "Trout Bayou"))
-d4.13<-d4.12 %>%
+d5.13<-d5.12 %>%
   mutate(Site = replace(Site,Site == "Trout Bayou  #1", "Trout Bayou"))
-d4.14<-d4.13 %>%
+d5.14<-d5.13 %>%
   mutate(Site = replace(Site,Site == "Trout Bayou #2", "Trout Bayou"))
 
-d5<-d4.14
+unique(d5.14$Site)
 
-#ok let's now write d5 (Pensacola) to a file and then that will be the file
+
+d6<-d5.14
+
+#ok let's now write d6 (Pensacola) to a file and then that will be the file
 #we merge with the others
 
-write.table(d5, file = "20220324_Pensacola_NRDA_to_merge.csv", row.names = FALSE,col.names = TRUE,sep = ",")
+write.table(d6, file = "20220324_Pensacola_NRDA_to_merge.csv", row.names = FALSE,col.names = TRUE,sep = ",")
 
