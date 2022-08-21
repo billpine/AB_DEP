@@ -154,6 +154,12 @@ CPUE_Cat<-subset(d3,d3$Site =="Cat Point")
 CPUE_Hotel<-subset(d3,d3$Site =="Hotel Bar")
 CPUE_Dry<-subset(d3,d3$Site =="Dry Bar")
 CPUE_Bulkhead<-subset(d3,d3$Site =="Bulkhead")
+CPUE_Lighthouse<-subset(d3,d3$Site =="Lighthouse Bar")
+
+#just some simple checks to help examine 2022
+light_check<-subset(d2,d2$Site =="Lighthouse Bar" & d2$Period==14)
+east_check<-subset(d2,d2$Site =="East Lumps" & d2$Period==14)
+
 
 windows(record=TRUE)
 
@@ -489,6 +495,116 @@ tmb1 <- glmmTMB(Sum_spat ~ Period * Project + (1|Site) + offset(log(Num_quads)),
 summary(tmb1)
 
 #so the NFWF gebf 5007 project is intercept 
+
+###now instead of using interaction term, let's just look at each project as an individual dataset
+##based on meeting with Fred 20220821
+
+#when you plot with the models structured this way, it is only going to plot for the periods
+#of that project. If you want to interpolate beyond the data and plot in all periods
+#then you need to create the "new data" structure
+#new.dat = data.frame(Sum_spat = dp4$Sum_spat,
+#Period = dp4$Period,
+#Num_quads = dp4$Num_quads)
+##and then predict using the new.dat and not the specified data set
+
+library(ggeffects)
+
+unique(dp4$Project)
+
+#NFWF-1
+dNFWF1<-subset(dp4,dp4$Project =="NFWF-1")
+tmb1_NFWF1 <- glmmTMB(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = dNFWF1, family="nbinom2") #converge
+summary(tmb1_NFWF1)
+
+pred.tmbNFWF1 <- ggpredict(tmb1_NFWF1, c("Period"))
+#plot and show data
+pr.1<-plot(pred.tmbNFWF1, facet=FALSE, add.data=TRUE)
+
+#predicted for one period and one quadrant
+test.NFWF1 = ggpredict(tmb1_NFWF1, terms = c("Period[15]", "Num_quads[1]"), type = c('fe')) 
+#predicted for all periods of data and one quadrant
+test2.NFWF1 = ggpredict(tmb1_NFWF1, terms = c("Period", "Num_quads[1]"), type = c('fe')) 
+
+pr_NFWF1 = ggplot(test2.NFWF1, aes(x, predicted))+
+  geom_line(size=2)+
+  ylab("Live oyster per quad") +
+  xlab ("Period")+
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
+  ggtitle("NFWF1 Apalachicola Spat by Period") +
+  scale_x_continuous(breaks=seq(1,15,1))
+
+
+#NRDA-4044
+dNRDA4044<-subset(dp4,dp4$Project =="NRDA-4044")
+tmb1_NRDA4044 <- glmmTMB(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = dNRDA4044, family="nbinom2") #converge
+summary(tmb1_NRDA4044)
+
+pred.tmbNRDA4044 <- ggpredict(tmb1_NRDA4044, c("Period"))
+#plot and show data
+plot(pred.tmbNRDA4044, facet=FALSE, add.data=TRUE)
+
+#predicted for one period and one quadrant
+test.NRDA4044 = ggpredict(tmb1_NRDA4044, terms = c("Period[15]", "Num_quads[1]"), type = c('fe')) 
+#predicted for all periods of data and one quadrant
+test2.NRDA4044 = ggpredict(tmb1_NRDA4044, terms = c("Period", "Num_quads[1]"), type = c('fe')) 
+
+pr_NRDA4044 = ggplot(test2.NRDA4044, aes(x, predicted))+
+  geom_line(size=2)+
+  ylab("Live oyster per quad") +
+  xlab ("Period")+
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
+  ggtitle("NRDA4044 Apalachicola Spat by Period") +
+  scale_x_continuous(breaks=seq(1,15,1))
+
+
+#GEBF-5007
+dGEBF5007<-subset(dp4,dp4$Project =="GEBF-5007")
+tmb1_GEBF5007 <- glmmTMB(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = dGEBF5007, family="nbinom2") #converge
+summary(tmb1_GEBF5007)
+
+pred.tmbGEBF5007 <- ggpredict(tmb1_GEBF5007, c("Period"))
+#plot and show data
+plot(pred.tmbGEBF5007, facet=FALSE, add.data=TRUE)
+
+#predicted for one period and one quadrant
+test.GEBF5007 = ggpredict(tmb1_GEBF5007, terms = c("Period[15]", "Num_quads[1]"), type = c('fe')) 
+#predicted for all periods of data and one quadrant
+test2.GEBF5007 = ggpredict(tmb1_GEBF5007, terms = c("Period", "Num_quads[1]"), type = c('fe')) 
+
+pr_GEBF5007 = ggplot(test2.GEBF5007, aes(x, predicted))+
+  geom_line(size=2)+
+  ylab("Live oyster per quad") +
+  xlab ("Period")+
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
+  ggtitle("GEBF5007 Apalachicola Spat by Period") +
+  scale_x_continuous(breaks=seq(1,15,1))
+
+
+#NFWF-2021
+dNFWF2021<-subset(dp4,dp4$Project =="NFWF-2021")
+tmb1_NFWF2021 <- glmmTMB(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = dNFWF2021, family="nbinom2") #converge
+summary(tmb1_NFWF2021)
+
+pred.tmbNFWF2021 <- ggpredict(tmb1_NFWF2021, c("Period"))
+#plot and show data
+plot(pred.tmbNFWF2021, facet=FALSE, add.data=TRUE)
+
+#predicted for one period and one quadrant
+test.NFWF2021 = ggpredict(tmb1_NFWF2021, terms = c("Period[15]", "Num_quads[1]"), type = c('fe')) 
+#predicted for all periods of data and one quadrant
+test2.NFWF2021 = ggpredict(tmb1_NFWF2021, terms = c("Period", "Num_quads[1]"), type = c('fe')) 
+
+pr_NFWF2021 = ggplot(test2.NFWF2021, aes(x, predicted))+
+  geom_line(size=2)+
+  ylab("Live oyster per quad") +
+  xlab ("Period")+
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
+  ggtitle("NFWF-2021 Apalachicola Spat by Period") +
+  scale_x_continuous(breaks=seq(1,15,1))
+
+######################
+######################
+
 
 tmb2 <- glmmTMB(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
 summary(tmb2)
