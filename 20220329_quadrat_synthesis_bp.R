@@ -160,6 +160,14 @@ CPUE_Lighthouse<-subset(d3,d3$Site =="Lighthouse Bar")
 light_check<-subset(d2,d2$Site =="Lighthouse Bar" & d2$Period==14)
 east_check<-subset(d2,d2$Site =="East Lumps" & d2$Period==14)
 
+##some checks to review with Matt
+unique(d2$Project)
+nfwf2021_check<-subset(d2,d2$Project =="NFWF-2021")
+table(nfwf2021_check$Site,nfwf2021_check$Period)
+mattcheck<-table(nfwf2021_check$Site,nfwf2021_check$Month,nfwf2021_check$Year)
+write.table(mattcheck, file = "~/GitHub/AB_DEP/mattcheck.csv", row.names = FALSE,col.names = TRUE,sep = ",")
+
+
 
 windows(record=TRUE)
 
