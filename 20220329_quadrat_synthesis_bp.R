@@ -167,6 +167,7 @@ table(nfwf2021_check$Site,nfwf2021_check$Period)
 mattcheck<-table(nfwf2021_check$Site,nfwf2021_check$Month,nfwf2021_check$Year)
 write.table(mattcheck, file = "~/GitHub/AB_DEP/mattcheck.csv", row.names = FALSE,col.names = TRUE,sep = ",")
 
+unique(nfwf2021_check$Project)
 
 
 windows(record=TRUE)
