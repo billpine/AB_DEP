@@ -165,9 +165,15 @@ unique(d2$Project)
 nfwf2021_check<-subset(d2,d2$Project =="NFWF-2021")
 table(nfwf2021_check$Site,nfwf2021_check$Period)
 mattcheck<-table(nfwf2021_check$Site,nfwf2021_check$Month,nfwf2021_check$Year)
-write.table(mattcheck, file = "~/GitHub/AB_DEP/mattcheck.csv", row.names = FALSE,col.names = TRUE,sep = ",")
+write.table(mattcheck, file = "~/Git/AB_DEP/mattcheck.csv", row.names = FALSE,col.names = TRUE,sep = ",")
 
 unique(nfwf2021_check$Project)
+
+matt_check1<-subset(d2,d2$Project=="NFWF-1")
+matt_check2<-subset(d2,d2$Project=="NFWF-2021")
+matt_check3<-rbind(matt_check1,matt_check2)
+
+#write.table(matt_check3, file = "~/Git/AB_DEP/matt_check3.csv", row.names = FALSE,col.names = TRUE,sep = ",")
 
 
 windows(record=TRUE)
