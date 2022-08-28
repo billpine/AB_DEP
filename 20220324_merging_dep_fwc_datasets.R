@@ -326,7 +326,7 @@ f1.1<-f1 %>%
 unique(f1.1$Site)
 
 table(f1.1$Period,f1.1$Season)
-
+ 
 
 #merged FWC and DEP
 write.table(f1.1, file = "~/Git/AB_DEP/20220326_merged_agency_data.csv", row.names = FALSE,col.names = TRUE,sep = ",")
