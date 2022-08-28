@@ -8772,153 +8772,93 @@
 "Apalachicola","FWC-2021",2021,9,27,"Bulkhead",13,"Summer","Rock",999,13,0.3,0,0,0
 "Apalachicola","FWC-2021",2021,9,27,"Bulkhead",13,"Summer","Rock",999,14,0.9,12,2,1
 "Apalachicola","FWC-2021",2021,9,27,"Bulkhead",13,"Summer","Rock",999,15,0.8,4,1,0
-"Apalachicola","FWC-2021",2022,2,10,"Lighthouse Bar",14,"Winter","Rock",999,1,11.86,423,160,1
-"Apalachicola","FWC-2021",2022,2,10,"Lighthouse Bar",14,"Winter","Rock",999,2,9.23,346,131,1
-"Apalachicola","FWC-2021",2022,2,10,"Lighthouse Bar",14,"Winter","Rock",999,3,7.89,226,86,1
-"Apalachicola","FWC-2021",2022,2,10,"Lighthouse Bar",14,"Winter","Rock",999,4,10.43,372,141,1
-"Apalachicola","FWC-2021",2022,2,10,"Lighthouse Bar",14,"Winter","Rock",999,5,11.36,294,111,1
-"Apalachicola","FWC-2021",2022,2,10,"Lighthouse Bar",14,"Winter","Rock",999,6,13.08,698,265,2
-"Apalachicola","FWC-2021",2022,2,10,"Lighthouse Bar",14,"Winter","Rock",999,7,11.58,595,225,2
-"Apalachicola","FWC-2021",2022,2,10,"Lighthouse Bar",14,"Winter","Rock",999,8,12.22,455,172,2
-"Apalachicola","FWC-2021",2022,2,10,"Lighthouse Bar",14,"Winter","Rock",999,9,10.17,332,126,1
-"Apalachicola","FWC-2021",2022,2,10,"Lighthouse Bar",14,"Winter","Rock",999,10,13.32,555,210,2
-"Apalachicola","FWC-2021",2022,2,10,"Lighthouse Bar",14,"Winter","Rock",999,11,9.43,249,94,1
-"Apalachicola","FWC-2021",2022,2,10,"Lighthouse Bar",14,"Winter","Rock",999,12,12.65,457,173,2
-"Apalachicola","FWC-2021",2022,2,10,"Lighthouse Bar",14,"Winter","Rock",999,13,14.06,552,209,2
-"Apalachicola","FWC-2021",2022,2,10,"Lighthouse Bar",14,"Winter","Rock",999,14,8.33,244,93,1
-"Apalachicola","FWC-2021",2022,2,10,"Lighthouse Bar",14,"Winter","Rock",999,15,4.74,150,57,1
-"Apalachicola","FWC-2021",2022,1,24,"East Lumps",14,"Winter","Rock",999,1,7.99,258,98,1
-"Apalachicola","FWC-2021",2022,1,24,"East Lumps",14,"Winter","Rock",999,2,6.03,205,78,1
-"Apalachicola","FWC-2021",2022,1,24,"East Lumps",14,"Winter","Rock",999,3,12.15,501,190,2
-"Apalachicola","FWC-2021",2022,1,24,"East Lumps",14,"Winter","Rock",999,4,8.82,281,107,1
-"Apalachicola","FWC-2021",2022,1,24,"East Lumps",14,"Winter","Rock",999,5,9.27,384,146,1
-"Apalachicola","FWC-2021",2022,1,24,"East Lumps",14,"Winter","Rock",999,6,7.04,278,105,1
-"Apalachicola","FWC-2021",2022,1,24,"East Lumps",14,"Winter","Rock",999,7,5.98,195,74,1
-"Apalachicola","FWC-2021",2022,1,24,"East Lumps",14,"Winter","Rock",999,8,6.08,208,79,1
-"Apalachicola","FWC-2021",2022,1,24,"East Lumps",14,"Winter","Rock",999,9,5.59,148,56,1
-"Apalachicola","FWC-2021",2022,1,24,"East Lumps",14,"Winter","Rock",999,10,11.35,508,193,2
-"Apalachicola","FWC-2021",2022,1,24,"East Lumps",14,"Winter","Rock",999,11,7.81,254,96,1
-"Apalachicola","FWC-2021",2022,1,24,"East Lumps",14,"Winter","Rock",999,12,9.21,320,121,1
-"Apalachicola","FWC-2021",2022,1,24,"East Lumps",14,"Winter","Rock",999,13,8.12,247,94,1
-"Apalachicola","FWC-2021",2022,1,24,"East Lumps",14,"Winter","Rock",999,14,6.67,297,113,1
-"Apalachicola","FWC-2021",2022,1,24,"East Lumps",14,"Winter","Rock",999,15,12.08,451,171,2
-"Apalachicola","FWC-2021",2022,1,24,"Cat Point",14,"Winter","Rock",999,1,5.76,175,66,1
-"Apalachicola","FWC-2021",2022,1,24,"Cat Point",14,"Winter","Rock",999,2,9.14,681,258,2
-"Apalachicola","FWC-2021",2022,1,24,"Cat Point",14,"Winter","Rock",999,3,8.95,636,241,2
-"Apalachicola","FWC-2021",2022,1,24,"Cat Point",14,"Winter","Rock",999,4,8.39,163,62,1
-"Apalachicola","FWC-2021",2022,1,24,"Cat Point",14,"Winter","Rock",999,5,3.01,139,53,0
+"Apalachicola","FWC-2021",2022,2,10,"Lighthouse Bar",14,"Winter","Rock",999,1,11.86,421,163,0
+"Apalachicola","FWC-2021",2022,2,10,"Lighthouse Bar",14,"Winter","Rock",999,2,9.23,345,134,0
+"Apalachicola","FWC-2021",2022,2,10,"Lighthouse Bar",14,"Winter","Rock",999,3,7.89,225,87,0
+"Apalachicola","FWC-2021",2022,2,10,"Lighthouse Bar",14,"Winter","Rock",999,4,10.43,370,143,0
+"Apalachicola","FWC-2021",2022,2,10,"Lighthouse Bar",14,"Winter","Rock",999,5,11.36,292,113,0
+"Apalachicola","FWC-2021",2022,2,10,"Lighthouse Bar",14,"Winter","Rock",999,6,13.08,695,269,1
+"Apalachicola","FWC-2021",2022,2,10,"Lighthouse Bar",14,"Winter","Rock",999,7,11.58,592,229,0
+"Apalachicola","FWC-2021",2022,2,10,"Lighthouse Bar",14,"Winter","Rock",999,8,12.22,453,176,0
+"Apalachicola","FWC-2021",2022,2,10,"Lighthouse Bar",14,"Winter","Rock",999,9,10.17,331,128,0
+"Apalachicola","FWC-2021",2022,2,10,"Lighthouse Bar",14,"Winter","Rock",999,10,13.32,553,214,0
+"Apalachicola","FWC-2021",2022,2,10,"Lighthouse Bar",14,"Winter","Rock",999,11,9.43,248,96,0
+"Apalachicola","FWC-2021",2022,2,10,"Lighthouse Bar",14,"Winter","Rock",999,12,12.65,455,176,0
+"Apalachicola","FWC-2021",2022,2,10,"Lighthouse Bar",14,"Winter","Rock",999,13,14.06,550,213,0
+"Apalachicola","FWC-2021",2022,2,10,"Lighthouse Bar",14,"Winter","Rock",999,14,8.33,244,94,0
+"Apalachicola","FWC-2021",2022,2,10,"Lighthouse Bar",14,"Winter","Rock",999,15,4.74,149,58,0
+"Apalachicola","FWC-2021",2022,1,24,"East Lumps",14,"Winter","Rock",999,1,7.99,257,100,0
+"Apalachicola","FWC-2021",2022,1,24,"East Lumps",14,"Winter","Rock",999,2,6.03,205,79,0
+"Apalachicola","FWC-2021",2022,1,24,"East Lumps",14,"Winter","Rock",999,3,12.15,499,193,0
+"Apalachicola","FWC-2021",2022,1,24,"East Lumps",14,"Winter","Rock",999,4,8.82,280,109,0
+"Apalachicola","FWC-2021",2022,1,24,"East Lumps",14,"Winter","Rock",999,5,9.27,383,148,0
+"Apalachicola","FWC-2021",2022,1,24,"East Lumps",14,"Winter","Rock",999,6,7.04,277,107,0
+"Apalachicola","FWC-2021",2022,1,24,"East Lumps",14,"Winter","Rock",999,7,5.98,195,75,0
+"Apalachicola","FWC-2021",2022,1,24,"East Lumps",14,"Winter","Rock",999,8,6.08,207,80,0
+"Apalachicola","FWC-2021",2022,1,24,"East Lumps",14,"Winter","Rock",999,9,5.59,148,57,0
+"Apalachicola","FWC-2021",2022,1,24,"East Lumps",14,"Winter","Rock",999,10,11.35,506,196,0
+"Apalachicola","FWC-2021",2022,1,24,"East Lumps",14,"Winter","Rock",999,11,7.81,253,98,0
+"Apalachicola","FWC-2021",2022,1,24,"East Lumps",14,"Winter","Rock",999,12,9.21,318,123,0
+"Apalachicola","FWC-2021",2022,1,24,"East Lumps",14,"Winter","Rock",999,13,8.12,246,95,0
+"Apalachicola","FWC-2021",2022,1,24,"East Lumps",14,"Winter","Rock",999,14,6.67,296,115,0
+"Apalachicola","FWC-2021",2022,1,24,"East Lumps",14,"Winter","Rock",999,15,12.08,450,174,0
+"Apalachicola","FWC-2021",2022,1,24,"Cat Point",14,"Winter","Rock",999,1,5.76,174,68,0
+"Apalachicola","FWC-2021",2022,1,24,"Cat Point",14,"Winter","Rock",999,2,9.14,678,263,0
+"Apalachicola","FWC-2021",2022,1,24,"Cat Point",14,"Winter","Rock",999,3,8.95,633,245,0
+"Apalachicola","FWC-2021",2022,1,24,"Cat Point",14,"Winter","Rock",999,4,8.39,162,63,0
+"Apalachicola","FWC-2021",2022,1,24,"Cat Point",14,"Winter","Rock",999,5,3.01,138,54,0
 "Apalachicola","FWC-2021",2022,1,24,"Cat Point",14,"Winter","Rock",999,6,5.75,43,16,0
-"Apalachicola","FWC-2021",2022,1,24,"Cat Point",14,"Winter","Rock",999,7,5.92,331,126,1
+"Apalachicola","FWC-2021",2022,1,24,"Cat Point",14,"Winter","Rock",999,7,5.92,330,128,0
 "Apalachicola","FWC-2021",2022,1,24,"Cat Point",14,"Winter","Rock",999,8,3.99,49,19,0
 "Apalachicola","FWC-2021",2022,1,24,"Cat Point",14,"Winter","Rock",999,9,7.23,41,16,0
 "Apalachicola","FWC-2021",2022,1,24,"Cat Point",14,"Winter","Rock",999,10,6,70,27,0
-"Apalachicola","FWC-2021",2022,1,24,"Cat Point",14,"Winter","Rock",999,11,14.13,861,326,3
-"Apalachicola","FWC-2021",2022,1,24,"Cat Point",14,"Winter","Rock",999,12,6.2,299,113,1
+"Apalachicola","FWC-2021",2022,1,24,"Cat Point",14,"Winter","Rock",999,11,14.13,857,332,1
+"Apalachicola","FWC-2021",2022,1,24,"Cat Point",14,"Winter","Rock",999,12,6.2,298,115,0
 "Apalachicola","FWC-2021",2022,1,24,"Cat Point",14,"Winter","Rock",999,13,3.8,68,26,0
-"Apalachicola","FWC-2021",2022,1,24,"Cat Point",14,"Winter","Rock",999,14,3.91,182,69,1
-"Apalachicola","FWC-2021",2022,1,24,"Cat Point",14,"Winter","Rock",999,15,2.52,61,23,0
-"Apalachicola","FWC-2021",2022,5,24,"Lighthouse Bar",15,"Summer","Rock",999,1,10.64,99,148,1
-"Apalachicola","FWC-2021",2022,5,24,"Lighthouse Bar",15,"Summer","Rock",999,2,9.9,55,82,1
-"Apalachicola","FWC-2021",2022,5,24,"Lighthouse Bar",15,"Summer","Rock",999,3,9.17,41,61,0
-"Apalachicola","FWC-2021",2022,5,24,"Lighthouse Bar",15,"Summer","Rock",999,4,9.81,50,75,1
-"Apalachicola","FWC-2021",2022,5,24,"Lighthouse Bar",15,"Summer","Rock",999,5,9.89,51,76,1
-"Apalachicola","FWC-2021",2022,5,24,"Lighthouse Bar",15,"Summer","Rock",999,6,10.19,56,84,1
-"Apalachicola","FWC-2021",2022,5,24,"Lighthouse Bar",15,"Summer","Rock",999,7,9.05,47,70,0
-"Apalachicola","FWC-2021",2022,5,24,"Lighthouse Bar",15,"Summer","Rock",999,8,9.93,55,82,1
-"Apalachicola","FWC-2021",2022,5,24,"Lighthouse Bar",15,"Summer","Rock",999,9,9.79,55,83,1
-"Apalachicola","FWC-2021",2022,5,24,"Lighthouse Bar",15,"Summer","Rock",999,10,10.3,45,67,0
-"Apalachicola","FWC-2021",2022,5,24,"Lighthouse Bar",15,"Summer","Rock",999,11,9.58,77,115,1
-"Apalachicola","FWC-2021",2022,5,24,"Lighthouse Bar",15,"Summer","Rock",999,12,2.98,12,18,0
-"Apalachicola","FWC-2021",2022,5,24,"Lighthouse Bar",15,"Summer","Rock",999,13,7.52,35,53,0
-"Apalachicola","FWC-2021",2022,5,24,"Lighthouse Bar",15,"Summer","Rock",999,14,7.95,58,87,1
-"Apalachicola","FWC-2021",2022,5,24,"Lighthouse Bar",15,"Summer","Rock",999,15,10.88,60,90,1
-"Apalachicola","FWC-2021",2022,5,24,"East Lumps",15,"Summer","Rock",999,1,7.21,91,136,1
-"Apalachicola","FWC-2021",2022,5,24,"East Lumps",15,"Summer","Rock",999,2,8.27,87,130,1
-"Apalachicola","FWC-2021",2022,5,24,"East Lumps",15,"Summer","Rock",999,3,6.74,52,78,1
-"Apalachicola","FWC-2021",2022,5,24,"East Lumps",15,"Summer","Rock",999,4,6.63,37,56,0
-"Apalachicola","FWC-2021",2022,5,24,"East Lumps",15,"Summer","Rock",999,5,11.05,95,143,1
-"Apalachicola","FWC-2021",2022,5,24,"East Lumps",15,"Summer","Rock",999,6,7.28,104,156,1
-"Apalachicola","FWC-2021",2022,5,24,"East Lumps",15,"Summer","Rock",999,7,7.55,140,210,1
-"Apalachicola","FWC-2021",2022,5,24,"East Lumps",15,"Summer","Rock",999,8,9.69,45,67,0
-"Apalachicola","FWC-2021",2022,5,24,"East Lumps",15,"Summer","Rock",999,9,8.35,30,44,0
-"Apalachicola","FWC-2021",2022,5,24,"East Lumps",15,"Summer","Rock",999,10,13.1,63,94,1
-"Apalachicola","FWC-2021",2022,5,24,"East Lumps",15,"Summer","Rock",999,11,6.18,44,66,0
-"Apalachicola","FWC-2021",2022,5,24,"East Lumps",15,"Summer","Rock",999,12,9.74,98,146,1
-"Apalachicola","FWC-2021",2022,5,24,"East Lumps",15,"Summer","Rock",999,13,7.7,114,171,1
-"Apalachicola","FWC-2021",2022,5,24,"East Lumps",15,"Summer","Rock",999,14,9.29,48,72,1
-"Apalachicola","FWC-2021",2022,5,24,"East Lumps",15,"Summer","Rock",999,15,10.32,51,77,1
-"Apalachicola","FWC-2021",2022,5,24,"Cat Point",15,"Summer","Rock",999,1,6.67,46,69,0
-"Apalachicola","FWC-2021",2022,5,24,"Cat Point",15,"Summer","Rock",999,2,7,85,127,1
-"Apalachicola","FWC-2021",2022,5,24,"Cat Point",15,"Summer","Rock",999,3,6.96,66,99,1
-"Apalachicola","FWC-2021",2022,5,24,"Cat Point",15,"Summer","Rock",999,4,6.88,71,106,1
-"Apalachicola","FWC-2021",2022,5,24,"Cat Point",15,"Summer","Rock",999,5,6.33,85,127,1
-"Apalachicola","FWC-2021",2022,5,24,"Cat Point",15,"Summer","Rock",999,6,6.79,109,164,1
-"Apalachicola","FWC-2021",2022,5,24,"Cat Point",15,"Summer","Rock",999,7,3.55,28,42,0
-"Apalachicola","FWC-2021",2022,5,24,"Cat Point",15,"Summer","Rock",999,8,6.82,100,150,1
-"Apalachicola","FWC-2021",2022,5,24,"Cat Point",15,"Summer","Rock",999,9,3.73,33,50,0
-"Apalachicola","FWC-2021",2022,5,24,"Cat Point",15,"Summer","Rock",999,10,6.65,66,99,1
-"Apalachicola","FWC-2021",2022,5,24,"Cat Point",15,"Summer","Rock",999,11,7.34,86,128,1
-"Apalachicola","FWC-2021",2022,5,24,"Cat Point",15,"Summer","Rock",999,12,5.34,43,64,0
-"Apalachicola","FWC-2021",2022,5,24,"Cat Point",15,"Summer","Rock",999,13,8.04,80,119,1
-"Apalachicola","FWC-2021",2022,5,24,"Cat Point",15,"Summer","Rock",999,14,8.56,105,157,1
-"Apalachicola","FWC-2021",2022,5,24,"Cat Point",15,"Summer","Rock",999,15,7.15,72,108,1
-"Apalachicola","FWC-2021",2022,2,23,"Bulkhead",14,"Winter","Rock",999,1,1.36,43,16,0
-"Apalachicola","FWC-2021",2022,2,23,"Bulkhead",14,"Winter","Rock",999,2,1.35,33,13,0
-"Apalachicola","FWC-2021",2022,2,23,"Bulkhead",14,"Winter","Rock",999,3,0.88,4,2,0
-"Apalachicola","FWC-2021",2022,2,23,"Bulkhead",14,"Winter","Rock",999,4,0.78,0,0,0
-"Apalachicola","FWC-2021",2022,2,23,"Bulkhead",14,"Winter","Rock",999,5,0.86,3,1,0
-"Apalachicola","FWC-2021",2022,2,23,"Bulkhead",14,"Winter","Rock",999,6,1.09,1,0,0
-"Apalachicola","FWC-2021",2022,2,23,"Bulkhead",14,"Winter","Rock",999,7,0.81,2,1,0
-"Apalachicola","FWC-2021",2022,2,23,"Bulkhead",14,"Winter","Rock",999,8,0.75,1,0,0
-"Apalachicola","FWC-2021",2022,2,23,"Bulkhead",14,"Winter","Rock",999,9,1,16,6,0
-"Apalachicola","FWC-2021",2022,2,23,"Bulkhead",14,"Winter","Rock",999,10,1.17,14,5,0
-"Apalachicola","FWC-2021",2022,2,23,"Bulkhead",14,"Winter","Rock",999,11,1.16,15,6,0
-"Apalachicola","FWC-2021",2022,2,23,"Bulkhead",14,"Winter","Rock",999,12,1.7,34,13,0
-"Apalachicola","FWC-2021",2022,2,23,"Bulkhead",14,"Winter","Rock",999,13,1.4,9,3,0
-"Apalachicola","FWC-2021",2022,2,23,"Bulkhead",14,"Winter","Rock",999,14,0.92,4,1,0
-"Apalachicola","FWC-2021",2022,2,23,"Bulkhead",14,"Winter","Rock",999,15,0.99,40,15,0
-"Apalachicola","FWC-2021",2022,5,24,"Bulkhead",15,"Summer","Rock",999,1,2.34,3,5,0
-"Apalachicola","FWC-2021",2022,5,24,"Bulkhead",15,"Summer","Rock",999,2,2.2,2,4,0
-"Apalachicola","FWC-2021",2022,5,24,"Bulkhead",15,"Summer","Rock",999,3,2.14,0,1,0
-"Apalachicola","FWC-2021",2022,5,24,"Bulkhead",15,"Summer","Rock",999,4,2.26,2,2,0
-"Apalachicola","FWC-2021",2022,5,24,"Bulkhead",15,"Summer","Rock",999,5,2.1,7,10,0
-"Apalachicola","FWC-2021",2022,5,24,"Bulkhead",15,"Summer","Rock",999,6,1.99,3,5,0
-"Apalachicola","FWC-2021",2022,5,24,"Bulkhead",15,"Summer","Rock",999,7,1.47,0,1,0
-"Apalachicola","FWC-2021",2022,5,24,"Bulkhead",15,"Summer","Rock",999,8,1.27,2,2,0
-"Apalachicola","FWC-2021",2022,5,24,"Bulkhead",15,"Summer","Rock",999,9,1.11,0,0,0
-"Apalachicola","FWC-2021",2022,5,24,"Bulkhead",15,"Summer","Rock",999,10,2.29,1,1,0
-"Apalachicola","FWC-2021",2022,5,24,"Bulkhead",15,"Summer","Rock",999,11,2.02,1,2,0
-"Apalachicola","FWC-2021",2022,5,24,"Bulkhead",15,"Summer","Rock",999,12,1.35,3,4,0
-"Apalachicola","FWC-2021",2022,5,24,"Bulkhead",15,"Summer","Rock",999,13,1.02,2,2,0
-"Apalachicola","FWC-2021",2022,5,24,"Bulkhead",15,"Summer","Rock",999,14,0.58,0,0,0
-"Apalachicola","FWC-2021",2022,5,24,"Bulkhead",15,"Summer","Rock",999,15,1.36,1,1,0
-"Apalachicola","FWC-2021",2022,2,23,"Bulkhead",14,"Winter","Rock",999,1,1.25,14,5,0
-"Apalachicola","FWC-2021",2022,2,23,"Bulkhead",14,"Winter","Rock",999,2,1.25,14,5,0
-"Apalachicola","FWC-2021",2022,2,23,"Bulkhead",14,"Winter","Rock",999,3,1.33,1,1,0
-"Apalachicola","FWC-2021",2022,2,23,"Bulkhead",14,"Winter","Rock",999,4,1.57,7,3,0
-"Apalachicola","FWC-2021",2022,2,23,"Bulkhead",14,"Winter","Rock",999,5,2,14,5,0
-"Apalachicola","FWC-2021",2022,2,23,"Bulkhead",14,"Winter","Rock",999,6,1.24,5,2,0
-"Apalachicola","FWC-2021",2022,2,23,"Bulkhead",14,"Winter","Rock",999,7,1.01,0,0,0
-"Apalachicola","FWC-2021",2022,2,23,"Bulkhead",14,"Winter","Rock",999,8,1.41,17,7,0
-"Apalachicola","FWC-2021",2022,2,23,"Bulkhead",14,"Winter","Rock",999,9,1.03,7,3,0
-"Apalachicola","FWC-2021",2022,2,23,"Bulkhead",14,"Winter","Rock",999,10,2.32,27,10,0
-"Apalachicola","FWC-2021",2022,2,23,"Bulkhead",14,"Winter","Rock",999,11,1.52,6,2,0
-"Apalachicola","FWC-2021",2022,2,23,"Bulkhead",14,"Winter","Rock",999,12,2.21,20,8,0
-"Apalachicola","FWC-2021",2022,2,23,"Bulkhead",14,"Winter","Rock",999,13,1.65,18,7,0
-"Apalachicola","FWC-2021",2022,2,23,"Bulkhead",14,"Winter","Rock",999,14,1.92,12,5,0
-"Apalachicola","FWC-2021",2022,2,23,"Bulkhead",14,"Winter","Rock",999,15,1.76,23,9,0
-"Apalachicola","FWC-2021",2022,5,24,"Bulkhead",15,"Summer","Rock",999,1,1.05,1,2,0
-"Apalachicola","FWC-2021",2022,5,24,"Bulkhead",15,"Summer","Rock",999,2,1.84,5,7,0
-"Apalachicola","FWC-2021",2022,5,24,"Bulkhead",15,"Summer","Rock",999,3,2.67,9,14,0
-"Apalachicola","FWC-2021",2022,5,24,"Bulkhead",15,"Summer","Rock",999,4,2.37,10,14,0
-"Apalachicola","FWC-2021",2022,5,24,"Bulkhead",15,"Summer","Rock",999,5,1.7,0,1,0
-"Apalachicola","FWC-2021",2022,5,24,"Bulkhead",15,"Summer","Rock",999,6,1.6,8,11,0
-"Apalachicola","FWC-2021",2022,5,24,"Bulkhead",15,"Summer","Rock",999,7,2.41,7,10,0
-"Apalachicola","FWC-2021",2022,5,24,"Bulkhead",15,"Summer","Rock",999,8,2.32,4,6,0
-"Apalachicola","FWC-2021",2022,5,24,"Bulkhead",15,"Summer","Rock",999,9,1.83,2,2,0
-"Apalachicola","FWC-2021",2022,5,24,"Bulkhead",15,"Summer","Rock",999,10,3.75,2,4,0
-"Apalachicola","FWC-2021",2022,5,24,"Bulkhead",15,"Summer","Rock",999,11,1.35,2,4,0
-"Apalachicola","FWC-2021",2022,5,24,"Bulkhead",15,"Summer","Rock",999,12,1.9,2,2,0
-"Apalachicola","FWC-2021",2022,5,24,"Bulkhead",15,"Summer","Rock",999,13,1.62,0,0,0
-"Apalachicola","FWC-2021",2022,5,24,"Bulkhead",15,"Summer","Rock",999,14,1.78,3,4,0
-"Apalachicola","FWC-2021",2022,5,24,"Bulkhead",15,"Summer","Rock",999,15,2.75,4,6,0
+"Apalachicola","FWC-2021",2022,1,24,"Cat Point",14,"Winter","Rock",999,14,3.91,182,70,0
+"Apalachicola","FWC-2021",2022,1,24,"Cat Point",14,"Winter","Rock",999,15,2.52,61,24,0
+"Apalachicola","FWC-2021",2022,5,24,"Lighthouse Bar",15,"Summer","Rock",999,1,10.64,93,155,0
+"Apalachicola","FWC-2021",2022,5,24,"Lighthouse Bar",15,"Summer","Rock",999,2,9.9,51,85,0
+"Apalachicola","FWC-2021",2022,5,24,"Lighthouse Bar",15,"Summer","Rock",999,3,9.17,38,64,0
+"Apalachicola","FWC-2021",2022,5,24,"Lighthouse Bar",15,"Summer","Rock",999,4,9.81,47,79,0
+"Apalachicola","FWC-2021",2022,5,24,"Lighthouse Bar",15,"Summer","Rock",999,5,9.89,48,79,0
+"Apalachicola","FWC-2021",2022,5,24,"Lighthouse Bar",15,"Summer","Rock",999,6,10.19,53,87,0
+"Apalachicola","FWC-2021",2022,5,24,"Lighthouse Bar",15,"Summer","Rock",999,7,9.05,44,74,0
+"Apalachicola","FWC-2021",2022,5,24,"Lighthouse Bar",15,"Summer","Rock",999,8,9.93,52,86,0
+"Apalachicola","FWC-2021",2022,5,24,"Lighthouse Bar",15,"Summer","Rock",999,9,9.79,52,87,0
+"Apalachicola","FWC-2021",2022,5,24,"Lighthouse Bar",15,"Summer","Rock",999,10,10.3,42,70,0
+"Apalachicola","FWC-2021",2022,5,24,"Lighthouse Bar",15,"Summer","Rock",999,11,9.58,72,120,0
+"Apalachicola","FWC-2021",2022,5,24,"Lighthouse Bar",15,"Summer","Rock",999,12,2.98,11,19,0
+"Apalachicola","FWC-2021",2022,5,24,"Lighthouse Bar",15,"Summer","Rock",999,13,7.52,33,55,0
+"Apalachicola","FWC-2021",2022,5,24,"Lighthouse Bar",15,"Summer","Rock",999,14,7.95,54,90,0
+"Apalachicola","FWC-2021",2022,5,24,"Lighthouse Bar",15,"Summer","Rock",999,15,10.88,57,94,0
+"Apalachicola","FWC-2021",2022,5,24,"East Lumps",15,"Summer","Rock",999,1,7.21,86,142,0
+"Apalachicola","FWC-2021",2022,5,24,"East Lumps",15,"Summer","Rock",999,2,8.27,82,136,0
+"Apalachicola","FWC-2021",2022,5,24,"East Lumps",15,"Summer","Rock",999,3,6.74,49,81,0
+"Apalachicola","FWC-2021",2022,5,24,"East Lumps",15,"Summer","Rock",999,4,6.63,35,58,0
+"Apalachicola","FWC-2021",2022,5,24,"East Lumps",15,"Summer","Rock",999,5,11.05,90,149,0
+"Apalachicola","FWC-2021",2022,5,24,"East Lumps",15,"Summer","Rock",999,6,7.28,98,163,0
+"Apalachicola","FWC-2021",2022,5,24,"East Lumps",15,"Summer","Rock",999,7,7.55,132,219,0
+"Apalachicola","FWC-2021",2022,5,24,"East Lumps",15,"Summer","Rock",999,8,9.69,42,70,0
+"Apalachicola","FWC-2021",2022,5,24,"East Lumps",15,"Summer","Rock",999,9,8.35,28,46,0
+"Apalachicola","FWC-2021",2022,5,24,"East Lumps",15,"Summer","Rock",999,10,13.1,59,98,0
+"Apalachicola","FWC-2021",2022,5,24,"East Lumps",15,"Summer","Rock",999,11,6.18,41,69,0
+"Apalachicola","FWC-2021",2022,5,24,"East Lumps",15,"Summer","Rock",999,12,9.74,92,153,0
+"Apalachicola","FWC-2021",2022,5,24,"East Lumps",15,"Summer","Rock",999,13,7.7,107,178,0
+"Apalachicola","FWC-2021",2022,5,24,"East Lumps",15,"Summer","Rock",999,14,9.29,45,75,0
+"Apalachicola","FWC-2021",2022,5,24,"East Lumps",15,"Summer","Rock",999,15,10.32,48,80,0
+"Apalachicola","FWC-2021",2022,5,24,"Cat Point",15,"Summer","Rock",999,1,6.67,43,72,0
+"Apalachicola","FWC-2021",2022,5,24,"Cat Point",15,"Summer","Rock",999,2,7,80,133,0
+"Apalachicola","FWC-2021",2022,5,24,"Cat Point",15,"Summer","Rock",999,3,6.96,62,103,0
+"Apalachicola","FWC-2021",2022,5,24,"Cat Point",15,"Summer","Rock",999,4,6.88,66,110,0
+"Apalachicola","FWC-2021",2022,5,24,"Cat Point",15,"Summer","Rock",999,5,6.33,80,132,0
+"Apalachicola","FWC-2021",2022,5,24,"Cat Point",15,"Summer","Rock",999,6,6.79,103,171,0
+"Apalachicola","FWC-2021",2022,5,24,"Cat Point",15,"Summer","Rock",999,7,3.55,27,44,0
+"Apalachicola","FWC-2021",2022,5,24,"Cat Point",15,"Summer","Rock",999,8,6.82,94,156,0
+"Apalachicola","FWC-2021",2022,5,24,"Cat Point",15,"Summer","Rock",999,9,3.73,32,52,0
+"Apalachicola","FWC-2021",2022,5,24,"Cat Point",15,"Summer","Rock",999,10,6.65,62,103,0
+"Apalachicola","FWC-2021",2022,5,24,"Cat Point",15,"Summer","Rock",999,11,7.34,81,134,0
+"Apalachicola","FWC-2021",2022,5,24,"Cat Point",15,"Summer","Rock",999,12,5.34,40,67,0
+"Apalachicola","FWC-2021",2022,5,24,"Cat Point",15,"Summer","Rock",999,13,8.04,75,125,0
+"Apalachicola","FWC-2021",2022,5,24,"Cat Point",15,"Summer","Rock",999,14,8.56,99,164,0
+"Apalachicola","FWC-2021",2022,5,24,"Cat Point",15,"Summer","Rock",999,15,7.15,68,113,0
