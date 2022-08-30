@@ -19,10 +19,17 @@ library(AICcmodavg)
 library(ggeffects)
 library(cowplot)
 
-d1 <- read.csv("~/Git/AB_DEP/20220305_merged_agency_data.csv")
+d0 <- read.csv("~/Git/AB_DEP/20220305_merged_agency_data.csv")
 
 #the FWC data have been modified per Matt at FWC to
 #do the proportions based on size for the number per size category
+
+#adjust some cultch values and remove zero cultch
+d0.1<-d0 %>%
+  mutate(Cultch = replace(Cultch,Cultch == "999", "300"))
+d0.2<- subset(d0.1, d0.1$Cultch > "0")
+
+d1<-d0.2
 
 #switch -999 to NA instead of removing
 d2 <- d1
