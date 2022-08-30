@@ -18,15 +18,23 @@ library(ggeffects)
 library(cowplot)
 
 #this has all 3 bays
-d1 <- read.csv("~/Git/AB_DEP/20220326_merged_agency_data.csv")
+d0 <- read.csv("~/Git/AB_DEP/20220326_merged_agency_data.csv")
 
-unique(d1$Bay)
+unique(d0$Bay)
 #ok, change Apalachicola Bay to Apalachicola
-d1<-d1 %>%
+d0.1<-d0 %>%
   mutate(Bay = replace(Bay,Bay == "Apalachicola Bay", "Apalachicola"))
+d0.11<-d0.1 %>%
+  mutate(Bay = replace(Bay,Bay == "St. Andrews", "St. Andrew"))
 
+#updating the cultch amounts and removing the zero cultch
+d0.2<-d0.11 %>%
+  mutate(Cultch = replace(Cultch,Cultch == "999", "300"))
+d0.3<- subset(d0.2, d0.2$Cultch > "0")
 
-dApalach<-subset(d1,d1$Bay =="Apalachicola")
+d1<-d0.3
+
+dApalach<-subset(d0.3,d0.3$Bay =="Apalachicola")
 
 #the FWC data have been modified per Matt at FWC to
 #do the proportions based on size for the number per size category
@@ -35,8 +43,10 @@ dApalach<-subset(d1,d1$Bay =="Apalachicola")
 d2 <- d1
 d2$Spat[d2$Spat < -1] <- NA
 d2$Weight[d2$Weight < -1] <- NA
-d2$Sublegal[d2$Sublegal < -1] <- NA
+d2$Seed[d2$Seed < -1] <- NA
 d2$Legal[d2$Legal < -1] <- NA
+
+
 
 data_sum<- d2 %>%
   dplyr::group_by(Bay, Project, Year, Month, Period, Site) %>%
@@ -96,11 +106,11 @@ CPUE_NRDA_4044<-subset(d3,d3$Site =="NRDA_4044")
 CPUE_NRDA_5007<-subset(d3,d3$Site =="NRDA_5007")
 
 #this is by study on one plot 
-r1<-ggplot(data = d3[d3$Project=="NFWF_1",], aes(Period, CPUE_Weight, color="NFWF_1")) +
+r1<-ggplot(data = d3[d3$Project=="NFWF-1",], aes(Period, CPUE_Weight, color="NFWF_1")) +
   geom_point(size=3) +
-  geom_point(data = d3[d3$Project=="NRDA_4044",], mapping = aes(Period, CPUE_Weight, color="NRDA_4044"), size = 3)+
-  geom_point(data = d3[d3$Project=="NRDA_5007",], mapping = aes(Period, CPUE_Weight, color="NRDA_5077"), size = 3)+
-  geom_point(data = d3[d3$Project=="FWC_2021",], mapping = aes(Period, CPUE_Weight, color="FWC_2021"), size = 3)+
+  geom_point(data = d3[d3$Project=="NRDA-4044",], mapping = aes(Period, CPUE_Weight, color="NRDA_4044"), size = 3)+
+  geom_point(data = d3[d3$Project=="GEBF-5007",], mapping = aes(Period, CPUE_Weight, color="NRDA_5077"), size = 3)+
+  geom_point(data = d3[d3$Project=="FWC-2021",], mapping = aes(Period, CPUE_Weight, color="FWC_2021"), size = 3)+
   ggtitle("Weight per quadrat") +
   #scale_y_log10()+
   xlab("Period") +
@@ -114,7 +124,7 @@ r2<-ggplot(data = d3, aes(Period, CPUE_Weight, color=Project)) +
 
 r2+scale_color_manual(values=c("black", "light blue", "red", "dark blue"))
 
-ggsave("weight.pdf", width = 10, height = 10)  
+#ggsave("weight.pdf", width = 10, height = 10)  
 
 
 ######
@@ -134,29 +144,50 @@ r3<-ggplot(data = d3, aes(Period, Roundwt, color=Project)) +
   facet_wrap(~Bay)
 
 ##
-tmb_0 <- glmmTMB(Roundwt ~ Project + Period + (1|Site) + offset(log(Num_quads)), data = d3, family="nbinom2") #converge
-summary(tmb_0)
 
-tmb_01 <- glmmTMB(Roundwt ~ Period * Project + (1|Site) + offset(log(Num_quads)), data = d3, family="nbinom2") #converge
-summary(tmb_01)
+##subset by Bay and fit simple models, no interaction terms needed this way
+unique(d3$Bay)
+
+#Pensacola only
+dPensacola<-subset(d3,d3$Bay =="Pensacola")
+#apalach only
+dApalach<-subset(d3,d3$Bay =="Apalachicola")
+#St. Andrew only
+dStAndrew<-subset(d3,d3$Bay =="St. Andrew")
+
+#now GLM models by Bay.  First Roundwt over Period
+
+m1_Pensacola <- glmmTMB(Roundwt ~ Period + (1|Site) + offset(log(Num_quads)), data = dPensacola, family="nbinom2") #converge
+summary(m1_Pensacola)
+#Pensacola declines over time. Makes sense b/c only received cultch once
+
+m1_Apalach <- glmmTMB(Roundwt ~ Period + (1|Site) + offset(log(Num_quads)), data = dApalach, family="nbinom2") #converge
+summary(m1_Apalach)
+#Increases over time. Makes since b/c cultched multiple times
+#Need to do Apalach by study to account for this
+
+m1_StAndrew <- glmmTMB(Roundwt ~ Period + (1|Site) + offset(log(Num_quads)), data = dStAndrew, family="nbinom2") #converge
+summary(m1_StAndrew)
+#declines over time.
+
 
 #subset data for each project in Apalach, fit tmbglm, then predict, then separate plot
 #for each project. This is to check on intercepts
 
-#apalach only
-dApalach<-subset(d3,d3$Bay =="Apalachicola")
-
 unique(dApalach$Project)
 
-dNFWF_1<-subset(dApalach,dApalach$Project =="NFWF_1")
-dFWC_2021<-subset(dApalach,dApalach$Project =="FWC_2021")
-dNRDA_4044<-subset(dApalach,dApalach$Project =="NRDA_4044")
-dNRDA_5007<-subset(dApalach,dApalach$Project =="NRDA_5007")
+dNFWF_1<-subset(dApalach,dApalach$Project =="NFWF-1")
+dFWC_2021<-subset(dApalach,dApalach$Project =="FWC-2021")
+dNRDA_4044<-subset(dApalach,dApalach$Project =="NRDA-4044")
+dNRDA_5007<-subset(dApalach,dApalach$Project =="GEBF-5007")
 
 #########NFWF_1 only#################
 #NFWF_1 this is working
 tmb_NFWF <- glmmTMB(Roundwt ~ Period + (1|Site) + offset(log(Num_quads)), data = dNFWF_1, family="nbinom2") #converge
 summary(tmb_NFWF)
+#looks like NFWF 1 declines over time
+
+library(ggeffects)
 
 dNFWF_1.new = data.frame(Roundwt = dNFWF_1$Roundwt,
                          Period = dNFWF_1$Period,
@@ -190,7 +221,7 @@ pr1 = ggplot(dNFWF_2_pred, aes(x, predicted))+
   ggtitle("Predicted NFWF_1 Cultch (Shell) Weight by Period - 1 quadrat")+
   #scale_x_continuous(breaks=seq(1,14,1))+
   ylim(0,30)+
-  xlim(1,14)
+  xlim(1,15)
 
 
 #no need to include the data on single quadrat because the data are from
@@ -218,7 +249,6 @@ ggpredict(dFWC_2021.new.tmb1)
 dFWC_2021_pred = ggpredict(dFWC_2021.new.tmb1, terms = c("Period", "Num_quads"), type = c('fe')) #for all projects
 plot(dFWC_2021_pred, facet=FALSE, add.data=TRUE)
 
-#the above is a good demonstration the model is a decent fit to data
 
 #this predicts with 1 quad which is how we will compare the 3 projects
 dFWC_2_pred = ggpredict(dFWC_2021.new.tmb1, terms = c("Period", "Num_quads[1]"), type = c('fe')) #for all projects
@@ -236,8 +266,8 @@ pr2 = ggplot(dFWC_2_pred, aes(x, predicted))+
   xlab ("Period")+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
   ggtitle("Predicted FWC_2021 Cultch (Rock) Weight by Period - 1 quadrat") +
-  ylim(0,30)+
-  xlim(1,14)
+  ylim(0,40)+
+  xlim(1,15)
 
 #no need to include the data on single quadrat because the data are from
 #more than 1 quadrat
@@ -282,7 +312,7 @@ pr3 = ggplot(dNRDA_4044_2_pred, aes(x, predicted))+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
   ggtitle("Predicted NRDA 4044 Cultch (Shell) Weight by Period - 1 quadrat")+
   ylim(0,30)+
-  xlim(1,14)
+  xlim(1,15)
 
 #########NRDA 5007 only#################
 
@@ -305,7 +335,7 @@ plot(dNRDA_5007_pred, facet=FALSE, add.data=FALSE)
 #the above is a good demonstration the model is a decent fit to data
 
 #this predicts with 1 quad which is how we will compare the 3 projects
-dNRDA_5007_2_pred = ggpredict(dNRDA_5007.new.tmb1, terms = c("Period", "Num_quads[3]"), type = c('fe')) #for all projects
+dNRDA_5007_2_pred = ggpredict(dNRDA_5007.new.tmb1, terms = c("Period", "Num_quads[1]"), type = c('fe')) #for all projects
 plot(dNRDA_5007_2_pred, facet=FALSE, colors=c("red"), add.data=TRUE)
 
 ##note this matches the data well if you predict for 1-3 quads
@@ -322,7 +352,7 @@ pr4 = ggplot(dNRDA_5007_2_pred, aes(x, predicted))+
   ggtitle("Predicted Restore 5007 Cultch (Rock) Weight by Period - 1 quadrat") +
   #scale_x_continuous(breaks=seq(2,14,1))+
   ylim(0,30)+
-  xlim(1,14)
+  xlim(1,15)
   
 
 plot_grid(pr1,pr2,pr3,pr4)
