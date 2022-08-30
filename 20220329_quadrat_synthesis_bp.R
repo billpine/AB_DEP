@@ -25,7 +25,6 @@ d0 <- read.csv("~/Git/AB_DEP/20220326_merged_agency_data.csv")
 #ok, change Apalachicola Bay to Apalachicola
 d0.1<-d0 %>%
   mutate(Bay = replace(Bay,Bay == "Apalachicola Bay", "Apalachicola"))
-
 d0.2<-d0.1 %>%
   mutate(Project = replace(Project,Project == "FWC-2021", "NFWF-2021"))
 d0.3<-d0.2 %>%
@@ -35,8 +34,12 @@ d0.4<-d0.3 %>%
 d0.5<-d0.4 %>%
   mutate(Project = replace(Project,Project == "NRDA-4044", "NRDA-4044"))
 
-d1<- subset(d0.5, d0.5$Bay == "Apalachicola")
+#updating the cultch amounts and removing the zero cultch
+d0.6<-d0.5 %>%
+  mutate(Cultch = replace(Cultch,Cultch == "999", "300"))
+d0.7<- subset(d0.6, d0.6$Cultch > "0")
 
+d1<- subset(d0.7, d0.7$Bay == "Apalachicola")
 
 #the FWC data have been modified per Matt at FWC to
 #do the proportions based on size for the number per size category
@@ -160,6 +163,11 @@ CPUE_Lighthouse<-subset(d3,d3$Site =="Lighthouse Bar")
 light_check<-subset(d2,d2$Site =="Lighthouse Bar" & d2$Period==14)
 east_check<-subset(d2,d2$Site =="East Lumps" & d2$Period==14)
 
+p14_check<-subset(d2,d2$Period =="14")
+nfwf2_check<-subset(d2,d2$Period =="14" & d2$Project=="NFWF-2021")
+
+
+
 ##some checks to review with Matt
 unique(d2$Project)
 nfwf2021_check<-subset(d2,d2$Project =="NFWF-2021")
@@ -214,10 +222,11 @@ plot_grid(f1,f2,f3,f4)
 ##maybe start here with FWC/FSU
 ##this will show CPUE of spat, seed, legal by site over period
 
-#d3x<- subset(d3, d3$Site == "Bulkhead")
+#d3x<- subset(d3, d3$Site == "Lighthouse Bar")
+d3y<- subset(d3, d3$Site == "East Lumps")
 
-f5<-ggplot(d3, aes(Period, CPUE_Spat)) +
-  geom_point(size=4) +
+f5<-ggplot(d3y, aes(Period, CPUE_Spat)) +
+  geom_point(size=3) +
   ggtitle("Spat CPUE by Period") +
   xlab("Period") +
   ylab("Spat") +
@@ -228,7 +237,7 @@ f5<-ggplot(d3, aes(Period, CPUE_Spat)) +
 #now seed
 
 f5.1<-ggplot(d3, aes(Period, CPUE_Seed)) +
-  geom_point(size=2) +
+  geom_point(size=3) +
   ggtitle("Seed CPUE by Period") +
   xlab("Period") +
   ylab("Seed") +
@@ -268,10 +277,6 @@ count_legal2 <- dplyr::rename(count_legal2,Project=Project,Period=Period,Site=Si
 #count number quads by doing the length of transect, then rename
 count_quads2=aggregate(Spat~Project+Period+Site,data=d2,length)
 count_quads_spat2 <- dplyr::rename(count_quads2,Project=Project,Period=Period,Site=Site,Num_quads=Spat)
-
-count_quadsxx=aggregate(Spat~Period,data=d2,length)
-count_quads_spatxx <- dplyr::rename(count_quadsxx,Period=Period,Num_quads=Spat)
-
 
 #merge spat live count total data frame with the tran_length total data frame
 dp3=merge(count_spat2,count_quads_spat2,by=c("Project","Period","Site"))
@@ -363,6 +368,7 @@ legal_study<-ggplot(dp3.2, aes(Period, CPUE_Legal)) +
   ggtitle("Legal CPUE by Period") +
   xlab("Period") +
   ylab("Legal CPUE") +
+  scale_x_continuous(breaks=seq(2,15,1))+
   facet_wrap(~Project)
 #ggsave("legal_study.png", width = 10, height = 10)
 
@@ -432,7 +438,7 @@ r2<-ggplot(data = dp3.2[dp3.2$Project=="NFWF-1",], aes(Period, Sum_spat)) +
   geom_point(size=3) +
   geom_point(data = dp3.2[dp3.2$Project=="NFWF-1",], mapping = aes(Period, Sum_spat, color="NFWF 1"), size = 3)+
   geom_point(data = dp3.2[dp3.2$Project=="NRDA-4044",], mapping = aes(Period, Sum_spat, color="NRDA 4044"), size = 3)+
-  geom_point(data = dp3.2[dp3.2$Project=="NRDA_5007",], mapping = aes(Period, Sum_spat, color="NRDA 5077"), size = 3)+
+  geom_point(data = dp3.2[dp3.2$Project=="GEBF-5007",], mapping = aes(Period, Sum_spat, color="NRDA 5077"), size = 3)+
   geom_point(data = dp3.2[dp3.2$Project=="NFWF-2021",], mapping = aes(Period, Sum_spat, color="NFWF 2021"), size = 3)+
   ggtitle("Spat per Period by Study") +
   xlab("Period") +
@@ -532,6 +538,7 @@ tmb1_NFWF1 <- glmmTMB(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), dat
 summary(tmb1_NFWF1)
 
 pred.tmbNFWF1 <- ggpredict(tmb1_NFWF1, c("Period"))
+
 #plot and show data
 pr.1<-plot(pred.tmbNFWF1, facet=FALSE, add.data=TRUE)
 
@@ -547,7 +554,6 @@ pr_NFWF1 = ggplot(test2.NFWF1, aes(x, predicted))+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
   ggtitle("NFWF1 Apalachicola Spat by Period") +
   scale_x_continuous(breaks=seq(1,15,1))
-
 
 #NRDA-4044
 dNRDA4044<-subset(dp4,dp4$Project =="NRDA-4044")
@@ -570,7 +576,6 @@ pr_NRDA4044 = ggplot(test2.NRDA4044, aes(x, predicted))+
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .5) +
   ggtitle("NRDA4044 Apalachicola Spat by Period") +
   scale_x_continuous(breaks=seq(1,15,1))
-
 
 #GEBF-5007
 dGEBF5007<-subset(dp4,dp4$Project =="GEBF-5007")
@@ -617,33 +622,19 @@ pr_NFWF2021 = ggplot(test2.NFWF2021, aes(x, predicted))+
   ggtitle("NFWF-2021 Apalachicola Spat by Period") +
   scale_x_continuous(breaks=seq(1,15,1))
 
+#
+plot_grid(pr_NFWF1,pr_NRDA4044,pr_GEBF5007,pr_NFWF2021)
+
+
+######################
+#This ends the revised work from August 2022
+#Now what? revise text and come up with revised plots
+#remember if you want to predict for each period
+#you have to generate the data "jennifer style" below
 ######################
 ######################
 
-
-tmb2 <- glmmTMB(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
-summary(tmb2)
-
-##don't forget to backtransform when looking at the summaries
-##or work in predict
-
-#here is a way to generate CI on parameters
-testci<-confint(tmb1)
-
-################
-#now compare multiple models from same family
-#and add discharge
-################
-
-#do we really care about project? At the highest level no
-#these sites nearly all received cultch
-#we could look more closely at project later since they are different materials (?)
-
-plot(dp4$Period,dp4$Sum_spat)
-
-tmb4 <- glmmTMB(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
-summary(tmb4)
-
+###LOW DAYS
 #now is that influenced by the number of low days?
 #more low days would be drier conditions
 
@@ -662,12 +653,33 @@ summary(tmb5.1)
 tmb6 <- glmmTMB(Sum_spat ~ Lowdays + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
 summary(tmb6)
 #interesting just low days not significant
-#
-####Project is driving so much because the NFWF project
-####is the only one with data during period of high counts
-####DEP project was in the water, but monitoring wasn't done
-####for several periods after building project
 
+######################
+######################
+
+
+tmb2 <- glmmTMB(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
+summary(tmb2)
+
+##don't forget to backtransform when looking at the summaries
+##or work in predict
+
+#here is a way to generate CI on parameters
+testci<-confint(tmb1)
+
+
+#do we really care about project? At the highest level no
+#these sites nearly all received cultch
+#we could look more closely at project later since they are different materials (?)
+
+plot(dp4$Period,dp4$Sum_spat)
+
+tmb4 <- glmmTMB(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
+summary(tmb4)
+
+
+#
+####Project is driving a lot
 
 AICtab(tmb0, tmb1,tmb4,tmb5,tmb5.1,tmb6)
 #This suggests project is really important from AIC
