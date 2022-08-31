@@ -165,8 +165,7 @@ east_check<-subset(d2,d2$Site =="East Lumps" & d2$Period==14)
 
 p14_check<-subset(d2,d2$Period =="14")
 nfwf2_check<-subset(d2,d2$Period =="14" & d2$Project=="NFWF-2021")
-
-
+nfwf3_check<-subset(d2,d2$Project=="NFWF-2021")
 
 ##some checks to review with Matt
 unique(d2$Project)
