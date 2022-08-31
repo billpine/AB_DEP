@@ -209,12 +209,12 @@ unique(d7.26$Site)
 #write.table((unique(d7.11$Site)), file = "~/Git/AB_DEP/name_check.csv", row.names = FALSE,col.names = TRUE,sep = ",")
 
 #################################################
-##2021 FWC
+##This is the NFWF 2021 project from FWC data provided by Matt Davis. Data for year 2021 and 2022
 #################################################
 
-##bring in FWC 2021
+##bring in NFWF 2021
 
-e1<-read.csv("~/Git/AB_DEP/FWC_2021_to_merge.csv")
+e1<-read.csv("~/Git/AB_DEP/NFWF_2021_Project_to_merge.csv")
 names(e1)
 
 
@@ -224,7 +224,7 @@ names(e1)
 
 e1$Bottom<-"Rock"
 e1$Project<-"FWC-2021"
-e1$Cultch<-999
+e1$Cultch<-300
 e1$Bay<-"Apalachicola"
 
 names(e1)
@@ -269,56 +269,18 @@ e1.8<-e1.8[,c("Bay","Project","Year", "Month", "Day", "Site", "Period", "Season"
 #str(d7.26)
 #str(e1.8)
 
-##########################################################
-#now bring in FWC 2022 that Matt Davis gave bp August 2022
-##########################################################
-
-ee1 <- read.csv("~/Git/AB_DEP/FWC_2022_to_merge.csv")
-
-ee1$Bottom<-"Rock"
-ee1$Project<-"FWC-2021"
-ee1$Cultch<-999
-ee1$Bay<-"Apalachicola"
-
-names(ee1)
-head(ee1)
-
-#some renaming 
-#Spat is TotalSpat from FWC-NFWF
-ee1.1 <- dplyr::rename(ee1,Weight_kg=Weight_kg,Spat=TotalSpat, Seed=TotalSeed, Legal=TotalLegal)
-
-#subset the columns to the ones you want to work with
-ee1.2 <- ee1.1 %>% 
-  dplyr::select(Bay,StationName, Quadrat, Weight_kg, Spat, Seed, Legal, Year, Month, Day, Period, Season, Bottom, Project,Cultch)
-
-unique(ee1.2$StationName)
-
-ee1.3<-ee1.2 %>%
-  mutate(StationName = replace(StationName,StationName == "Lighthouse", "Lighthouse Bar"))
-
-names(ee1.3)
-head(ee1.3)
-
-
-ee1.4 <- dplyr::rename(ee1.3,Site=StationName)
-
-unique(ee1.4$Site)
-
-#Put columns in order
-ee1.5<-ee1.4[,c("Bay","Project","Year", "Month", "Day", "Site", "Period", "Season", "Bottom","Cultch", "Quadrat", "Weight_kg", "Spat", "Seed", "Legal")]
-
 
 
 #############
 
-#now bring in the FWC-DEP data (d7.26, then FWC 2021 e1.8 and then FWC 2022 ee1.5)
+#now bring in the FWC-DEP data 
 
 #this includes working with the DEP data that were in error in SECAR and 
 #instead I use the updated files from Jonathan directly
 
 #The FWC data are through 2022 and are from Matt Davis directly
 
-f1<-rbind(d7.26, e1.8, ee1.5)
+f1<-rbind(d7.26, e1.8)
 
 f1.1<-f1 %>%
   mutate(Bay = replace(Bay,Bay == "Apalachicola Bay", "Apalachicola"))
