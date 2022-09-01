@@ -174,6 +174,11 @@ table(nfwf2021_check$Site,nfwf2021_check$Period)
 mattcheck<-table(nfwf2021_check$Site,nfwf2021_check$Month,nfwf2021_check$Year)
 write.table(mattcheck, file = "~/Git/AB_DEP/mattcheck.csv", row.names = FALSE,col.names = TRUE,sep = ",")
 
+nfwf1_check<-subset(d2,d2$Project =="NFWF-1")
+table(nfwf1_check$Site,nfwf1_check$Period)
+mattcheck_nfwf1<-table(nfwf1_check$Site,nfwf1_check$Month,nfwf1_check$Year)
+write.table(mattcheck_nfwf1, file = "~/Git/AB_DEP/mattcheck_nfwf1.csv", row.names = FALSE,col.names = TRUE,sep = ",")
+
 unique(nfwf2021_check$Project)
 
 matt_check1<-subset(d2,d2$Project=="NFWF-1")
@@ -222,9 +227,9 @@ plot_grid(f1,f2,f3,f4)
 ##this will show CPUE of spat, seed, legal by site over period
 
 #d3x<- subset(d3, d3$Site == "Lighthouse Bar")
-d3y<- subset(d3, d3$Site == "East Lumps")
+#d3y<- subset(d3, d3$Site == "East Lumps")
 
-f5<-ggplot(d3y, aes(Period, CPUE_Spat)) +
+f5<-ggplot(d3, aes(Period, CPUE_Spat)) +
   geom_point(size=3) +
   ggtitle("Spat CPUE by Period") +
   xlab("Period") +
@@ -353,7 +358,7 @@ spat_study<-ggplot(dp3.2x, aes(Period, CPUE_Spat)) +
 
 #ggsave("AB_spat_study.png", width = 10, height = 10)
 
-seed_study<-ggplot(dp3.2, aes(Period, CPUE_Seed)) +
+seed_study<-ggplot(dp3.2x, aes(Period, CPUE_Seed)) +
   geom_point(size=2) +
   ggtitle("Seed CPUE by Period") +
   xlab("Period") +
@@ -362,7 +367,7 @@ seed_study<-ggplot(dp3.2, aes(Period, CPUE_Seed)) +
   facet_wrap(~Project)
 #ggsave("sub_study.png", width = 10, height = 10)
 
-legal_study<-ggplot(dp3.2, aes(Period, CPUE_Legal)) +
+legal_study<-ggplot(dp3.2x, aes(Period, CPUE_Legal)) +
   geom_point(size=2) +
   ggtitle("Legal CPUE by Period") +
   xlab("Period") +
@@ -454,6 +459,7 @@ dp3.2$Site<-as.factor(dp3.2$Site)
 
 library(glmmTMB)
 library(bbmle)
+library(DHARMa)
 
 #bring in a measure of discharge
 #below are just the river discharge covariates
@@ -495,30 +501,75 @@ names(dp4)
 #####GLMM#################
 ##########################
 
-#Period only
-tmb0 <- glmmTMB(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
+#All studies combined
+tmb0 <- glmmTMB(Sum_spat ~ + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
 summary(tmb0)
 
-#ok need to address these autocorrelation questions
-#maybe with this library(DHARMa)?
-#https://cran.r-project.org/web/packages/DHARMa/vignettes/DHARMa.html#owl-example-count-data
+#All studies combined over period
+tmb1 <- glmmTMB(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
+summary(tmb1)
 
-res <- simulateResiduals(tmb0)
-plot(res)
-testDispersion(res)
+#check autocorrelation issues
+res1 <- simulateResiduals(tmb1)
+plot(res1)
+agg.res1 = recalculateResiduals(res1,group=dp4$Period)
+time = unique(dp4$Period)
+plot(time,agg.res1$scaledResiduals,pch=16)
 
-unique(dp4$Project)
+#model comparison
+anova(tmb0,tmb1)
+AICtab(tmb0,tmb1,weights=TRUE)
+
+#no difference in these two models from AIC perspective when all studies included
+
+##############
+##############
+
 
 #this model is asking how period and project influence counts
 #using NB2 formulation (most common formulation)
-tmb1 <- glmmTMB(Sum_spat ~ Period * Project + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
-summary(tmb1)
+#tmb1 <- glmmTMB(Sum_spat ~ Period * Project + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
+#summary(tmb1)
 
-#so the NFWF gebf 5007 project is intercept 
+#so the NFWF gebf 5007 project is intercept
+
+##############
+##############
 
 ###now instead of using interaction term, let's just look at each project as an individual dataset
 ##based on meeting with Fred 20220821
 
+
+library(ggeffects)
+unique(dp4$Project)
+
+#NFWF-1
+dNFWF1<-subset(dp4,dp4$Project =="NFWF-1")
+
+tmb0_NFWF1 <- glmmTMB(Sum_spat ~ (1|Site) + offset(log(Num_quads)), data = dNFWF1, family="nbinom2") #converge
+summary(tmb0_NFWF1)
+
+tmb1_NFWF1 <- glmmTMB(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = dNFWF1, family="nbinom2") #converge
+summary(tmb1_NFWF1)
+
+
+anova(tmb0_NFWF1,tmb1_NFWF1)
+AICtab(tmb0_NFWF1,tmb1_NFWF1,weights=TRUE)
+
+#OK so period is significant
+
+#check autocorrelation issues
+res_tmb1_NFWF1 <- simulateResiduals(tmb1_NFWF1)
+plot(res_tmb1_NFWF1)
+agg.res_tmb1_NFWF1 = recalculateResiduals(res_tmb1_NFWF1,group=dNFWF1$Period)
+time = unique(dNFWF1$Period)
+plot(time,agg.res_tmb1_NFWF1$scaledResiduals,pch=16)
+#no significant problem detected
+
+
+pred.tmbNFWF1 <- ggpredict(tmb1_NFWF1, c("Period"))
+
+##ggpredicts framework
 #when you plot with the models structured this way, it is only going to plot for the periods
 #of that project. If you want to interpolate beyond the data and plot in all periods
 #then you need to create the "new data" structure
@@ -526,17 +577,6 @@ summary(tmb1)
 #Period = dp4$Period,
 #Num_quads = dp4$Num_quads)
 ##and then predict using the new.dat and not the specified data set
-
-library(ggeffects)
-
-unique(dp4$Project)
-
-#NFWF-1
-dNFWF1<-subset(dp4,dp4$Project =="NFWF-1")
-tmb1_NFWF1 <- glmmTMB(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = dNFWF1, family="nbinom2") #converge
-summary(tmb1_NFWF1)
-
-pred.tmbNFWF1 <- ggpredict(tmb1_NFWF1, c("Period"))
 
 #plot and show data
 pr.1<-plot(pred.tmbNFWF1, facet=FALSE, add.data=TRUE)
@@ -556,8 +596,23 @@ pr_NFWF1 = ggplot(test2.NFWF1, aes(x, predicted))+
 
 #NRDA-4044
 dNRDA4044<-subset(dp4,dp4$Project =="NRDA-4044")
+
+tmb0_NRDA4044 <- glmmTMB(Sum_spat ~ + (1|Site) + offset(log(Num_quads)), data = dNRDA4044, family="nbinom2") #converge
+summary(tmb0_NRDA4044)
+
 tmb1_NRDA4044 <- glmmTMB(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = dNRDA4044, family="nbinom2") #converge
 summary(tmb1_NRDA4044)
+
+anova(tmb0_NRDA4044,tmb1_NRDA4044)
+AICtab(tmb0_NRDA4044,tmb1_NRDA4044,weights=TRUE)
+
+#check autocorrelation issues
+res_tmb1_NRDA4044 <- simulateResiduals(tmb1_NRDA4044)
+plot(res_tmb1_NRDA4044)
+agg.res_tmb1_NRDA4044 = recalculateResiduals(res_tmb1_NRDA4044,group=dNRDA4044$Period)
+time = unique(dNRDA4044$Period)
+plot(time,agg.res_tmb1_NRDA4044$scaledResiduals,pch=16)
+#quantile deviations detected, but KS test not signficant
 
 pred.tmbNRDA4044 <- ggpredict(tmb1_NRDA4044, c("Period"))
 #plot and show data
@@ -578,8 +633,15 @@ pr_NRDA4044 = ggplot(test2.NRDA4044, aes(x, predicted))+
 
 #GEBF-5007
 dGEBF5007<-subset(dp4,dp4$Project =="GEBF-5007")
+
+tmb0_GEBF5007 <- glmmTMB(Sum_spat ~ (1|Site) + offset(log(Num_quads)), data = dGEBF5007, family="nbinom2") #converge
+summary(tmb0_GEBF5007)
+
 tmb1_GEBF5007 <- glmmTMB(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = dGEBF5007, family="nbinom2") #converge
 summary(tmb1_GEBF5007)
+
+anova(tmb0_GEBF5007,tmb1_GEBF5007)
+AICtab(tmb0_GEBF5007,tmb1_GEBF5007,weights=TRUE)
 
 pred.tmbGEBF5007 <- ggpredict(tmb1_GEBF5007, c("Period"))
 #plot and show data
@@ -598,11 +660,18 @@ pr_GEBF5007 = ggplot(test2.GEBF5007, aes(x, predicted))+
   ggtitle("GEBF5007 Apalachicola Spat by Period") +
   scale_x_continuous(breaks=seq(1,15,1))
 
-
 #NFWF-2021
 dNFWF2021<-subset(dp4,dp4$Project =="NFWF-2021")
+
+tmb0_NFWF2021 <- glmmTMB(Sum_spat ~ (1|Site) + offset(log(Num_quads)), data = dNFWF2021, family="nbinom2") #converge
+summary(tmb0_NFWF2021)
+
 tmb1_NFWF2021 <- glmmTMB(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = dNFWF2021, family="nbinom2") #converge
 summary(tmb1_NFWF2021)
+
+anova(tmb0_NFWF2021,tmb1_NFWF2021)
+AICtab(tmb0_NFWF2021,tmb1_NFWF2021,weights=TRUE)
+
 
 pred.tmbNFWF2021 <- ggpredict(tmb1_NFWF2021, c("Period"))
 #plot and show data
@@ -624,14 +693,16 @@ pr_NFWF2021 = ggplot(test2.NFWF2021, aes(x, predicted))+
 #
 plot_grid(pr_NFWF1,pr_NRDA4044,pr_GEBF5007,pr_NFWF2021)
 
-
-######################
+############################################
+############################################
 #This ends the revised work from August 2022
 #Now what? revise text and come up with revised plots
 #remember if you want to predict for each period
 #you have to generate the data "jennifer style" below
-######################
-######################
+############################################
+############################################
+############################################
+
 
 ###LOW DAYS
 #now is that influenced by the number of low days?
