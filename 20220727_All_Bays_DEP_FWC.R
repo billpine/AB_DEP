@@ -371,14 +371,14 @@ r0<-ggplot(d5, aes(Period, Sum_spat)) +
   ylab("Total Spat")+
   facet_wrap(~Bay)
 
-r1<-ggplot(d9, aes(Period, Sum_seed)) +
+r1<-ggplot(d5, aes(Period, Sum_seed)) +
   geom_point(size=4) +
   ggtitle("seed per Period by Site") +
   xlab("Period") +
   ylab("Total seed")+
   facet_wrap(~Bay)
 
-r2<-ggplot(d9, aes(Period, Sum_legal)) +
+r2<-ggplot(d5, aes(Period, Sum_legal)) +
   geom_point(size=4) +
   ggtitle("Legal per Period by Site") +
   xlab("Period") +
@@ -410,8 +410,106 @@ library(bbmle)
 
 names(d5)
 
-tmb0 <- glmmTMB(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = d5, family="nbinom2") #converge
+as.factor(d5$Bay)
+
+tmb0 <- glmmTMB(Sum_spat ~ (1|Site) + offset(log(Num_quads)), data = d5, family="nbinom2") #converge
 summary(tmb0)
+
+tmb1 <- glmmTMB(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = d5, family="nbinom2") #converge
+summary(tmb1)
+
+tmb2 <- glmmTMB(Sum_spat ~ Period + Bay + (1|Site) + offset(log(Num_quads)), data = d5, family="nbinom2") #converge
+summary(tmb2)
+
+tmb3 <- glmmTMB(Sum_spat ~ Period * Bay + (1|Site) + offset(log(Num_quads)), data = d5, family="nbinom2") #converge
+summary(tmb3)
+
+tmb4 <- glmmTMB(Sum_spat ~ Bay + (1|Site) + offset(log(Num_quads)), data = d5, family="nbinom2") #converge
+summary(tmb4)
+
+anova(tmb0,tmb1)
+
+AICtab(tmb0,tmb1,weights=TRUE)
+
+
+AICtab(tmb0,tmb1,tmb2,tmb3,tmb4,weights=TRUE)
+
+
+#now subset and just work with each Bay individually
+
+##PENSACOLA
+dPensacola<-subset(d5,d5$Bay =="Pensacola")
+
+plot(dPensacola$Period,dPensacola$CPUE_seed)
+
+tmb0_Pensacola <- glmmTMB(Sum_spat ~ (1|Site) + offset(log(Num_quads)), data = dPensacola, family="nbinom2") #converge
+summary(tmb0_Pensacola)
+tmb1_Pensacola <- glmmTMB(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = dPensacola, family="nbinom2") #converge
+summary(tmb1_Pensacola)
+
+anova(tmb0_Pensacola,tmb1_Pensacola)
+AICtab(tmb0_Pensacola,tmb1_Pensacola,weights=TRUE)
+#period improves
+
+###
+#Seed
+tmb00_Pensacola <- glmmTMB(Sum_seed ~ (1|Site) + offset(log(Num_quads)), data = dPensacola, family="nbinom2") #converge
+summary(tmb00_Pensacola)
+tmb11_Pensacola <- glmmTMB(Sum_seed ~ Period + (1|Site) + offset(log(Num_quads)), data = dPensacola, family="nbinom2") #converge
+summary(tmb11_Pensacola)
+
+anova(tmb00_Pensacola,tmb11_Pensacola)
+AICtab(tmb00_Pensacola,tmb11_Pensacola,weights=TRUE)
+
+#legal
+tmb000_Pensacola <- glmmTMB(Sum_seed ~ (1|Site) + offset(log(Num_quads)), data = dPensacola, family="nbinom2") #converge
+summary(tmb000_Pensacola)
+tmb111_Pensacola <- glmmTMB(Sum_seed ~ Period + (1|Site) + offset(log(Num_quads)), data = dPensacola, family="nbinom2") #converge
+summary(tmb111_Pensacola)
+
+anova(tmb000_Pensacola,tmb111_Pensacola)
+AICtab(tmb000_Pensacola,tmb111_Pensacola,weights=TRUE)
+
+
+
+##St. Andrew
+dStAndrew<-subset(d5,d5$Bay =="St. Andrew")
+
+plot(dStAndrew$Period,dStAndrew$CPUE_Spat)
+
+tmb0_StAndrew <- glmmTMB(Sum_spat ~ (1|Site) + offset(log(Num_quads)), data = dStAndrew, family="nbinom2") #converge
+summary(tmb0_StAndrew)
+
+tmb1_StAndrew <- glmmTMB(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = dStAndrew, family="nbinom2") #converge
+summary(tmb1_StAndrew)
+
+anova(tmb0_StAndrew,tmb1_StAndrew)
+AICtab(tmb0_StAndrew,tmb1_StAndrew,weights=TRUE)
+#period does not improve
+
+##Apalachicola
+dApalachicola<-subset(d5,d5$Bay =="Apalachicola")
+
+plot(dApalachicola$Period,dApalachicola$CPUE_Spat)
+
+
+tmb0_Apalachicola <- glmmTMB(Sum_spat ~ (1|Site) + offset(log(Num_quads)), data = dApalachicola, family="nbinom2") #converge
+summary(tmb0_Apalachicola)
+
+tmb1_Apalachicola <- glmmTMB(Sum_spat ~ Period + (1|Site) + offset(log(Num_quads)), data = dApalachicola, family="nbinom2") #converge
+summary(tmb1_Apalachicola)
+
+anova(tmb0_Apalachicola,tmb1_Apalachicola)
+AICtab(tmb0_Apalachicola,tmb1_Apalachicola,weights=TRUE)
+
+#period does not improve
+
+###########
+
+
+###############
+###############
+###############
 
 ##below is Period + Bay with site as random effect and effort offset
 tmb1 <- glmmTMB(Sum_spat ~ Period + Bay + (1|Site) + offset(log(Num_quads)), data = d5, family="nbinom2") #converge
