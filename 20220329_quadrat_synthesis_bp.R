@@ -90,37 +90,6 @@ names(spat_sum_zz) <- c("Project", "Year", "Month","Period", "Site",
 
 #  write.table(spat_sum_zz, file = "spat_count_yr_mnth_station.txt", row.names = FALSE,
 #              col.names = TRUE,sep = ",")
-  
-# #OK parking the summary stats function here
-# options(scipen = 2)
-# sumstats = function(x){ 
-#   y=na.omit(x)
-#   bstrap <- c()
-#   for (i in 1:1000){
-#     bstrap <- c(bstrap, mean(sample(y,(length(y)),replace=T), na.rm = T))}
-#   c(
-#     Mean=mean(y), 
-#     Median=median(y),
-#     SD=sd(y), 
-#     Var=var(y),
-#     CV=sd(y)/mean(y),
-#     SE=sd(y)/sqrt(length(y)),
-#     L95SE=mean(y)-1.96*(sd(y)/sqrt(length(y))),
-#     U95SE=mean(y)+1.96*(sd(y)/sqrt(length(y))),
-#     BSMEAN = mean(bstrap),
-#     L95BS = quantile(bstrap,.025),
-#     U95BS= quantile(bstrap,.975))
-# }
-# 
-# a<-round(sumstats(d2$Spat[d2$Site == "Dry Bar" & d2$Period == "2" ]),2)
-# write.table(a, file = "dry_p2.txt", row.names = TRUE,
-#             col.names = TRUE,sep = ",")
-# 
-# 
-# b<-round(sumstats(d2$Spat[d2$Site == "Dry Bar" & d2$Period == "12" ]),2)
-# write.table(b, file = "dry_p13.txt", row.names = TRUE,
-#             col.names = TRUE,sep = ",")
-# ###
 
 #sum live counts for each transect
 count_spat=aggregate(Spat~Site+Period+Season,data=d2,sum)
@@ -294,7 +263,6 @@ dp3.2$CPUE_Spat<-dp3.2$Sum_spat/dp3.2$Num_quads
 dp3.2$CPUE_Seed<-dp3.2$Sum_Seed/dp3.2$Num_quads
 dp3.2$CPUE_Legal<-dp3.2$Sum_legal/dp3.2$Num_quads
 
-
 plot(dp3.2$Period,dp3.2$CPUE_Spat)
 plot(dp3.2$Period,dp3.2$CPUE_Seed)
 plot(dp3.2$Period,dp3.2$CPUE_Legal)
@@ -387,7 +355,24 @@ seed_study2<-ggplot(dp3.2x, aes(Period, CPUE_Seed,color=Project)) +
 seed_study2+scale_color_manual(values=c("red","blue","black","brown"))+
   geom_vline(xintercept = c(2,3,6,13),col="red",
                       linetype="dotted")
+#just add each v line individually instead of all at once to assign color
 
+seed_study2+scale_color_manual(values=c("red","blue","black","brown"))+
+  geom_vline(xintercept = c(2),col="red",
+             linetype="dotted")+
+  geom_vline(xintercept = c(3),col="blue",
+             linetype="dotted")+
+  geom_vline(xintercept = c(6),col="black",
+             linetype="dotted")+
+  geom_vline(xintercept = c(13),col="brown",
+             linetype="dotted")
+#this shows a single site that has a decline from winter to summer
+seed_study3<-ggplot(dp3.2x[dp3.2$Site == "East Lumps",], aes(Period, CPUE_Seed,color=Project)) +
+  geom_point(size=2) +
+  ggtitle("Seed CPUE by Period") +
+  xlab("Period") +
+  ylab("Seed CPUE") +
+  scale_x_continuous(breaks=seq(2,15,1))
 
 
 #ggsave("sub_study.png", width = 10, height = 10)
