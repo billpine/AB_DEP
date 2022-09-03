@@ -170,8 +170,7 @@ nfwf3_check<-subset(d2,d2$Project=="NFWF-2021")
 ##some checks to review with Matt
 unique(d2$Project)
 nfwf2021_check<-subset(d2,d2$Project =="NFWF-2021")
-table(nfwf2021_check$Site,nfwf2021_check$Period)
-mattcheck<-table(nfwf2021_check$Site,nfwf2021_check$Month,nfwf2021_check$Year)
+table(nfwf2021_check$Site,nfwf2021_check$Period,nfwf2021_check$Year)
 write.table(mattcheck, file = "~/Git/AB_DEP/mattcheck.csv", row.names = FALSE,col.names = TRUE,sep = ",")
 
 nfwf1_check<-subset(d2,d2$Project =="NFWF-1")
@@ -356,6 +355,17 @@ spat_study<-ggplot(dp3.2x, aes(Period, CPUE_Spat)) +
   ylab("CPUE Spat") +
   facet_wrap(~Project)
 
+spat_study2<-ggplot(dp3.2x, aes(Period, CPUE_Spat,color=Project)) +
+  geom_point(size=4) +
+  ggtitle("CPUE Spat by Period") +
+  scale_x_continuous(breaks=seq(2,15,1))+
+  xlab("Period") +
+  ylab("CPUE Spat") +
+  facet_wrap(~Site)
+
+spat_study2+scale_color_manual(values=c("red","blue","black","brown"))
+
+
 #ggsave("AB_spat_study.png", width = 10, height = 10)
 
 seed_study<-ggplot(dp3.2x, aes(Period, CPUE_Seed)) +
@@ -365,6 +375,19 @@ seed_study<-ggplot(dp3.2x, aes(Period, CPUE_Seed)) +
   ylab("Seed CPUE") +
   scale_x_continuous(breaks=seq(2,15,1))+
   facet_wrap(~Project)
+
+seed_study2<-ggplot(dp3.2x, aes(Period, CPUE_Seed,color=Project)) +
+  geom_point(size=2) +
+  ggtitle("Seed CPUE by Period") +
+  xlab("Period") +
+  ylab("Seed CPUE") +
+  scale_x_continuous(breaks=seq(2,15,1))+
+  facet_wrap(~Site)
+
+seed_study2+scale_color_manual(values=c("red","blue","black","brown"))+geom_vline(xintercept = 13)
+
+
+
 #ggsave("sub_study.png", width = 10, height = 10)
 
 legal_study<-ggplot(dp3.2x, aes(Period, CPUE_Legal)) +
