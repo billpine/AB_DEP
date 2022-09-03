@@ -114,14 +114,14 @@ d6$CPUE_Legal<-d6$Sum_legal/d6$Num_quads
 f1<-ggplot(d6, aes(Period, CPUE_Spat)) +
   geom_point(size=4) +
   #ggtitle("Spat CPUE by Period") +
-  scale_x_continuous(limits=c(2,13),breaks=c(2,3,4,5,6,7,8,9,10,11,12,
-                                             13)) +
+  scale_x_continuous(limits=c(2,15),breaks=c(2,3,4,5,6,7,8,9,10,11,12,
+                                             13,15)) +
   xlab("Period") +
   ylab("Spat per quadrat") +
   theme(text = element_text(size = 18))+ 
   facet_wrap(~Bay)
 
-ggsave("three_bay_spat_CPUE.png", width = 10, height = 10)
+#ggsave("three_bay_spat_CPUE.png", width = 10, height = 10)
 
 
 f2<-ggplot(d6, aes(Period, CPUE_Seed)) +
@@ -344,7 +344,7 @@ s4<-ggplot(d5, aes(Period, CPUE_Spat)) +
   ylab("Spat CPUE")+
   facet_wrap(~Bay)
 
-ggsave("dep_each_bays_spat_cpue.png", width = 10, height = 10)
+#ggsave("dep_each_bays_spat_cpue.png", width = 10, height = 10)
 
 
 #########
@@ -405,6 +405,9 @@ r2<-ggplot(d5, aes(Period, Sum_legal)) +
 ##TMB##########
 ###############
 
+write.table(d5, file = "~/Fred/d5.csv", row.names = FALSE,col.names = TRUE,sep = ",")
+
+
 library(glmmTMB)
 library(bbmle)
 
@@ -427,12 +430,51 @@ summary(tmb3)
 tmb4 <- glmmTMB(Sum_spat ~ Bay + (1|Site) + offset(log(Num_quads)), data = d5, family="nbinom2") #converge
 summary(tmb4)
 
-anova(tmb0,tmb1)
-
-AICtab(tmb0,tmb1,weights=TRUE)
-
-
+#AIC table of all models
 AICtab(tmb0,tmb1,tmb2,tmb3,tmb4,weights=TRUE)
+#lowest AIC for tmb3 (interaction), 8.6 AICs separate between this and additive Bay model tmb2
+#look into Fred's comments about glmmTMB and additive effects
+
+#likelihood ratio test between top two - tmb3 & tmb2
+anova(tmb2,tmb3)
+
+#Dharma
+
+library(DHARMa)
+summary(tmb3)
+res3 <- simulateResiduals(tmb3)
+plot(res3)
+agg.res3 = recalculateResiduals(res3,group=d5$Period)
+time = unique(d5$Period)
+plot(time,agg.res3$scaledResiduals,pch=16)
+testTemporalAutocorrelation(agg.res3,time=time)
+summary(tmb4)
+#for tmb3 neither KS or Durbin Watson significant
+
+res2 <- simulateResiduals(tmb2)
+plot(res2)
+agg.res2 = recalculateResiduals(res2,group=d5$Period)
+time = unique(d5$Period)
+plot(time,agg.res2$scaledResiduals,pch=16)
+testTemporalAutocorrelation(agg.res2,time=time)
+#for tmb2 neither KS or Durbin Watson significant
+
+###
+###Not sure if the ggeffects is worth including. Be careful below
+###because the predict is predicting over periods not sampled for PB and SA
+###could go back and plot Jennifer way and then can control periods
+
+table(d5$Period,d4$Bay)
+
+library(ggeffects)
+#ok predict by bay using tmb3 (model with interaction term)
+#####
+ggpredict(tmb3)
+#now look at predictions by bay in each period for 1 quad
+pred_tmb3AB <- ggpredict(tmb3, c("Period", "Bay[Apalachicola]","Num_quads[1]"))
+pred_tmb3PB <- ggpredict(tmb3, c("Period", "Bay[Pensacola]","Num_quads[1]"))
+pred_tmb3SA <- ggpredict(tmb3, c("Period", "Bay[St. Andrew]","Num_quads[1]"))
+
 
 
 #now subset and just work with each Bay individually
