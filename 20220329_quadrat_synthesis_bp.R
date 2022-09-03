@@ -384,7 +384,9 @@ seed_study2<-ggplot(dp3.2x, aes(Period, CPUE_Seed,color=Project)) +
   scale_x_continuous(breaks=seq(2,15,1))+
   facet_wrap(~Site)
 
-seed_study2+scale_color_manual(values=c("red","blue","black","brown"))+geom_vline(xintercept = 13)
+seed_study2+scale_color_manual(values=c("red","blue","black","brown"))+
+  geom_vline(xintercept = c(2,3,6,13),col="red",
+                      linetype="dotted")
 
 
 
