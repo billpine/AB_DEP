@@ -59,7 +59,7 @@ dx<-subset(d2,d2$Bay == "Apalachicola")
 
 #count number of quadrats per period, site
 quad_sum<- d2 %>%
-  dplyr::group_by(Period, Bay) %>%
+  dplyr::group_by(Period, Bay, Site) %>%
   dplyr::count(Period, Bay) %>%
   dplyr::relocate(Period, Bay)
 names(quad_sum) <- c("Period", "Bay",
@@ -114,11 +114,10 @@ d6$CPUE_Legal<-d6$Sum_legal/d6$Num_quads
 f1<-ggplot(d6, aes(Period, CPUE_Spat)) +
   geom_point(size=4) +
   #ggtitle("Spat CPUE by Period") +
-  scale_x_continuous(limits=c(2,15),breaks=c(2,3,4,5,6,7,8,9,10,11,12,
-                                             13,15)) +
+  scale_x_continuous(breaks=seq(2,15,1)) +
   xlab("Period") +
   ylab("Spat per quadrat") +
-  theme(text = element_text(size = 18))+ 
+  theme(text = element_text(size = 12))+
   facet_wrap(~Bay)
 
 #ggsave("three_bay_spat_CPUE.png", width = 10, height = 10)
@@ -129,6 +128,8 @@ f2<-ggplot(d6, aes(Period, CPUE_Seed)) +
   ggtitle("Seed CPUE by Period") +
   xlab("Period") +
   ylab("Seed") +
+  scale_x_continuous(breaks=seq(2,15,1)) +
+  theme(text = element_text(size = 12)) +
   facet_wrap(~Bay)
 
 f3<-ggplot(d6, aes(Period, CPUE_Legal)) +
@@ -305,46 +306,116 @@ d5$CPUE_seed<-d5$Sum_seed/d5$Num_quads
 d5$CPUE_Legal<-d5$Sum_legal/d5$Num_quads
 
 #the plots below show you the range in CPUE for a given size class
-#of oyster in each of the bays
+#of oyster in each of the bays#####
 
-s1<-ggplot(d5, aes(Period, CPUE_Spat)) +
-  geom_point(size=4) +
-  ggtitle("Spat CPUE by Period") +
+#####SHOW THESE IN THE PAPER
+
+dPensacola<-subset(d5,d5$Bay =="Pensacola")
+
+p1<-ggplot(dPensacola, aes(Period, CPUE_Spat)) +
+  geom_point(size=2) +
+  ggtitle("Pensacola spat CPUE") +
   xlab("Period") +
-  ylab("Spat") +
-  facet_wrap(~Bay)
+  scale_x_continuous(limits=c(2,15),breaks=seq(2,15,2))+
+  ylab("CPUE") +
+  theme(axis.text = element_text(size = 8)) +
+  facet_wrap(~Site)
 
-s2<-ggplot(d5, aes(Period, CPUE_seed)) +
-  geom_point(size=4) +
-  ggtitle("seed CPUE by Period") +
+p2<-ggplot(dPensacola, aes(Period, CPUE_seed)) +
+  geom_point(size=2) +
+  ggtitle("Pensacola seed CPUE") +
   xlab("Period") +
-  ylab("seed") +
-  facet_wrap(~Bay)
+  scale_x_continuous(limits=c(2,15),breaks = seq(2,15,2))+
+  ylab("CPUE") +
+  theme(axis.text = element_text(size = 8)) +
+  facet_wrap(~Site)
 
-s3<-ggplot(d5, aes(Period, CPUE_Legal)) +
-  geom_point(size=4) +
-  ggtitle("Legal CPUE by Period") +
+p3<-ggplot(dPensacola, aes(Period, CPUE_Legal)) +
+  geom_point(size=2) +
+  ggtitle("Pensacola legal CPUE") +
   xlab("Period") +
-  ylab("Legal") +
-  facet_wrap(~Bay)
+  scale_x_continuous(limits=c(2,15),breaks = seq(2,15,2))+
+  ylab("CPUE") +
+  theme(axis.text = element_text(size = 8)) +
+  facet_wrap(~Site)
 
-plot_grid(s1,s2,s3)
+plot_grid(p1,p2,p3)
 
-#ggsave("dep_allbays_site.pdf", width = 10, height = 10)
+dStAndrew<-subset(d5,d5$Bay =="St. Andrew")
 
-#single plot of CPUE, spat, different color by Bay
-
-s4<-ggplot(d5, aes(Period, CPUE_Spat)) +
-  geom_point(size=4) +
-  ggtitle("Spat CPUE by Period") +
-  scale_x_continuous(limits=c(2,13),breaks=c(2,3,4,5,6,7,8,9,10,11,
-                                             12,13)) +
-  scale_y_continuous(limits=c(0,600),breaks=c(0,100,200,300,400,500,600)) +
+sa1<-ggplot(dStAndrew, aes(Period, CPUE_Spat)) +
+  geom_point(size=2) +
+  ggtitle("St. Andrew spat CPUE") +
   xlab("Period") +
-  ylab("Spat CPUE")+
-  facet_wrap(~Bay)
+  scale_x_continuous(limits=c(2,15),breaks = seq(2,15,2))+
+  scale_y_continuous(limits=c(0,600),breaks=seq(0,600,100))+
+  ylab("CPUE") +
+  theme(axis.text = element_text(size = 8)) +
+  facet_wrap(~Site)
 
-#ggsave("dep_each_bays_spat_cpue.png", width = 10, height = 10)
+sa2<-ggplot(dStAndrew, aes(Period, CPUE_seed)) +
+  geom_point(size=2) +
+  ggtitle("St. Andrew seed CPUE") +
+  xlab("Period") +
+  scale_x_continuous(limits=c(2,15),breaks= seq(2,15,2))+
+  scale_y_continuous(limits=c(0,110),breaks=seq(0,110,20))+
+  ylab("CPUE") +
+  theme(axis.text = element_text(size = 8)) +
+  facet_wrap(~Site)
+
+sa3<-ggplot(dStAndrew, aes(Period, CPUE_Legal)) +
+  geom_point(size=2) +
+  ggtitle("St. Andrew legal CPUE") +
+  xlab("Period") +
+  scale_x_continuous(limits=c(2,15),breaks = seq(2,15,2))+
+  ylab("CPUE") +
+  theme(axis.text = element_text(size = 8)) +
+  facet_wrap(~Site)
+
+plot_grid(sa1,sa2,sa3)
+
+dApalachicola<-subset(d5,d5$Bay =="Apalachicola")
+
+ab1<-ggplot(dApalachicola, aes(Period, CPUE_Spat)) +
+  geom_point(size=2) +
+  ggtitle("Apalachicola spat CPUE") +
+  xlab("Period") +
+  scale_x_continuous(limits=c(2,15),breaks = seq(2,15,2))+
+  scale_y_continuous(limits=c(0,1100),breaks=seq(0,1100,200))+
+  ylab("CPUE") +
+  theme(axis.text = element_text(size = 8)) +
+  facet_wrap(~Site)
+
+ab2<-ggplot(dApalachicola, aes(Period, CPUE_seed)) +
+  geom_point(size=2) +
+  ggtitle("Apalachicola seed CPUE") +
+  xlab("Period") +
+  scale_x_continuous(limits=c(2,15),breaks = seq(2,15,2))+
+  scale_y_continuous(limits=c(0,300),breaks=seq(0,300,75))+
+  ylab("CPUE") +
+  theme(axis.text = element_text(size = 8)) +
+  facet_wrap(~Site)
+
+ab3<-ggplot(dApalachicola, aes(Period, CPUE_Legal)) +
+  geom_point(size=2) +
+  ggtitle("Apalachicola legal CPUE") +
+  xlab("Period") +
+  scale_x_continuous(limits=c(2,15),breaks=seq(2,15,2))+
+  scale_y_continuous(limits=c(0,10),breaks=seq(0,10,2))+
+  ylab("CPUE") +
+  theme(axis.text = element_text(size = 8)) +
+  facet_wrap(~Site)
+
+
+plot_grid(p1,p2,p3)
+ggsave("PB_cpue_site.jpg", width = 10, height = 10)
+
+plot_grid(sa1,sa2,sa3)
+ggsave("SA_cpue_site.jpg", width = 10, height = 10)
+
+plot_grid(ab1,ab2,ab3)
+ggsave("AB_cpue_site.jpg", width = 10, height = 10)
+
 
 
 #########
@@ -405,9 +476,6 @@ r2<-ggplot(d5, aes(Period, Sum_legal)) +
 ##TMB##########
 ###############
 
-write.table(d5, file = "~/Fred/d5.csv", row.names = FALSE,col.names = TRUE,sep = ",")
-
-
 library(glmmTMB)
 library(bbmle)
 
@@ -435,6 +503,12 @@ AICtab(tmb0,tmb1,tmb2,tmb3,tmb4,weights=TRUE)
 #lowest AIC for tmb3 (interaction), 8.6 AICs separate between this and additive Bay model tmb2
 #look into Fred's comments about glmmTMB and additive effects
 
+cand.set2 = list(tmb0,tmb1,tmb2,tmb3,tmb4)
+modnames2 = c("intercept", "period", "period + bay", "period*bay","bay")
+aictab(cand.set2, modnames2, second.ord = FALSE) #model selection table with AIC
+
+
+
 #likelihood ratio test between top two - tmb3 & tmb2
 anova(tmb2,tmb3)
 
@@ -451,18 +525,15 @@ testTemporalAutocorrelation(agg.res3,time=time)
 summary(tmb4)
 #for tmb3 neither KS or Durbin Watson significant
 
-res2 <- simulateResiduals(tmb2)
-plot(res2)
-agg.res2 = recalculateResiduals(res2,group=d5$Period)
-time = unique(d5$Period)
-plot(time,agg.res2$scaledResiduals,pch=16)
-testTemporalAutocorrelation(agg.res2,time=time)
-#for tmb2 neither KS or Durbin Watson significant
 
 ###
 ###Not sure if the ggeffects is worth including. Be careful below
 ###because the predict is predicting over periods not sampled for PB and SA
 ###could go back and plot Jennifer way and then can control periods
+
+#remember period not significant in AB, this is why AB predicted
+#plot shows poor fit
+#plot is better for Pensacola since period is significant
 
 table(d5$Period,d4$Bay)
 
@@ -475,8 +546,27 @@ pred_tmb3AB <- ggpredict(tmb3, c("Period", "Bay[Apalachicola]","Num_quads[1]"))
 pred_tmb3PB <- ggpredict(tmb3, c("Period", "Bay[Pensacola]","Num_quads[1]"))
 pred_tmb3SA <- ggpredict(tmb3, c("Period", "Bay[St. Andrew]","Num_quads[1]"))
 
+#plot predicted for PB from Bay*Period
+pred_tmbPB <- ggpredict(tmb3, c("Period", "Bay[Pensacola]"))
+
+plot(pred_tmb3PB,facet=FALSE, add.data=TRUE)
+
+####
+#Seed
+tmb3_seed <- glmmTMB(Sum_seed ~ Period * Bay + (1|Site) + offset(log(Num_quads)), data = d5, family="nbinom2") #converge
+summary(tmb3_seed)
+
+pred_tmb3seed <- ggpredict(tmb3_seed, c("Period", "Bay","Num_quads[1]"))
+
+#Legal
+tmb3_legal <- glmmTMB(Sum_legal ~ Period * Bay + (1|Site) + offset(log(Num_quads)), data = d5, family="nbinom2") #converge
+summary(tmb3_legal)
+
+pred_tmb3legal <- ggpredict(tmb3_legal, c("Period", "Bay","Num_quads[1]"))
 
 
+
+############
 #now subset and just work with each Bay individually
 
 ##PENSACOLA
@@ -493,6 +583,10 @@ anova(tmb0_Pensacola,tmb1_Pensacola)
 AICtab(tmb0_Pensacola,tmb1_Pensacola,weights=TRUE)
 #period improves
 
+pred.tmbPB <- ggpredict(tmb1_Pensacola, c("Period"))
+plot(pred.tmbPB,facet=FALSE, add.data=TRUE)
+
+
 ###
 #Seed
 tmb00_Pensacola <- glmmTMB(Sum_seed ~ (1|Site) + offset(log(Num_quads)), data = dPensacola, family="nbinom2") #converge
@@ -502,6 +596,7 @@ summary(tmb11_Pensacola)
 
 anova(tmb00_Pensacola,tmb11_Pensacola)
 AICtab(tmb00_Pensacola,tmb11_Pensacola,weights=TRUE)
+
 
 #legal
 tmb000_Pensacola <- glmmTMB(Sum_seed ~ (1|Site) + offset(log(Num_quads)), data = dPensacola, family="nbinom2") #converge
@@ -545,6 +640,8 @@ anova(tmb0_Apalachicola,tmb1_Apalachicola)
 AICtab(tmb0_Apalachicola,tmb1_Apalachicola,weights=TRUE)
 
 #period does not improve
+
+pred.tmbNFWF1 <- ggpredict(tmb1_NFWF1, c("Period"))
 
 ###########
 
