@@ -318,7 +318,7 @@ dp3.2x$Project <- factor(dp3.2x$Project,      # Reordering group factor levels
 spat_study<-ggplot(dp3.2x, aes(Period, CPUE_Spat)) +
   geom_point(size=2) +
   ggtitle("CPUE Spat by Period") +
-  scale_x_continuous(breaks=seq(2,15,1))+
+  scale_x_continuous(breaks=seq(2,15,2))+
   xlab("Period") +
   ylab("CPUE Spat") +
   facet_wrap(~Project)
@@ -326,22 +326,21 @@ spat_study<-ggplot(dp3.2x, aes(Period, CPUE_Spat)) +
 spat_study2<-ggplot(dp3.2x, aes(Period, CPUE_Spat,color=Project)) +
   geom_point(size=4) +
   ggtitle("CPUE Spat by Period") +
-  scale_x_continuous(breaks=seq(2,15,1))+
+  scale_x_continuous(breaks=seq(2,15,2))+
   xlab("Period") +
   ylab("CPUE Spat") +
   facet_wrap(~Site)
 
 spat_study2+scale_color_manual(values=c("red","blue","black","brown"))
 
-
-#ggsave("AB_spat_study.png", width = 10, height = 10)
+ggsave("AB_spat_study_project_color.png", width = 10, height = 10)
 
 seed_study<-ggplot(dp3.2x, aes(Period, CPUE_Seed)) +
   geom_point(size=2) +
   ggtitle("Seed CPUE by Period") +
   xlab("Period") +
   ylab("Seed CPUE") +
-  scale_x_continuous(breaks=seq(2,15,1))+
+  scale_x_continuous(breaks=seq(2,15,2))+
   facet_wrap(~Project)
 
 seed_study2<-ggplot(dp3.2x, aes(Period, CPUE_Seed,color=Project)) +
@@ -349,7 +348,7 @@ seed_study2<-ggplot(dp3.2x, aes(Period, CPUE_Seed,color=Project)) +
   ggtitle("Seed CPUE by Period") +
   xlab("Period") +
   ylab("Seed CPUE") +
-  scale_x_continuous(breaks=seq(2,15,1))+
+  scale_x_continuous(breaks=seq(2,15,2))+
   facet_wrap(~Site)
 
 seed_study2+scale_color_manual(values=c("red","blue","black","brown"))+
@@ -366,16 +365,49 @@ seed_study2+scale_color_manual(values=c("red","blue","black","brown"))+
              linetype="dotted")+
   geom_vline(xintercept = c(13),col="brown",
              linetype="dotted")
-#this shows a single site that has a decline from winter to summer
-seed_study3<-ggplot(dp3.2x[dp3.2$Site == "East Lumps",], aes(Period, CPUE_Seed,color=Project)) +
-  geom_point(size=2) +
-  ggtitle("Seed CPUE by Period") +
+
+#this shows a single site that has a decline
+spat_study3<-ggplot(dp3.2x[dp3.2$Site == "East Lumps",], aes(Period, CPUE_Spat,color=Project)) +
+  geom_point(size=4) +
+  ggtitle("East Lumps") +
+  xlab("Period") +
+  ylab("Spat CPUE") +
+  scale_x_continuous(limits=c(2,15),breaks=seq(2,15,2))
+
+spat_study4<-ggplot(dp3.2x[dp3.2$Site == "Lighthouse Bar",], aes(Period, CPUE_Spat,color=Project)) +
+  geom_point(size=4) +
+  ggtitle("Lighthouse Bar") +
+  xlab("Period") +
+  ylab("Spat CPUE") +
+  scale_x_continuous(limits=c(2,15),breaks=seq(2,15,2))
+
+plot_grid(spat_study3,spat_study4)
+
+ggsave("spat_declines.png", width = 10, height = 10)
+
+#This shows seed, which should persist, also declining
+seed_study3<-ggplot(dp3.2x[dp3.2$Site == "Lighthouse Bar",], aes(Period, CPUE_Seed,color=Project)) +
+  geom_point(size=4) +
+  ggtitle("Lighthouse Bar") +
   xlab("Period") +
   ylab("Seed CPUE") +
-  scale_x_continuous(breaks=seq(2,15,1))
+  scale_x_continuous(limits=c(2,15),breaks=seq(2,15,2))
+
+seed_study4<-ggplot(dp3.2x[dp3.2$Site == "East Lumps",], aes(Period, CPUE_Seed,color=Project)) +
+  geom_point(size=4) +
+  ggtitle("East Lumps") +
+  xlab("Period") +
+  ylab("Seed CPUE") +
+  scale_x_continuous(limits=c(2,15),breaks=seq(2,15,2))
+
+plot_grid(seed_study3,seed_study4)
 
 
-#ggsave("sub_study.png", width = 10, height = 10)
+plot_grid(spat_study3,seed_study4,spat_study4,seed_study3)
+
+ggsave("spat_seed_declines.png", width = 10, height = 10)
+
+###########
 
 legal_study<-ggplot(dp3.2x, aes(Period, CPUE_Legal)) +
   geom_point(size=2) +
