@@ -140,12 +140,12 @@ nfwf3_check<-subset(d2,d2$Project=="NFWF-2021")
 unique(d2$Project)
 nfwf2021_check<-subset(d2,d2$Project =="NFWF-2021")
 table(nfwf2021_check$Site,nfwf2021_check$Period,nfwf2021_check$Year)
-write.table(mattcheck, file = "~/Git/AB_DEP/mattcheck.csv", row.names = FALSE,col.names = TRUE,sep = ",")
+#write.table(mattcheck, file = "~/Git/AB_DEP/mattcheck.csv", row.names = FALSE,col.names = TRUE,sep = ",")
 
 nfwf1_check<-subset(d2,d2$Project =="NFWF-1")
 table(nfwf1_check$Site,nfwf1_check$Period)
 mattcheck_nfwf1<-table(nfwf1_check$Site,nfwf1_check$Month,nfwf1_check$Year)
-write.table(mattcheck_nfwf1, file = "~/Git/AB_DEP/mattcheck_nfwf1.csv", row.names = FALSE,col.names = TRUE,sep = ",")
+#write.table(mattcheck_nfwf1, file = "~/Git/AB_DEP/mattcheck_nfwf1.csv", row.names = FALSE,col.names = TRUE,sep = ",")
 
 unique(nfwf2021_check$Project)
 
