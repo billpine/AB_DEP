@@ -1,0 +1,230 @@
+"Bay","Period","Year","Month","Site","n"
+"Apalachicola",2,2015,10,"Bulkhead",75
+"Apalachicola",2,2015,10,"Dry Bar",74
+"Apalachicola",2,2015,10,"Hotel Bar",74
+"Apalachicola",2,2016,1,"Bulkhead",75
+"Apalachicola",2,2016,2,"Dry Bar",75
+"Apalachicola",2,2016,2,"Hotel Bar",75
+"Apalachicola",3,2016,4,"Bulkhead",75
+"Apalachicola",3,2016,5,"Dry Bar",75
+"Apalachicola",3,2016,5,"Hotel Bar",75
+"Apalachicola",3,2016,6,"Dry Bar",5
+"Apalachicola",3,2016,7,"Bulkhead",75
+"Apalachicola",3,2016,7,"Dry Bar",75
+"Apalachicola",3,2016,8,"Hotel Bar",75
+"Apalachicola",4,2016,10,"Bulkhead",75
+"Apalachicola",4,2016,10,"Dry Bar",75
+"Apalachicola",4,2016,10,"Hotel Bar",75
+"Apalachicola",4,2017,1,"Bulkhead",74
+"Apalachicola",4,2017,1,"Dry Bar",75
+"Apalachicola",4,2017,1,"Hotel Bar",74
+"Apalachicola",4,2017,2,"Bulkhead",1
+"Apalachicola",4,2017,2,"Hotel Bar",1
+"Apalachicola",5,2017,4,"Bulkhead",75
+"Apalachicola",5,2017,4,"Cat Point",30
+"Apalachicola",5,2017,4,"Dry Bar",75
+"Apalachicola",5,2017,4,"Eleven Mile",30
+"Apalachicola",5,2017,4,"Hotel Bar",120
+"Apalachicola",5,2017,4,"Normans Bar",15
+"Apalachicola",5,2017,5,"Green Point",15
+"Apalachicola",5,2017,5,"Normans Bar",30
+"Apalachicola",5,2017,5,"North Spur",15
+"Apalachicola",5,2017,6,"Cabbage Lumps",15
+"Apalachicola",5,2017,6,"Cabbage Top",30
+"Apalachicola",5,2017,6,"Dry Bar",55
+"Apalachicola",5,2017,6,"Lighthouse Bar",30
+"Apalachicola",5,2017,6,"Little Gully",30
+"Apalachicola",5,2017,6,"Normans Bar",15
+"Apalachicola",5,2017,7,"Bayou Flats",15
+"Apalachicola",5,2017,7,"Bulkhead",75
+"Apalachicola",5,2017,7,"Hotel Bar",75
+"Apalachicola",5,2017,7,"Redfish Creek",45
+"Apalachicola",5,2017,8,"Dry Bar",75
+"Apalachicola",6,2017,10,"Bulkhead",75
+"Apalachicola",6,2017,10,"Hotel Bar",75
+"Apalachicola",6,2017,11,"Cat Point",30
+"Apalachicola",6,2017,11,"Dry Bar",75
+"Apalachicola",6,2017,11,"Hotel Bar",15
+"Apalachicola",6,2017,12,"Cabbage Lumps",15
+"Apalachicola",6,2017,12,"Green Point",15
+"Apalachicola",6,2017,12,"North Spur",15
+"Apalachicola",6,2018,1,"Bulkhead",75
+"Apalachicola",6,2018,2,"Dry Bar",120
+"Apalachicola",6,2018,2,"Hotel Bar",75
+"Apalachicola",6,2018,3,"Bayou Flats",15
+"Apalachicola",6,2018,3,"Eleven Mile",30
+"Apalachicola",6,2018,3,"Hotel Bar",30
+"Apalachicola",6,2018,3,"Lighthouse Bar",30
+"Apalachicola",6,2018,3,"Normans Bar",60
+"Apalachicola",6,2018,3,"Redfish Creek",45
+"Apalachicola",7,2018,4,"Cabbage Top",30
+"Apalachicola",7,2018,4,"Dry Bar",90
+"Apalachicola",7,2018,4,"Hotel Bar",75
+"Apalachicola",7,2018,4,"Little Gully",30
+"Apalachicola",7,2018,5,"Bulkhead",75
+"Apalachicola",7,2018,6,"8 Mile",30
+"Apalachicola",7,2018,6,"9 Mile B",5
+"Apalachicola",7,2018,6,"Cabbage Top",15
+"Apalachicola",7,2018,6,"Hotel Bar",45
+"Apalachicola",7,2018,6,"King 9 Mile",15
+"Apalachicola",7,2018,6,"North Spur",30
+"Apalachicola",7,2018,7,"Bulkhead",75
+"Apalachicola",7,2018,7,"Hotel Bar",75
+"Apalachicola",7,2018,8,"Cat Point",45
+"Apalachicola",7,2018,8,"Cat Point Spur",30
+"Apalachicola",7,2018,8,"Dry Bar",75
+"Apalachicola",7,2018,8,"East Hole",30
+"Apalachicola",7,2018,8,"Monkeys Elbow",30
+"Apalachicola",7,2018,8,"Peanut Ridge",30
+"Apalachicola",7,2018,9,"Bulkhead",15
+"Apalachicola",7,2018,9,"East Hole",60
+"Apalachicola",8,2018,11,"Dry Bar",75
+"Apalachicola",8,2018,11,"Hotel Bar",75
+"Apalachicola",8,2018,12,"Bulkhead",75
+"Apalachicola",8,2019,1,"Bulkhead",75
+"Apalachicola",8,2019,1,"Dry Bar",75
+"Apalachicola",8,2019,1,"Hotel Bar",75
+"Apalachicola",9,2019,4,"Dry Bar",75
+"Apalachicola",9,2019,4,"Hotel Bar",75
+"Apalachicola",9,2019,5,"Bulkhead",75
+"Apalachicola",9,2019,6,"9 Mile B",10
+"Apalachicola",9,2019,6,"Bulkhead",15
+"Apalachicola",9,2019,6,"East Hole",30
+"Apalachicola",9,2019,6,"Hotel Bar",45
+"Apalachicola",9,2019,7,"8 Mile",30
+"Apalachicola",9,2019,7,"9 Mile B",15
+"Apalachicola",9,2019,7,"Cabbage Top",15
+"Apalachicola",9,2019,7,"East Hole",60
+"Apalachicola",9,2019,7,"King 9 Mile",15
+"Apalachicola",9,2019,7,"North Spur",30
+"Apalachicola",9,2019,8,"Cat Point",45
+"Apalachicola",9,2019,8,"Cat Point Spur",30
+"Apalachicola",9,2019,8,"Hotel Bar",75
+"Apalachicola",9,2019,8,"Monkeys Elbow",30
+"Apalachicola",9,2019,8,"Peanut Ridge",30
+"Apalachicola",9,2019,9,"Bulkhead",75
+"Apalachicola",9,2019,9,"Cabbage Lumps",15
+"Apalachicola",9,2019,9,"Cabbage Top",30
+"Apalachicola",9,2019,9,"Dry Bar",75
+"Apalachicola",9,2019,9,"Green Point",15
+"Apalachicola",9,2019,9,"North Spur",15
+"Apalachicola",10,2019,10,"Dry Bar",60
+"Apalachicola",10,2019,10,"Hotel Bar",45
+"Apalachicola",10,2019,10,"Redfish Creek",15
+"Apalachicola",10,2019,11,"Bayou Flats",15
+"Apalachicola",10,2019,11,"Eleven Mile",30
+"Apalachicola",10,2019,11,"Lighthouse Bar",30
+"Apalachicola",10,2019,11,"Normans Bar",60
+"Apalachicola",10,2019,11,"Redfish Creek",30
+"Apalachicola",10,2019,12,"Cat Point",30
+"Apalachicola",10,2019,12,"Little Gully",30
+"Apalachicola",12,2020,12,"Cabbage Top",15
+"Apalachicola",12,2020,12,"North Spur",30
+"Apalachicola",12,2021,1,"Hotel Bar",45
+"Apalachicola",13,2021,4,"8 Mile",30
+"Apalachicola",13,2021,4,"9 Mile B",15
+"Apalachicola",13,2021,4,"Cat Point",45
+"Apalachicola",13,2021,4,"East Hole",30
+"Apalachicola",13,2021,4,"King 9 Mile",15
+"Apalachicola",13,2021,6,"Bulkhead",15
+"Apalachicola",13,2021,6,"Cat Point Spur",30
+"Apalachicola",13,2021,6,"East Hole",60
+"Apalachicola",13,2021,6,"Monkeys Elbow",30
+"Apalachicola",13,2021,6,"Peanut Ridge",30
+"Apalachicola",13,2021,7,"Bayou Flats",15
+"Apalachicola",13,2021,7,"Cabbage Lumps",15
+"Apalachicola",13,2021,7,"Eleven Mile",30
+"Apalachicola",13,2021,7,"Redfish Creek",45
+"Apalachicola",13,2021,8,"Cat Point",30
+"Apalachicola",13,2021,8,"East Lumps",30
+"Apalachicola",13,2021,8,"Lighthouse Bar",30
+"Apalachicola",13,2021,9,"Cabbage Top",30
+"Apalachicola",13,2021,9,"Dry Bar",45
+"Apalachicola",13,2021,9,"Green Point",15
+"Apalachicola",13,2021,9,"Hotel Bar",45
+"Apalachicola",13,2021,9,"Lighthouse Bar",30
+"Apalachicola",13,2021,9,"Little Gully",30
+"Apalachicola",13,2021,9,"North Spur",15
+"Apalachicola",14,2021,10,"Cat Point",15
+"Apalachicola",14,2021,10,"East Lumps",15
+"Apalachicola",14,2021,11,"Lighthouse Bar",15
+"Apalachicola",14,2021,12,"Cat Point",30
+"Apalachicola",14,2021,12,"Dry Bar",15
+"Apalachicola",14,2021,12,"Normans Bar",60
+"Apalachicola",14,2022,1,"Cat Point",15
+"Apalachicola",14,2022,1,"East Lumps",15
+"Apalachicola",14,2022,2,"Lighthouse Bar",15
+"Apalachicola",15,2022,5,"Cat Point",15
+"Apalachicola",15,2022,5,"East Lumps",15
+"Apalachicola",15,2022,5,"Lighthouse Bar",15
+"Pensacola",5,2017,9,"Boathouse Lumps",30
+"Pensacola",5,2017,9,"Escribano Point",30
+"Pensacola",5,2017,9,"Mussel Beds",15
+"Pensacola",5,2017,9,"No Name Bar",15
+"Pensacola",5,2017,9,"Point No Point Bar",15
+"Pensacola",5,2017,9,"Trout Bayou",45
+"Pensacola",6,2017,10,"Big John Bar",15
+"Pensacola",6,2017,10,"East River",60
+"Pensacola",6,2017,10,"Half Moon Bar",15
+"Pensacola",6,2017,10,"Square Bar",15
+"Pensacola",6,2017,10,"White Point Bar",30
+"Pensacola",7,2018,7,"Big John Bar",15
+"Pensacola",7,2018,7,"Boathouse Lumps",30
+"Pensacola",7,2018,7,"East River",60
+"Pensacola",7,2018,7,"Escribano Point",30
+"Pensacola",7,2018,7,"Half Moon Bar",15
+"Pensacola",7,2018,7,"Mussel Beds",15
+"Pensacola",7,2018,7,"No Name Bar",15
+"Pensacola",7,2018,7,"Point No Point Bar",15
+"Pensacola",7,2018,7,"Square Bar",15
+"Pensacola",7,2018,7,"Trout Bayou",45
+"Pensacola",7,2018,7,"White Point Bar",30
+"Pensacola",10,2019,11,"Big John Bar",15
+"Pensacola",10,2019,11,"Boathouse Lumps",30
+"Pensacola",10,2019,11,"East River",60
+"Pensacola",10,2019,11,"Escribano Point",30
+"Pensacola",10,2019,11,"Half Moon Bar",15
+"Pensacola",10,2019,11,"Mussel Beds",15
+"Pensacola",10,2019,11,"No Name Bar",15
+"Pensacola",10,2019,11,"Point No Point Bar",15
+"Pensacola",10,2019,11,"Square Bar",15
+"Pensacola",10,2019,11,"Trout Bayou",45
+"Pensacola",10,2019,11,"White Point Bar",30
+"Pensacola",15,2022,6,"Boathouse Lumps",30
+"Pensacola",15,2022,6,"Escribano Point",30
+"Pensacola",15,2022,6,"Mussel Beds",15
+"Pensacola",15,2022,6,"No Name Bar",15
+"Pensacola",15,2022,6,"Point No Point Bar",15
+"Pensacola",15,2022,6,"Trout Bayou",45
+"Pensacola",15,2022,7,"Big John Bar",15
+"Pensacola",15,2022,7,"East River",60
+"Pensacola",15,2022,7,"Half Moon Bar",15
+"Pensacola",15,2022,7,"Square Bar",15
+"Pensacola",15,2022,7,"White Point Bar",30
+"St. Andrew",5,2017,8,"Crooked Creek Point",15
+"St. Andrew",5,2017,8,"Doyle Bayou",30
+"St. Andrew",5,2017,8,"East Power Lines",15
+"St. Andrew",5,2017,8,"Goose Point",15
+"St. Andrew",5,2017,8,"Little Oyster Bar Point",12
+"St. Andrew",5,2017,8,"Newman Bayou Bar",15
+"St. Andrew",5,2017,8,"Off Little Oyster Bar Ridge",15
+"St. Andrew",5,2017,8,"South Channel Ridge",15
+"St. Andrew",5,2017,8,"West Bay Point",30
+"St. Andrew",7,2018,4,"East Power Lines",15
+"St. Andrew",7,2018,4,"Newman Bayou Bar",15
+"St. Andrew",7,2018,4,"West Bay Point",30
+"St. Andrew",7,2018,5,"Crooked Creek Point",15
+"St. Andrew",7,2018,5,"Doyle Bayou",30
+"St. Andrew",7,2018,5,"Goose Point",15
+"St. Andrew",7,2018,5,"Little Oyster Bar Point",15
+"St. Andrew",7,2018,5,"Off Little Oyster Bar Ridge",15
+"St. Andrew",7,2018,5,"South Channel Ridge",15
+"St. Andrew",10,2019,12,"Crooked Creek Point",15
+"St. Andrew",10,2019,12,"Doyle Bayou",30
+"St. Andrew",10,2019,12,"Goose Point",15
+"St. Andrew",10,2019,12,"Little Oyster Bar Point",15
+"St. Andrew",10,2019,12,"Off Little Oyster Bar Ridge",15
+"St. Andrew",10,2019,12,"South Channel Ridge",15
+"St. Andrew",10,2019,12,"West Bay Point",30
+"St. Andrew",10,2020,1,"East Power Lines",15
+"St. Andrew",10,2020,1,"Newman Bayou Bar",15
