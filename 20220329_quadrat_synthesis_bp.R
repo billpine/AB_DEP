@@ -333,7 +333,7 @@ spat_study2<-ggplot(dp3.2x, aes(Period, CPUE_Spat,color=Project)) +
 
 spat_study2+scale_color_manual(values=c("red","blue","black","brown"))
 
-ggsave("AB_spat_study_project_color.png", width = 10, height = 10)
+#ggsave("AB_spat_study_project_color.png", width = 10, height = 10)
 
 seed_study<-ggplot(dp3.2x, aes(Period, CPUE_Seed)) +
   geom_point(size=2) +
@@ -383,7 +383,7 @@ spat_study4<-ggplot(dp3.2x[dp3.2$Site == "Lighthouse Bar",], aes(Period, CPUE_Sp
 
 plot_grid(spat_study3,spat_study4)
 
-ggsave("spat_declines.png", width = 10, height = 10)
+#ggsave("spat_declines.png", width = 10, height = 10)
 
 #This shows seed, which should persist, also declining
 seed_study3<-ggplot(dp3.2x[dp3.2$Site == "Lighthouse Bar",], aes(Period, CPUE_Seed,color=Project)) +
@@ -405,7 +405,7 @@ plot_grid(seed_study3,seed_study4)
 
 plot_grid(spat_study3,seed_study4,spat_study4,seed_study3)
 
-ggsave("spat_seed_declines.png", width = 10, height = 10)
+#ggsave("spat_seed_declines.png", width = 10, height = 10)
 
 ###########
 
@@ -536,7 +536,7 @@ z2<- ggplot(dp4, aes(x=Lowdays, y=CPUE_Spat))+
   xlab ("Days discharge < 12000 CFS")+
   ggtitle("Live oyster spat CPUE and days discharge < 12000 CFS") 
 
-#ggsave("low days and spat CPUE.png", width=10, height=10)
+ggsave("low days and spat CPUE.png", width=10, height=10)
 
 names(dp4)
 ##########################
@@ -566,6 +566,39 @@ AICtab(tmb0,tmb1,weights=TRUE)
 
 ##############
 ##############
+
+tmb2 <- glmmTMB(Sum_spat ~ Project + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
+summary(tmb2)
+
+tmb3 <- glmmTMB(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
+summary(tmb3)
+
+tmb4 <- glmmTMB(Sum_spat ~ Period * Project + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
+summary(tmb4)
+
+###LOW DAYS
+#more low days would be drier conditions
+
+tmb5 <- glmmTMB(Sum_spat ~ Period + Lowdays + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
+summary(tmb5)
+
+#now with lag of 1 period on lowdays
+tmb6 <- glmmTMB(Sum_spat ~ Period + lag1 + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
+summary(tmb6)
+#lag 1 not significant and AIC suggests no lag better fit also
+
+
+
+AICtab(tmb0,tmb1,tmb2,tmb3,tmb4,tmb5,tmb6,weights=TRUE)
+#lowest AIC for tmb3 (interaction), 8.6 AICs separate between this and additive Bay model tmb2
+#look into Fred's comments about glmmTMB and additive effects
+
+cand.set2 = list(tmb0,tmb1,tmb2,tmb3,tmb4,tmb5,tmb6)
+modnames2 = c("intercept", "period","project", "period + project", "period*project","lowdays","lowdays lag")
+aictab(cand.set2, modnames2, second.ord = FALSE) #model selection table with AIC
+
+
+
 
 
 #this model is asking how period and project influence counts
@@ -769,9 +802,6 @@ summary(tmb6)
 ######################
 ######################
 
-
-tmb2 <- glmmTMB(Sum_spat ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
-summary(tmb2)
 
 ##don't forget to backtransform when looking at the summaries
 ##or work in predict
