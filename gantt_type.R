@@ -47,12 +47,75 @@ unique(z$action)
 
 
 ggplot(z, aes(x=start, xend=end, y=name, yend=name, color=action)) +
-  geom_segment(size=0.5)+
+  geom_segment(size=2)+
   scale_x_continuous(breaks=seq(2,15,1))+
   geom_point(size=5,aes(x=start,y=name, color=action))+#here is the problem I only want geom_point for action = "monitoring"
   theme_bw()+ #black grid and white background
   labs(title='Apalachicola Bay', x='Time', y='Project')
   
+
+
+####from Matt
+z_new<-rbind(data1,data2,data3,data4) 
+
+gg_color_hue <- function(n) {
+  hues = seq(15, 375, length = n + 1)
+  hcl(h = hues, l = 65, c = 100)[1:n]
+}
+
+colors<-gg_color_hue(2)
+
+ggplot() +
+  
+  geom_segment(data=data,aes(x=start, xend=end, y=name, yend=name),size=1.5,color=colors[1])+
+  
+  scale_x_continuous(breaks=seq(2,15,1))+
+  
+  geom_point(data=z_new,aes(x=start,y=name, color=action),size=5)+#here is the problem I only want geom_point for action = "monitoring"
+  
+  theme_bw()+ #black grid and white background
+  
+  labs(title='Apalachicola Bay', x='Time', y='Project',color="Action")+
+  
+  theme(plot.title = element_text(hjust=0.5))+
+  
+  scale_color_manual(values=colors[2]) 
+
+ggsave("AB_gantt_type.png", width = 10, height = 10)
+
+#from Matt 2
+
+z_new<-rbind(data1,data2,data3,data4) 
+
+z_new$Sampling_Size<-"Normal"
+z_new$Sampling_Size[1]<-"Abnormal"
+
+gg_color_hue <- function(n) {
+  hues = seq(15, 375, length = n + 1)
+  hcl(h = hues, l = 65, c = 100)[1:n]
+}
+
+colors<-gg_color_hue(2)
+
+ggplot() +
+  
+  geom_segment(data=data,aes(x=start, xend=end, y=name, yend=name),size=0.5,color=colors[1])+
+  
+  scale_x_continuous(breaks=seq(2,15,1))+
+  
+  geom_point(data=z_new,aes(x=start,y=name, color=action,shape=Sampling_Size),size=5)+
+  
+  theme_bw()+
+  
+  labs(title='Apalachicola Bay', x='Time', y='Project',color="Action")+
+  
+  theme(plot.title = element_text(hjust=0.5))+
+  
+  scale_color_manual(values=colors[2])+
+  
+  scale_shape_manual(guide="none",values=c(1,16))
+
+ggsave("AB_gantt_type.png", width = 10, height = 10)
 
 
 # 
