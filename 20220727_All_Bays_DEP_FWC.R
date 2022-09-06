@@ -64,14 +64,14 @@ quad_sum<- d2 %>%
   dplyr::relocate(Bay, Site, Period,Month,Year)
 names(quad_sum) <- c("Bay", "Site", "Period","Month","Year",
                      "Number_Quadrats")
+ names(d2)
  
 #summary table of period and dates
 tab_z<- d2 %>%
-  dplyr::group_by(Bay, Period, Year, Month, Site) %>%
-  dplyr::count(Bay, Period, Year, Month, Site) %>%
-  dplyr::relocate(Bay, Period, Year, Month, Site)
-names(quad_sum) <- c("Bay","Period","Year","Month","Site",
-                     "Number_Quadrats")
+  dplyr::group_by(Bay, Period, Year, Month,Project, Site) %>%
+  dplyr::count(Bay, Period, Year, Month,Project, Site) %>%
+  dplyr::relocate(Bay, Period, Year, Month,Project, Site)
+names(quad_sum) <- c("Bay","Period","Year","Month","Project","Site")
 write.table(tab_z, file = "period_date_bay.txt", row.names = FALSE,
             col.names = TRUE,sep = ",")
 
