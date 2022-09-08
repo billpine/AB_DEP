@@ -99,11 +99,12 @@ d3=merge(d2.9, count_quads_weight,by=c("Bay", "Project","Site", "Period"))
 #this is by study on one plot, then wrapped by Bay 
 r1<-ggplot(data = d3[d3$Bay=="Apalachicola",], aes(x=Wt_mean, y=Spat_mean, color=Project)) +
   geom_point(size=3)+
-  ggtitle("Apalachicola Mean Cultch Weight vs. Mean Number Spat Per Quad") +
-  #scale_y_log10()+
+  #ggtitle("Apalachicola Mean Cultch Weight vs. Mean Number Spat Per Quad") +
   xlab("Mean weight (kg)") +
   ylab("Mean spat")+
-facet_wrap(~Period)
+  scale_color_manual(values=c("black", "light blue", "red", "dark blue"))+
+  scale_x_continuous(limits=c(2,15),breaks=seq(2,15,2))+
+  facet_wrap(~Site)
 
 ggsave("meanwt_meanspat.png", width=10, height=10)
 
