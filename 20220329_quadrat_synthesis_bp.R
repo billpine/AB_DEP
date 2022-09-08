@@ -597,9 +597,17 @@ cand.set2 = list(tmb0,tmb1,tmb2,tmb3,tmb4,tmb5,tmb6)
 modnames2 = c("intercept", "period","project", "period + project", "period*project","lowdays","lowdays lag")
 aictab(cand.set2, modnames2, second.ord = FALSE) #model selection table with AIC
 
+###########
+#now predict for best fit model (interaction term)
+library(ggeffects)
 
+ggpredict(tmb4)
+pred_tmb4 <- ggpredict(tmb4, c("Period[15]", "Project","Num_quads[1]"))
+plot(pred_tmb1, facet=TRUE, colors=c("red","black","blue","orange"), add.data=TRUE)
 
-
+###########
+###########
+###########
 
 #this model is asking how period and project influence counts
 #using NB2 formulation (most common formulation)
