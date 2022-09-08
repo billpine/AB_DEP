@@ -122,9 +122,11 @@ r2<-ggplot(data = d3, aes(Period, CPUE_Weight, color=Project)) +
   geom_point(size=3)+
   facet_wrap(~Bay)
 
-r2+scale_color_manual(values=c("black", "light blue", "red", "dark blue"))
+r2+scale_color_manual(values=c("black", "light blue", "red", "dark blue"))+
+  scale_x_continuous(limits=c(2,15),breaks=seq(2,15,2))+
+  ylab("Weight (kg) per quadrat")
 
-#ggsave("weight.pdf", width = 10, height = 10)  
+ggsave("weight.png", width = 10, height = 10)  
 
 
 ######
@@ -169,6 +171,53 @@ summary(m1_Apalach)
 m1_StAndrew <- glmmTMB(Roundwt ~ Period + (1|Site) + offset(log(Num_quads)), data = dStAndrew, family="nbinom2") #converge
 summary(m1_StAndrew)
 #declines over time.
+
+
+##now dig into AB
+
+
+#All studies combined
+tmb0 <- glmmTMB(Roundwt ~ + (1|Site) + offset(log(Num_quads)), data = dApalach, family="nbinom2") #converge
+summary(tmb0)
+
+#All studies combined over period
+tmb1 <- glmmTMB(Roundwt ~ Period + (1|Site) + offset(log(Num_quads)), data = dApalach, family="nbinom2") #converge
+summary(tmb1)
+
+tmb2 <- glmmTMB(Roundwt ~ Project + (1|Site) + offset(log(Num_quads)), data = dApalach, family="nbinom2") #converge
+summary(tmb2)
+
+tmb3 <- glmmTMB(Roundwt ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dApalach, family="nbinom2") #converge
+summary(tmb3)
+
+tmb4 <- glmmTMB(Roundwt ~ Period * Project + (1|Site) + offset(log(Num_quads)), data = dApalach, family="nbinom2") #converge
+summary(tmb4)
+
+
+
+
+AICtab(tmb0,tmb1,tmb2,tmb3,tmb4,weights=TRUE)
+
+
+cand.set2 = list(tmb0,tmb1,tmb2,tmb3,tmb4)
+modnames2 = c("intercept", "period","project", "period + project", "period*project")
+aictab(cand.set2, modnames2, second.ord = FALSE) #model selection table with AIC
+
+#####
+#now predict for best fit model (interaction term)
+library(ggeffects)
+
+ggpredict(tmb4)
+pred_tmb3 <- ggpredict(tmb4, c("Period[15]", "Project[NFWF-1]","Num_quads[1]"))
+pred_tmb4 <- ggpredict(tmb4, c("Period[15]", "Project","Num_quads[1]"))
+plot(pred_tmb1, facet=TRUE, colors=c("red","black","blue","orange"), add.data=TRUE)
+
+
+
+
+######
+######
+######
 
 
 #subset data for each project in Apalach, fit tmbglm, then predict, then separate plot
