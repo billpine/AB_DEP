@@ -1,6 +1,6 @@
 #Apalachicola oyster data from three DEP files and 2 FWC file 
 
-###REMEMBER THESE ARE ONLY APALACHICOLA DATA
+
 
 #data from quadrats
 #Bill Pine
@@ -27,7 +27,8 @@ d0 <- read.csv("~/Git/AB_DEP/20220326_merged_agency_data.csv")
 
 #ok, change Apalachicola Bay to Apalachicola
 d0.1<-d0 %>%
-  mutate(Bay = replace(Bay,Bay == "Apalachicola Bay", "Apalachicola"))
+  mutate(Bay = replace(Bay,Bay == "Apalachicola Bay", "Apalachicola"))%>%
+  mutate(Project = replace(Project,Project =="FWC-2021","NFWF-2021"))
 
 d1<- d0.1
 
@@ -106,7 +107,7 @@ r1<-ggplot(data = d3[d3$Bay=="Apalachicola",], aes(x=Wt_mean, y=Spat_mean, color
   scale_x_continuous(limits=c(0,20),breaks=seq(0,20,2))+
   facet_wrap(~Site)
 
-ggsave("meanwt_meanspat.png", width=10, height=10)
+#ggsave("meanwt_meanspat.png", width=10, height=10)
 
 
 
@@ -123,15 +124,16 @@ r2<-ggplot(data = d2[d2$Bay=="Apalachicola",], aes(x=Weight, y=Spat, color=Proje
 ggsave("r2_rawspat_rawweight.png", width=10, height=10)
 
 
-#now scale and limit y axis to 1000
 r3<-ggplot(data = d2[d2$Bay=="Apalachicola",], aes(x=Weight, y=Spat, color=Project, na.rm=TRUE)) +
   geom_point(size=2)+
-  scale_y_continuous(breaks=seq(0,1000,200), limits=c(0,1000))+
+  scale_color_manual(values=c("black", "light blue", "red", "dark blue"))+
+  scale_x_continuous(limits=c(0,20),breaks=seq(0,20,2))+
+  xlab("Cultch weight (kg)") +
+  ylab("Spat")+
   facet_wrap(~Period)
-
 #ggsave("r3_rawspat_rawweight.png", width=10, height=10)
 
   
-plot_grid(r1, r2, labels = c('A', 'B'))
+plot_grid(r2, r3, labels = c('A', 'B'))
 
 ggsave("rawwt_rawspat.png", width=10, height=10)
