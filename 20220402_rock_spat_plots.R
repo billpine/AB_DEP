@@ -103,7 +103,7 @@ r1<-ggplot(data = d3[d3$Bay=="Apalachicola",], aes(x=Wt_mean, y=Spat_mean, color
   xlab("Mean weight (kg)") +
   ylab("Mean spat")+
   scale_color_manual(values=c("black", "light blue", "red", "dark blue"))+
-  scale_x_continuous(limits=c(2,15),breaks=seq(2,15,2))+
+  scale_x_continuous(limits=c(0,20),breaks=seq(0,20,2))+
   facet_wrap(~Site)
 
 ggsave("meanwt_meanspat.png", width=10, height=10)
@@ -115,7 +115,13 @@ names(d2)
 
 r2<-ggplot(data = d2[d2$Bay=="Apalachicola",], aes(x=Weight, y=Spat, color=Project, na.rm=TRUE)) +
   geom_point(size=2)+
-  facet_wrap(~Period)
+  scale_color_manual(values=c("black", "light blue", "red", "dark blue"))+
+  scale_x_continuous(limits=c(0,20),breaks=seq(0,20,2))+
+  xlab("Cultch weight (kg)") +
+  ylab("Spat")+
+  facet_wrap(~Site)
+ggsave("r2_rawspat_rawweight.png", width=10, height=10)
+
 
 #now scale and limit y axis to 1000
 r3<-ggplot(data = d2[d2$Bay=="Apalachicola",], aes(x=Weight, y=Spat, color=Project, na.rm=TRUE)) +
@@ -123,9 +129,9 @@ r3<-ggplot(data = d2[d2$Bay=="Apalachicola",], aes(x=Weight, y=Spat, color=Proje
   scale_y_continuous(breaks=seq(0,1000,200), limits=c(0,1000))+
   facet_wrap(~Period)
 
-ggsave("r3_rawspat_rawweight.png", width=10, height=10)
+#ggsave("r3_rawspat_rawweight.png", width=10, height=10)
 
   
-plot_grid(r2, r3, labels = c('A', 'B'))
+plot_grid(r1, r2, labels = c('A', 'B'))
 
 ggsave("rawwt_rawspat.png", width=10, height=10)
