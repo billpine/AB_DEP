@@ -121,7 +121,7 @@ r2<-ggplot(data = d2[d2$Bay=="Apalachicola",], aes(x=Weight, y=Spat, color=Proje
   xlab("Cultch weight (kg)") +
   ylab("Spat")+
   facet_wrap(~Site)
-ggsave("r2_rawspat_rawweight.png", width=10, height=10)
+ggsave("r2_rawspat_rawweight_site.png", width=10, height=10)
 
 
 r3<-ggplot(data = d2[d2$Bay=="Apalachicola",], aes(x=Weight, y=Spat, color=Project, na.rm=TRUE)) +
@@ -131,9 +131,9 @@ r3<-ggplot(data = d2[d2$Bay=="Apalachicola",], aes(x=Weight, y=Spat, color=Proje
   xlab("Cultch weight (kg)") +
   ylab("Spat")+
   facet_wrap(~Period)
-#ggsave("r3_rawspat_rawweight.png", width=10, height=10)
+ggsave("r3_rawspat_rawweight_period.png", width=10, height=10)
 
   
 plot_grid(r2, r3, labels = c('A', 'B'))
 
-ggsave("rawwt_rawspat.png", width=10, height=10)
+ggsave("rawwt_rawspat_site_period.png", width=10, height=10)
