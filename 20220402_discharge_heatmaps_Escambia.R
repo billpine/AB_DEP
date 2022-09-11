@@ -28,7 +28,7 @@ dis$year    = as.numeric(strftime(dis$dates,format="%Y"))
 dis$month   = as.numeric(strftime(dis$dates,format="%m")) 
 
 #make dataset from epochs, 
-disE  = dis[dis$dates>='1930-10-01' & dis$dates<='2021-12-31',]  
+disE  = dis[dis$dates>='1930-10-01' & dis$dates<='2022-09-01',]  
 
 #get monthly sum, mean, sd, and var
 #discharge
@@ -103,7 +103,7 @@ plot(dis_per2005, xlab = "Month", ylab = "Year",
      col = colAll, na.col = "black")
 
 #subset for just the years 2013-2020
-include_years <- as.character(as.numeric(2013:2020))
+include_years <- as.character(as.numeric(2005:2022))
 dis_per2013 <- dis_per2[include_years, ]
 plot(dis_per2013, xlab = "Month", ylab = "Year",
      breaks = c(-100, -50, -25, -10, 10, 50, 100, 150, 200, 250, 300, 350, 400),
