@@ -494,6 +494,9 @@ library(bbmle)
 names(d5)
 
 as.factor(d5$Bay)
+write.table(d5, file = "~/Fred/d5.csv", row.names = FALSE,col.names = TRUE,sep = ",")
+
+
 
 tmb0 <- glmmTMB(Sum_spat ~ (1|Site) + offset(log(Num_quads)), data = d5, family="nbinom2") #converge
 summary(tmb0)
