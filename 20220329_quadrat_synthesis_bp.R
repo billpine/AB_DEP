@@ -511,16 +511,26 @@ library(DHARMa)
 
 #there are two discharge files, one below 12000 CFS the other below 6000 CFS
 
+#12k
 Lowdays <- read.csv("below_12_threshold.csv")
 dp4<-merge(dp3.2,Lowdays, by=c("Period"))
 for(i in 1:nrow(dp4))
 {dp4$lag1[i] <- Lowdays$Discharge[Lowdays$Period == (dp4$Period[i]-1)]}
 
+#6k
+Lowdays_6 <- read.csv("below_6_threshold.csv")
+dp4.1<-merge(dp4,Lowdays_6, by=c("Period"))
+for(i in 1:nrow(dp4.1))
+{dp4.1$lag1_6[i] <- Lowdays_6$Discharge_6[Lowdays_6$Period == (dp4.1$Period[i]-1)]}
+
+dp4<-dp4.1
 names(dp4)
 
 #plot(dp4$Sum_spat~dp4$Lowdays)
 
-names(dp4)[names(dp4) == 'Discharge'] <- 'Lowdays'
+names(dp4)[names(dp4) == 'Discharge'] <- 'Lowdays_12'
+names(dp4)[names(dp4) == 'Discharge_6'] <- 'Lowdays_6'
+
 
 z1<- ggplot(dp4, aes(x=Lowdays, y=Sum_spat))+
   geom_point(size=3)+
@@ -576,10 +586,10 @@ summary(tmb3)
 tmb4 <- glmmTMB(Sum_spat ~ Period * Project + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
 summary(tmb4)
 
-###LOW DAYS
+###LOW DAYS 12k
 #more low days would be drier conditions
 
-tmb5 <- glmmTMB(Sum_spat ~ Period + Lowdays + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
+tmb5 <- glmmTMB(Sum_spat ~ Period + Lowdays_12 + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
 summary(tmb5)
 
 #now with lag of 1 period on lowdays
@@ -587,14 +597,26 @@ tmb6 <- glmmTMB(Sum_spat ~ Period + lag1 + (1|Site) + offset(log(Num_quads)), da
 summary(tmb6)
 #lag 1 not significant and AIC suggests no lag better fit also
 
+###LOW DAYS 6k
+#more low days would be drier conditions
+
+tmb7 <- glmmTMB(Sum_spat ~ Period + Lowdays_6 + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
+summary(tmb7)
+
+#now with lag of 1 period on lowdays
+tmb8 <- glmmTMB(Sum_spat ~ Period + lag1_6 + (1|Site) + offset(log(Num_quads)), data = dp4, family="nbinom2") #converge
+summary(tmb8)
+#lag 1 significant 
 
 
-AICtab(tmb0,tmb1,tmb2,tmb3,tmb4,tmb5,tmb6,weights=TRUE)
-#lowest AIC for tmb3 (interaction), 8.6 AICs separate between this and additive Bay model tmb2
-#look into Fred's comments about glmmTMB and additive effects
 
-cand.set2 = list(tmb0,tmb1,tmb2,tmb3,tmb4,tmb5,tmb6)
-modnames2 = c("intercept", "period","project", "period + project", "period*project","lowdays","lowdays lag")
+
+
+AICtab(tmb0,tmb1,tmb2,tmb3,tmb4,tmb5,tmb6,tmb7,tmb8,weights=TRUE)
+#lowest AIC for tmb4 (interaction), 
+
+cand.set2 = list(tmb0,tmb1,tmb2,tmb3,tmb4,tmb5,tmb6,tmb7,tmb8)
+modnames2 = c("intercept", "period","project", "period + project", "period*project","lowdays_12","lowdays lag_12","lowdays_6","lowdays lag_6")
 aictab(cand.set2, modnames2, second.ord = FALSE) #model selection table with AIC
 
 ###########

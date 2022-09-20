@@ -31,14 +31,14 @@ for(i in unique(years)){
   }
 }
 
-#low threshold 12000 cfs is level to inundate floodplain
+#low threshold 6000 cfs is level to inundate floodplain
 below <- function(x){
-  length(x[x<12000])
+  length(x[x<6000])
 }
 
-#high threshold above 12000 inundation of floodplain
+#high threshold above 6000 inundation of floodplain
 above <- function(x){
-  length(x[x>12000])
+  length(x[x>6000])
 }
 
 ##
@@ -49,7 +49,7 @@ aboveThreshold <- aggregate(Discharge ~ Period, data = dis, FUN = above)
 belowThreshold
 aboveThreshold
 
-write.table(belowThreshold,file="below_12_threshold.csv",row.names=TRUE, col.names=TRUE, sep=",")
+write.table(belowThreshold,file="below_6_threshold.csv",row.names=TRUE, col.names=TRUE, sep=",")
 
 
 
