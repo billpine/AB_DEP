@@ -77,7 +77,6 @@ summary(tmb5)
 tmb5.1 <- glmmTMB(Sum_spat ~ Period + Bay + (Period|Site) + Period:Bay + offset(log(Num_quads)),
                 data = d5, family="nbinom2") #converge
 summary(tmb5.1)
-##back to Ben's code
 
 #all + dispersion
 tmb6 <- update(tmb5, dispformula = ~Bay)
@@ -93,22 +92,50 @@ names(cand.set2) <- modnames2
 #AIC(c) table of all models
 AICctab(cand.set2, weights=TRUE)
 ## best model is 'full' model, but without dispersion
+## This is Ben's comment above, what he means is best is
+## the best is tmb5, which is same as tmb6, but tmb6 includes
+## unique dispersion parameter for each Bay
 
-#look into Fred's comments about glmmTMB and additive effects
 
 ## quantify and test trends by bay
+#em notes https://bookdown.org/dereksonderegger/571/4-contrasts.html
+#https://cran.r-project.org/web/packages/emmeans/emmeans.pdf
+
+#report this info below in paper.
+#these are the beta values for each bay, not marginal means
+
 (em1 <- emtrends(tmb5, ~Bay, "Period"))
 test(em1)
+##need to compare this to summary(tmb5) to check betas. st andrew weird
+#> -0.05967+0.05610
+#[1] -0.00357
+
+#> -0.05967+-0.32938
+#[1] -0.38905
+
+
+#marginal means for tmb5
+mm.tmb5<-emmeans(tmb5, ~Bay, "Period")
+
 
 #ok bp wants to compare to the bay*period model
 (em3 <- emtrends(tmb3, ~Bay, "Period"))
 test(em3)
+#small differences, but not much
 
 
 aictab(cand.set2, modnames2, second.ord = FALSE) #model selection table with AIC
 
 ############################
 ############################
+
+#now for seed and legal
+tmb5.1_seed <- glmmTMB(Sum_seed ~ Period + Bay + (Period|Site) + Period:Bay + offset(log(Num_quads)),
+                  data = d5, family="nbinom2") #converge
+summary(tmb5.1_seed)
+
+
+
 ############################
 ############################
 
