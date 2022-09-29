@@ -106,7 +106,9 @@ AICctab(cand.set2, weights=TRUE)
 
 (em1 <- emtrends(tmb5, ~Bay, "Period"))
 test(em1)
-##need to compare this to summary(tmb5) to check betas. st andrew weird
+##need to compare this to summary(tmb5) to check betas. st andrew weird, i can match the other
+##two between emtrends results and summary(tmb5)
+
 #> -0.05967+0.05610
 #[1] -0.00357
 
