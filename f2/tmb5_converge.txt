@@ -1,0 +1,32 @@
+> #Period*bay/site (allow period by site across bay)
+> tmb5 <- update(tmb3, . ~ . - (1|Site) + (Period|Site))
+> summary(tmb5)
+ Family: nbinom2  ( log )
+Formula:          
+Sum_spat ~ Period + Bay + (Period | Site) + Period:Bay + offset(log(Num_quads))
+Data: d5
+
+     AIC      BIC   logLik deviance df.resid 
+  2650.3   2682.2  -1315.1   2630.3      169 
+
+Random effects:
+
+Conditional model:
+ Groups Name        Variance Std.Dev. Corr  
+ Site   (Intercept) 3.27511  1.8097         
+        Period      0.03251  0.1803   -0.83 
+Number of obs: 179, groups:  Site, 42
+
+Dispersion parameter for nbinom2 family (): 0.573 
+
+Conditional model:
+            Estimate Std. Error z value Pr(>|z|)    
+(Intercept)  3.46558    0.63442   5.463 4.69e-08 ***
+Period      -0.05967    0.07409  -0.805 0.420611    
+Bay1        -0.76760    0.77467  -0.991 0.321748    
+Bay2         2.01677    0.89459   2.254 0.024170 *  
+Period:Bay1  0.05610    0.08553   0.656 0.511851    
+Period:Bay2 -0.32938    0.09855  -3.342 0.000831 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+> 
