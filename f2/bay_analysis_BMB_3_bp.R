@@ -19,8 +19,10 @@ library(ggeffects)
 library(AICcmodavg)
 library(emmeans)
 library(DHARMa)
+library(readr)
+library(jtools)
 
-d5 <- read.csv("d5.csv")
+d5 <- read_csv("d5.csv")
 
 d5$Bay <- as.factor(d5$Bay)
 
@@ -122,6 +124,15 @@ aictab(cand.set2, modnames2, second.ord = FALSE) #model selection table with AIC
 aictab(cand.set2, modnames2, second.ord = TRUE) #model selection table with AICc
 
 
+#check autocorrelation issues
+res1 <- simulateResiduals(tmb5)
+plot(res1)
+agg.res1 = recalculateResiduals(res1,group=d5$Period)
+time = unique(dp4$Period)
+plot(time,agg.res1$scaledResiduals,pch=16)
+
+
+
 ## quantify and test trends by bay
 #em notes https://bookdown.org/dereksonderegger/571/4-contrasts.html
 #https://cran.r-project.org/web/packages/emmeans/emmeans.pdf
@@ -152,6 +163,10 @@ library(ggeffects)
 ggpredict(tmb5)
 pred_tmb5 <- ggpredict(tmb5, c("Period[15]", "Bay","Num_quads[1]"))
 
+
+
+
+
 #ok was all of this craziness worth it? Let's go back to the original interaction model!
 #ok bp wants to compare to the bay*period model
 (em3 <- emtrends(tmb3, ~Bay, "Period"))
@@ -177,7 +192,8 @@ pred_tmb5.1_seed <- ggpredict(tmb5.1_seed, c("Period[15]", "Bay","Num_quads[1]")
 
 ##
 tmb5.1_legal <- glmmTMB(Sum_legal ~ Period + Bay + (Period|Site) + Period:Bay + offset(log(Num_quads)),
-                       data = d5, family="nbinom2") #converge
+                       data = d5, family="nbinom2",control=glmmTMBControl(optimizer=optim,
+                                                                          optArgs=list(method="BFGS"))) #converge
 summary(tmb5.1_legal)
 
 (em1_legal <- emtrends(tmb5.1_legal, ~Bay, "Period"))
@@ -278,13 +294,22 @@ tmb2.AB <- update(tmb1.AB, . ~ . + Project, control=glmmTMBControl(optimizer=opt
                                                                    optArgs=list(method="BFGS")))
 summary(tmb2.AB)
 
+#compare optimizers
+
+tmb2.AB1 <- update(tmb1.AB, . ~ . + Project)
+
+#fixed effects
+all.equal(fixef(tmb2.AB1), fixef(tmb2.AB))
+
+
+
 #Period*Project
 tmb3.AB <- update(tmb2.AB, . ~ . + Period:Project, control=glmmTMBControl(optimizer=optim,
                                                                           optArgs=list(method="BFGS")))
 summary(tmb3.AB)
 
 ###just to compare optimizers
-#optim
+#default nlminb
 tmb3.AB1 <- update(tmb2.AB, . ~ . + Period:Project)
 #bfgs
 tmb3.AB2 <- update(tmb2.AB, . ~ . + Period:Project, control=glmmTMBControl(optimizer=optim,
@@ -292,6 +317,10 @@ tmb3.AB2 <- update(tmb2.AB, . ~ . + Period:Project, control=glmmTMBControl(optim
 #fixed effects
 all.equal(fixef(tmb3.AB1), fixef(tmb3.AB2))
 #yes all equal
+
+
+#plot coefficients
+plot_summs(tmb3.AB2)
 
 ########################
 
@@ -317,12 +346,26 @@ VarCorr(tmb5.AB)
 
 summary(tmb5.AB)
 
+
+#plot coefficients
+plot_summs(tmb5.AB)
+
+
 #full version of tmb5.AB written out by bp (to make sure I follow shorthand)
 
 tmb5.1.AB <- glmmTMB(Sum_spat ~ Period + Project + (Period|SP) + Period:Project + offset(log(Num_quads)),
                   data = dp4, family="nbinom2", control=glmmTMBControl(optimizer=optim,
                                                                         optArgs=list(method="BFGS"))) 
 summary(tmb5.1.AB)
+
+tmb5.1.AB1 <- glmmTMB(Sum_spat ~ Period + Project + (Period|SP) + Period:Project + offset(log(Num_quads)),
+                     data = dp4, family="nbinom2") 
+
+summary(tmb5.1.AB1)
+
+#fixed effects
+all.equal(fixef(tmb5.1.AB1), fixef(tmb5.1.AB))
+#there are some differences 
 
 ##back to Ben's code
 
@@ -368,6 +411,10 @@ AICctab(cand.set2.AB, weights=TRUE)
 #that's Ben's comment above
 
 
+#plot coefficients
+plot_summs(tmb5.AB, tmb6.AB)
+
+
 ## quantify and test trends by project
 (em1.AB <- emtrends(tmb5.AB, ~Project, "Period"))
 test(em1.AB)
@@ -385,7 +432,15 @@ test(em6.AB)
 test(em7.AB)
 
 
-aictab(cand.set2.AB, modnames2.AB, second.ord = FALSE) #model selection table with AIC
+#predict by project or period
+
+ggpredict(tmb5.AB)
+test.nfwf1 = ggpredict(tmb5.AB, terms = c("Period[9]", "Project[NFWF-1]", "Num_quads[1]"), type = c('fe')) 
+test.nrda4044 = ggpredict(tmb5.AB, terms = c("Period[13]", "Project[NRDA-4044]", "Num_quads[1]"), type = c('fe')) 
+test.nrda5077 = ggpredict(tmb5.AB, terms = c("Period[12]", "Project[GEBF-5007]", "Num_quads[1]"), type = c('fe')) 
+test.fwc2021 = ggpredict(tmb5.AB, terms = c("Period[15]", "Project[NFWF-2021]", "Num_quads[1]"), type = c('fe')) 
+
+
 
 #########
 #check autocorrelation of best
@@ -403,20 +458,23 @@ plot(time,agg.res1$scaledResiduals,pch=16)
 #now tmb5 w. discharge
 tmb5.12k <- update(tmb5.AB, . ~ . + Lowdays_12, control=glmmTMBControl(optimizer=optim,
                                                                        optArgs=list(method="BFGS")))
+summary(tmb5.12k)
+
 tmb5.lag12 <- update(tmb5.AB, . ~ . + lag1, control=glmmTMBControl(optimizer=optim,
                                                                    optArgs=list(method="BFGS")))
+summary(tmb5.lag12)
 tmb5.6k <- update(tmb5.AB, . ~ . + Lowdays_6, control=glmmTMBControl(optimizer=optim,
                                                                      optArgs=list(method="BFGS")))
 tmb5.lag6 <- update(tmb5.AB, . ~ . + lag1_6, control=glmmTMBControl(optimizer=optim,
                                                                     optArgs=list(method="BFGS")))
 
-cand.set2.1.AB =
+cand.set3.1.AB =
   list(tmb5.AB,tmb5.12k,tmb5.lag12, tmb5.6k, tmb5.lag6)
-modnames2.1.AB = c("full", "full_low12k", "full_12k_lag", "full_low6k", "full_6k_lag")
-names(cand.set2.1.AB) <- modnames3.AB
+modnames3.1.AB = c("full", "full_low12k", "full_12k_lag", "full_low6k", "full_6k_lag")
+names(cand.set3.1.AB) <- modnames3.1.AB
 
 #AICc
-aictab(cand.set2.1.AB, modnames2.1.AB, second.ord = TRUE) #model selection table with AICc
+aictab(cand.set3.1.AB, modnames3.1.AB, second.ord = TRUE) #model selection table with AICc
 
 #no improvement with the different discharge metrics
 
@@ -502,33 +560,5 @@ ggplot(res2, aes(estimate, model)) +
 ## variation among SP in trend is small and/or hard to quantify
 ## CIs are not well computed
 ## almost certainly not worth worrying about very much
-
-####################
-####################
-###now bp bring in discharge
-####################
-####################
-
-
-##########
-
-####################
-####################
-###now deal with autocorrelation
-####################
-####################
-
-library(DHARMa)
-
-#check autocorrelation issues
-res1 <- simulateResiduals(tmb1)
-plot(res1)
-agg.res1 = recalculateResiduals(res1,group=dp4$Period)
-time = unique(dp4$Period)
-plot(time,agg.res1$scaledResiduals,pch=16)
-
-#model comparison
-anova(tmb0,tmb1)
-AICtab(tmb0,tmb1,weights=TRUE)
 
 
