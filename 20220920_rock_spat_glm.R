@@ -18,6 +18,15 @@ library(lubridate)
 library(AICcmodavg)
 library(ggeffects)
 library(cowplot)
+library(ggplot2); theme_set(theme_bw(base_size=16) + theme(panel.spacing = grid::unit(0, "lines")))
+library(glmmTMB)
+library(bbmle)
+library(ggeffects)
+library(AICcmodavg)
+library(emmeans)
+library(DHARMa)
+library(readr)
+library(jtools)
 
 
 #if you want to only do the rock analyses with Apalach then you can
@@ -136,7 +145,7 @@ ggsave("r3_rawspat_rawweight_period.png", width=10, height=10)
   
 plot_grid(r2, r3, labels = c('A', 'B'))
 
-ggsave("rawwt_rawspat_site_period.png", width=10, height=10)
+#ggsave("rawwt_rawspat_site_period.png", width=10, height=10)
 
 
 ###
@@ -153,54 +162,161 @@ head(d3)
 
 
 #round weight to make it integer
-d3$Roundwt<-round(d3$Weight,0)
+d3$Roundwt<-round(d3$Wt_sum,0)
+
+as.integer(d3$Roundwt)
+
+## BMB: the same but 'looks' like an interaction
+d3$SP <- with(d3, interaction(Site, Project, sep = "_", drop = TRUE))
 
 
 dApalach<-subset(d3,d3$Bay =="Apalachicola")
 
-plot(dApalach$Spat_sum~dApalach$Wt_sum)
+plot(dApalach$Spat_sum~dApalach$Roundwt)
 
 
-#All studies combined
-tmb0 <- glmmTMB(Spat_sum ~ + (1|Site) + offset(log(Num_quads)), data = dApalach, family="nbinom2") #converge
-summary(tmb0)
-
-tmb1 <- glmmTMB(Spat_sum ~ Wt_sum + (1|Site) + offset(log(Num_quads)), data = dApalach, family="nbinom2") #converge
-summary(tmb1)
-
-tmb2 <- glmmTMB(Spat_sum ~ Period + (1|Site) + offset(log(Num_quads)), data = dApalach, family="nbinom2") #converge
-summary(tmb2)
-
-tmb3 <- glmmTMB(Spat_sum ~ Project + (1|Site) + offset(log(Num_quads)), data = dApalach, family="nbinom2") #converge
-summary(tmb3)
-
-tmb4 <- glmmTMB(Spat_sum ~ Period + Project + (1|Site) + offset(log(Num_quads)), data = dApalach, family="nbinom2") #converge
-summary(tmb4)
-
-tmb5 <- glmmTMB(Spat_sum ~ Period + Wt_sum + (1|Site) + offset(log(Num_quads)), data = dApalach, family="nbinom2") #converge
-summary(tmb5)
-
-tmb6 <- glmmTMB(Spat_sum ~ Period * Project + (1|Site) + offset(log(Num_quads)), data = dApalach, family="nbinom2") #converge
-summary(tmb6)
+tab <- with(dApalach,table(SP,Project))
+library(Matrix)
+ifun <- function(M) {
+  M <- as(M, "Matrix")
+  image(M, aspect = "fill",
+        scales = list(y = list(at = seq(nrow(M)), labels = rownames(M)),
+                      x = list(at = seq(ncol(M)), labels = colnames(M), rot = 90)))
+}
+ifun(tab)
 
 
 
-
-AICtab(tmb0,tmb1,tmb2,tmb3,tmb4,tmb5,tmb6,weights=TRUE)
-
-
-cand.set2 = list(tmb0,tmb1,tmb2,tmb3,tmb4)
-modnames2 = c("intercept", "period","project", "period + project", "period*project")
-aictab(cand.set2, modnames2, second.ord = FALSE) #model selection table with AIC
-
-#####
-#now predict for best fit model (interaction term)
-library(ggeffects)
-
-ggpredict(tmb4)
-pred_tmb3 <- ggpredict(tmb4, c("Period[15]", "Project[NFWF-1]","Num_quads[1]"))
-pred_tmb4 <- ggpredict(tmb4, c("Period[15]", "Project","Num_quads[1]"))
-plot(pred_tmb1, facet=TRUE, colors=c("red","black","blue","orange"), add.data=TRUE)
+## sum-to-zero contrasts so main effect of Period = unweighted average across Bays
+options(contrasts = c("contr.sum", "contr.poly"))
 
 
+#########
+#########
+#WARNING A BUNCH OF THESE MODELS ARE LIKELY OVERPARAMETERIZED
+#########
+#########
+
+
+
+
+#Intercept
+tmb0.AB <- glmmTMB(Roundwt ~ (1|SP) + offset(log(Num_quads)),
+                   data = dApalach, family="nbinom2") #converge
+summary(tmb0.AB)
+
+
+#spat sum
+
+tmb00.AB <- update(tmb0.AB, . ~ . + Spat_sum)
+summary(tmb00.AB)
+
+
+#Period
+tmb1.AB <- update(tmb00.AB, . ~ . + Period)
+summary(tmb1.AB)
+
+#Period + Project
+tmb2.AB <- update(tmb1.AB, . ~ . + Project)
+summary(tmb2.AB)
+
+
+#Period*Project
+tmb3.AB <- update(tmb2.AB, . ~ . + Period:Project)
+summary(tmb3.AB)
+
+
+########################
+
+#Project
+tmb4.AB <- update(tmb0.AB, . ~ . + Project)
+summary(tmb4.AB)
+
+#Ben note below
+## This is a better model, both in principle (we do want to allow for temporal trends
+## to vary across sites) and in terms of AIC
+
+#bill note on tmb5. Ben removes the random effect term on site and then nests it
+#period
+
+#ben note below
+#Period*bay/site (allow period by site across project)
+tmb5.AB <- update(tmb3.AB, . ~ . - (1|SP) + (Period|SP))
+diagnose(tmb5.AB)  ##  BMB: this is a *singular fit*: correlation of -1
+## means this is probably overfitted
+VarCorr(tmb5.AB)
+
+summary(tmb5.AB)
+
+#plot coefficients
+plot_summs(tmb5.AB)
+
+#all + project:Spat_sum
+#i think this is what ed wants to see (but I think way overparameterized, the SE are too small)
+tmb5.AB.xx <- update(tmb3.AB, . ~ . - (1|SP) - Spat_sum + Project:Spat_sum + (Period|SP)) #w/o spat sum
+
+diagnose(tmb5.AB.xx)  ##  BMB: this is a *singular fit*: correlation of -1
+## means this is probably overfitted
+VarCorr(tmb5.AB)
+
+
+summary(tmb5.AB.xx)
+(em5.ABxx <- emtrends(tmb5.AB.xx, ~Project, "Spat_sum"))
+test(em5.ABxx)
+
+
+#all + dispersion
+tmb6.AB <- update(tmb5.AB, dispformula = ~Project)
+                  summary(tmb6.AB)
+
+#bp note, tmb6.AB is tmb5.AB + adding a unique dispersion parameter for each project. 
+#has singular convergence issue goes away with bfgs 
+
+tmb7.AB <- update(tmb3.AB, . ~ .  + (0+Period|SP), dispformula = ~Project)
+summary(tmb7.AB)
+
+diagnose(tmb6.AB)
+
+
+#model selection information
+
+## self-naming list
+cand.set2.AB =
+  list(tmb0.AB,tmb00.AB, tmb1.AB,tmb2.AB,tmb3.AB,tmb4.AB, tmb5.AB, tmb5.AB.xx, tmb6.AB, tmb7.AB)
+modnames2.AB = c("intercept","spat sum", "period", "period + project", "period*project", "project", "all",
+                 "all +project:spat_sum","all + dispersion", "project/sp uncorr + disp")
+names(cand.set2.AB) <- modnames2.AB
+
+
+#AIC
+aictab(cand.set2.AB, modnames2.AB, second.ord = FALSE) #model selection table with AIC
+#AICc
+aictab(cand.set2.AB, modnames2.AB, second.ord = TRUE) #model selection table with AICc
+
+#for example, grab tmb5 and fit it w/o spat sum and see if different
+
+tmb5.AB.x <- update(tmb3.AB, . ~ . - (1|SP) - Spat_sum + (Period|SP)) #w/o spat sum
+AIC(tmb5.AB.x,tmb5.AB) #delta AIC about 1.8. so not separable (w/o is slightly lower)
+
+
+AIC(tmb5.AB.xx,tmb5.AB) #still no improvement
+
+
+# #now take all and add spat?
+# 
+# tmb3.AB.spat <- update(tmb2.AB, . ~ . + Period:Project + Spat_sum)
+# summary(tmb3.AB.spat)
+# 
+# plot_summs(tmb3.AB.spat,tmb3.AB)
+# 
+# tmb5.AB.spat <- update(tmb3.AB, . ~ . - (1|SP) + (Period|SP)+Spat_sum)
+# summary(tmb5.AB.spat)
+# 
+# AIC(tmb5.AB.spat,tmb5.AB)
+# 
+# ## quantify and test trends by project
+
+# 
+# (em3.AB.spat <- emtrends(tmb3.AB.spat, ~Project, "Period"))
+# test(em3.AB.spat)
 
