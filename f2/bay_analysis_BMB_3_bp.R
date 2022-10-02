@@ -444,7 +444,7 @@ test.fwc2021 = ggpredict(tmb5.AB, terms = c("Period[15]", "Project[NFWF-2021]", 
 
 #########
 #check autocorrelation of best
-#look at discharge vs. best from above
+#
 #########
 
 #check autocorrelation issues
