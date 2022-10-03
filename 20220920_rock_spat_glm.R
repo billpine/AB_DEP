@@ -39,9 +39,9 @@ d0.1<-d0 %>%
   mutate(Bay = replace(Bay,Bay == "Apalachicola Bay", "Apalachicola"))%>%
   mutate(Project = replace(Project,Project =="FWC-2021","NFWF-2021"))
 
-d1<- d0.1
+#d1<- d0.1
 
-#d1<- subset(d0.1, d0.1$Bay == "Apalachicola")
+d1<- subset(d0.1, d0.1$Bay == "Apalachicola")
 
 #the FWC data have been modified per Matt at FWC to
 #do the proportions based on size for the number per size category
@@ -130,7 +130,7 @@ r2<-ggplot(data = d2[d2$Bay=="Apalachicola",], aes(x=Weight, y=Spat, color=Proje
   xlab("Cultch weight (kg)") +
   ylab("Spat")+
   facet_wrap(~Site)
-ggsave("r2_rawspat_rawweight_site.png", width=10, height=10)
+#ggsave("r2_rawspat_rawweight_site.png", width=10, height=10)
 
 
 r3<-ggplot(data = d2[d2$Bay=="Apalachicola",], aes(x=Weight, y=Spat, color=Project, na.rm=TRUE)) +
@@ -140,7 +140,7 @@ r3<-ggplot(data = d2[d2$Bay=="Apalachicola",], aes(x=Weight, y=Spat, color=Proje
   xlab("Cultch weight (kg)") +
   ylab("Spat")+
   facet_wrap(~Period)
-ggsave("r3_rawspat_rawweight_period.png", width=10, height=10)
+#ggsave("r3_rawspat_rawweight_period.png", width=10, height=10)
 
   
 plot_grid(r2, r3, labels = c('A', 'B'))
@@ -275,14 +275,14 @@ tmb6.AB <- update(tmb5.AB, dispformula = ~Project)
 tmb7.AB <- update(tmb3.AB, . ~ .  + (0+Period|SP), dispformula = ~Project)
 summary(tmb7.AB)
 
-diagnose(tmb6.AB)
-
+diagnose(tmb7.AB)
+VarCorr(tmb7.AB)
 
 #model selection information
 
 ## self-naming list
 cand.set2.AB =
-  list(tmb0.AB,tmb00.AB, tmb1.AB,tmb2.AB,tmb3.AB,tmb4.AB, tmb5.AB, tmb5.AB.xx, tmb6.AB, tmb7.AB)
+  list(tmb0.AB, tmb00.AB, tmb1.AB, tmb2.AB, tmb3.AB, tmb4.AB, tmb5.AB, tmb5.AB.xx, tmb6.AB, tmb7.AB)
 modnames2.AB = c("intercept","spat sum", "period", "period + project", "period*project", "project", "all",
                  "all +project:spat_sum","all + dispersion", "project/sp uncorr + disp")
 names(cand.set2.AB) <- modnames2.AB

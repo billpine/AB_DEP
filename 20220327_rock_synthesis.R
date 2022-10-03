@@ -16,6 +16,10 @@ library(lubridate)
 library(AICcmodavg)
 library(ggeffects)
 library(cowplot)
+library(emmeans)
+library(DHARMa)
+library(readr)
+library(jtools)
 
 #this has all 3 bays
 d0 <- read.csv("~/Git/AB_DEP/20220326_merged_agency_data.csv")
@@ -126,7 +130,7 @@ r2+scale_color_manual(values=c("black", "light blue", "red", "dark blue"))+
   scale_x_continuous(limits=c(2,15),breaks=seq(2,15,2))+
   ylab("Weight (kg) per quadrat")
 
-ggsave("weight.png", width = 10, height = 10)  
+#ggsave("weight.png", width = 10, height = 10)  
 
 
 ######
@@ -145,7 +149,123 @@ r3<-ggplot(data = d3, aes(Period, Roundwt, color=Project)) +
   geom_point(size=3)+
   facet_wrap(~Bay)
 
-##
+#######
+#######
+#REVISE GLM to Ben way
+
+
+as.integer(d3$Roundwt)
+
+## BMB: the same but 'looks' like an interaction
+d3$SP <- with(d3, interaction(Site, Project, sep = "_", drop = TRUE))
+
+
+
+
+tab <- with(dApalach,table(SP,Project))
+library(Matrix)
+ifun <- function(M) {
+  M <- as(M, "Matrix")
+  image(M, aspect = "fill",
+        scales = list(y = list(at = seq(nrow(M)), labels = rownames(M)),
+                      x = list(at = seq(ncol(M)), labels = colnames(M), rot = 90)))
+}
+ifun(tab)
+
+
+
+## sum-to-zero contrasts so main effect of Period = unweighted average across Bays
+options(contrasts = c("contr.sum", "contr.poly"))
+
+
+#########
+#########
+#WARNING CHECK CONVERGENCE 
+#########
+#########
+
+
+#Intercept
+tmb0 <- glmmTMB(Roundwt ~ (1|SP) + offset(log(Num_quads)),
+                   data = d3, family="nbinom2") #converge
+summary(tmb0)
+
+
+#Period
+tmb1 <- update(tmb0, . ~ . + Period)
+summary(tmb1)
+
+#Period + Bay
+tmb2 <- update(tmb1, . ~ . + Bay)
+summary(tmb2)
+
+#Period*Bay
+tmb3 <- update(tmb2, . ~ . + Period:Bay)
+summary(tmb3)
+
+
+########################
+
+#Bay
+tmb4 <- update(tmb0, . ~ . + Bay)
+summary(tmb4)
+
+#Ben note below
+## This is a better model, both in principle (we do want to allow for temporal trends
+## to vary across sites) and in terms of AIC
+
+#bill note on tmb5. Ben removes the random effect term on site and then nests it
+#period
+
+#ben note below
+#Period*bay/site (allow period by site across Bay)
+tmb5 <- update(tmb3, . ~ . - (1|SP) + (Period|SP))
+diagnose(tmb5)  ##  BMB: this is a *singular fit*: correlation of -1
+## means this is probably overfitted
+VarCorr(tmb5)
+
+summary(tmb5)
+
+#plot coefficients
+plot_summs(tmb5)
+
+#all + dispersion
+tmb6 <- update(tmb5, dispformula = ~Bay)
+summary(tmb6)
+
+#bp note, tmb6 is tmb5 + adding a unique dispersion parameter for each Bay. 
+#has singular convergence issue goes away with bfgs 
+
+tmb7 <- update(tmb3, . ~ .  + (0+Period|SP), dispformula = ~Bay)
+summary(tmb7)
+
+diagnose(tmb7)
+VarCorr(tmb7)
+
+#model selection information
+
+## self-naming list
+cand.set2 =
+  list(tmb0, tmb1, tmb2, tmb3, tmb4, tmb5, tmb6, tmb7)
+modnames2 = c("intercept", "period", "period + Bay", "period*Bay", "Bay", "all",
+                 "all + dispersion", "Bay/sp uncorr + disp")
+names(cand.set2) <- modnames2
+
+
+#AIC
+aictab(cand.set2, modnames2, second.ord = FALSE) #model selection table with AIC
+#AICc
+aictab(cand.set2, modnames2, second.ord = TRUE) #model selection table with AICc
+
+
+(em1 <- emtrends(tmb7, ~Bay, "Period"))
+test(em1)
+
+
+###below is all old old old
+
+
+
 
 ##subset by Bay and fit simple models, no interaction terms needed this way
 unique(d3$Bay)
