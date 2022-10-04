@@ -212,11 +212,14 @@ tmb5 <- update(tmb3, . ~ . - (1|Site) + (Period|Site))
 
 summary(tmb5)
 
-
 tmb6 <- update(tmb5, dispformula = ~Bay)
+
+# fails with bfgs as well
+# tmb6 <- update(tmb5, dispformula = ~Bay, control=glmmTMBControl(optimizer=optim,
+#                                                                  optArgs=list(method="BFGS")))
 summary(tmb6)
 
-#drop tmb6 bc of convergence
+#drop tmb6 bc of convergence (w/ either optimizer)
 cand.set2 = list(tmb0,tmb1,tmb2,tmb3,tmb4, tmb5)
 modnames2 = c("intercept", "period", "period + bay", "period*bay", "bay", "period*bay/site")
 names(cand.set2) <- modnames2
@@ -231,6 +234,19 @@ aictab(cand.set2, modnames2, second.ord = TRUE) #model selection table with AICc
 
 (em1 <- emtrends(tmb5, ~Bay, "Period"))
 test(em1)
+
+ggpredict(tmb5)
+
+pred_tmb5<- ggpredict(tmb5, c("Period[15]", "Bay","Num_quads[1]"))
+#about 1 oyster in AB, 0.1 oyster in Pensacola, and 3 oysters in St. Andrew. 
+
+# 
+# test.nfwf1 = ggpredict(tmb5, terms = c("Period[9]", "Project[NFWF-1]", "Num_quads[1]"), type = c('fe')) 
+# test.nrda4044 = ggpredict(tmb5, terms = c("Period[13]", "Project[NRDA-4044]", "Num_quads[1]"), type = c('fe')) 
+# test.nrda5077 = ggpredict(tmb5, terms = c("Period[12]", "Project[GEBF-5007]", "Num_quads[1]"), type = c('fe')) 
+# test.fwc2021 = ggpredict(tmb5, terms = c("Period[15]", "Project[NFWF-2021]", "Num_quads[1]"), type = c('fe')) 
+
+
 
 #ok so Apalach is significant, but is that b/c of shelling later periods
 #need to look at Apalach only by project (just like the count analyses)
@@ -333,10 +349,11 @@ aictab(cand.set2, modnames2, second.ord = FALSE) #model selection table with AIC
 aictab(cand.set2, modnames2, second.ord = TRUE) #model selection table with AICc
 
 
-(em1 <- emtrends(tmb7, ~Project, "Period"))
+(em1 <- emtrends(tmb3, ~Project, "Period"))
 test(em1)
 
-
+#plot coefficients
+plot_summs(tmb3)
 
 # ##############
 # 
