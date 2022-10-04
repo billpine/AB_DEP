@@ -190,6 +190,19 @@ ifun(tab)
 ## sum-to-zero contrasts so main effect of Period = unweighted average across Bays
 options(contrasts = c("contr.sum", "contr.poly"))
 
+######
+
+plot(dApalach$Spat_sum~dApalach$Roundwt)
+m1<-lm(Spat_sum~Roundwt, data=dApalach)
+summary(m1)
+
+
+ggplot(dApalach, aes(x=predict(m1), y= Spat_sum)) +
+  geom_point() +
+  geom_abline(intercept=0, slope=1) +
+  labs(x='Round weight', y='Spat sum', title='')
+
+
 
 #########
 #########
@@ -200,10 +213,19 @@ options(contrasts = c("contr.sum", "contr.poly"))
 
 
 
+
+
+
 #Intercept
 tmb0.AB <- glmmTMB(Roundwt ~ (1|SP) + offset(log(Num_quads)),
                    data = dApalach, family="nbinom2") #converge
 summary(tmb0.AB)
+
+
+ggplot(dApalach, aes(x=predict(tmb0.AB), y= Spat_sum)) +
+  geom_point() +
+  geom_abline(intercept=0, slope=1) +
+  labs(x='Round weight', y='Spat sum', title='')
 
 
 #spat sum
