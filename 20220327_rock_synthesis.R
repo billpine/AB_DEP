@@ -280,26 +280,26 @@ ggplot(dApalach, aes(Period, Roundwt)) + facet_wrap(~Project) + geom_point() + g
   scale_y_continuous(trans = scales::log1p_trans())
 
 #Intercept
-tmb0 <- glmmTMB(Roundwt ~ (1|SP) + offset(log(Num_quads)),
+tmb0.AB <- glmmTMB(Roundwt ~ (1|SP) + offset(log(Num_quads)),
                    data = dApalach, family="nbinom2") #converge
-summary(tmb0)
+summary(tmb0.AB)
 
 
 #Period
-tmb1 <- update(tmb0, . ~ . + Period)
-summary(tmb1)
+tmb1.AB <- update(tmb0.AB, . ~ . + Period)
+summary(tmb1.AB)
 
 #Period + Project
-tmb2 <- update(tmb1, . ~ . + Project)
-summary(tmb2)
+tmb2.AB <- update(tmb1.AB, . ~ . + Project)
+summary(tmb2.AB)
 
 #Period*Project
-tmb3 <- update(tmb2, . ~ . + Period:Project)
-summary(tmb3)
+tmb3.AB <- update(tmb2.AB, . ~ . + Period:Project)
+summary(tmb3.AB)
 
 #Project
-tmb4 <- update(tmb0, . ~ . + Project)
-summary(tmb4)
+tmb4.AB <- update(tmb0.AB, . ~ . + Project)
+summary(tmb4.AB)
 
 #Ben note below
 ## This is a better model, both in principle (we do want to allow for temporal trends
@@ -310,34 +310,34 @@ summary(tmb4)
 
 #ben note below
 #Period*Project/site (allow period by site across Project)
-tmb5 <- update(tmb3, . ~ . - (1|SP) + (Period|SP))
-diagnose(tmb5)  ##  BMB: this is a *singular fit*: correlation of -1
+tmb5.AB <- update(tmb3.AB, . ~ . - (1|SP) + (Period|SP))
+diagnose(tmb5.AB)  ##  BMB: IF this is a *singular fit*: correlation of -1
 ## means this is probably overfitted
-VarCorr(tmb5)
+VarCorr(tmb5.AB)
 
-summary(tmb5)
+summary(tmb5.AB)
 
 #plot coefficients
-plot_summs(tmb5)
+plot_summs(tmb5.AB)
 
 #all + dispersion
-tmb6 <- update(tmb5, dispformula = ~Project)
-summary(tmb6)
+tmb6.AB <- update(tmb5.AB, dispformula = ~Project)
+summary(tmb6.AB)
 
 #bp note, tmb6 is tmb5 + adding a unique dispersion parameter for each Project. 
 #has singular convergence issue goes away with bfgs 
 
-tmb7 <- update(tmb3, . ~ .  + (0+Period|SP), dispformula = ~Project)
-summary(tmb7)
+tmb7.AB <- update(tmb3.AB, . ~ .  + (0+Period|SP), dispformula = ~Project)
+summary(tmb7.AB)
 
-diagnose(tmb7)
-VarCorr(tmb7)
+diagnose(tmb7.AB)
+VarCorr(tmb7.AB)
 
 #model selection information
 
 ## self-naming list
 cand.set2 =
-  list(tmb0, tmb1, tmb2, tmb3, tmb4, tmb5, tmb6, tmb7)
+  list(tmb0.AB, tmb1.AB, tmb2.AB, tmb3.AB, tmb4.AB, tmb5.AB, tmb6.AB, tmb7.AB)
 modnames2 = c("intercept", "period", "period + Project", "period*Project", "Project", "all",
                  "all + dispersion", "Project/sp uncorr + disp")
 names(cand.set2) <- modnames2
@@ -349,11 +349,18 @@ aictab(cand.set2, modnames2, second.ord = FALSE) #model selection table with AIC
 aictab(cand.set2, modnames2, second.ord = TRUE) #model selection table with AICc
 
 
-(em1 <- emtrends(tmb3, ~Project, "Period"))
+(em1 <- emtrends(tmb3.AB, ~Project, "Period"))
 test(em1)
 
 #plot coefficients
-plot_summs(tmb3)
+plot_summs(tmb3.AB)
+
+ 
+ test.nfwf1 = ggpredict(tmb3.AB, terms = c("Period[9]", "Project[NFWF-1]", "Num_quads[1]"), type = c('fe')) 
+ test.nrda4044 = ggpredict(tmb3.AB, terms = c("Period[13]", "Project[NRDA-4044]", "Num_quads[1]"), type = c('fe')) 
+ test.nrda5077 = ggpredict(tmb3.AB, terms = c("Period[12]", "Project[GEBF-5007]", "Num_quads[1]"), type = c('fe')) 
+ test.fwc2021 = ggpredict(tmb3.AB, terms = c("Period[15]", "Project[FWC-2021]", "Num_quads[1]"), type = c('fe')) 
+
 
 # ##############
 # 
