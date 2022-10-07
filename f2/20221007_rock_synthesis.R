@@ -84,13 +84,10 @@ cand.set2 = list(tmb0,tmb1,tmb2,tmb3,tmb4)
 modnames2 = c("intercept", "period", "period + bay", "period*bay", "bay")
 names(cand.set2) <- modnames2
 
-
-
 #model selection information
 
 aictab(cand.set2, modnames2, second.ord = FALSE) #model selection table with AIC
 aictab(cand.set2, modnames2, second.ord = TRUE) #model selection table with AICc
-
 
 (em1 <- emtrends(tmb5, ~Bay, "Period"))
 test(em1)
