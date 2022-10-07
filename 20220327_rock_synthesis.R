@@ -149,6 +149,10 @@ r3<-ggplot(data = d3, aes(Period, Roundwt, color=Project)) +
   geom_point(size=3)+
   facet_wrap(~Bay)
 
+write.table(d3, file = "C:\\Users\\billpine\\Documents\\Git\\AB_DEP\\f2\\d3_rock.csv", row.names = FALSE,col.names = TRUE,sep = ",")
+
+
+
 #######
 #######
 #REVISE GLM to Ben way
@@ -212,6 +216,12 @@ tmb5 <- update(tmb3, . ~ . - (1|Site) + (Period|Site))
 
 summary(tmb5)
 
+# fails with bfgs as well
+tmb5.x <- update(tmb3, . ~ . - (1|Site) + (Period|Site), control=glmmTMBControl(optimizer=optim,
+                                                                  optArgs=list(method="BFGS")))
+
+
+
 tmb6 <- update(tmb5, dispformula = ~Bay)
 
 # fails with bfgs as well
@@ -219,9 +229,9 @@ tmb6 <- update(tmb5, dispformula = ~Bay)
 #                                                                  optArgs=list(method="BFGS")))
 summary(tmb6)
 
-#drop tmb6 bc of convergence (w/ either optimizer)
-cand.set2 = list(tmb0,tmb1,tmb2,tmb3,tmb4, tmb5)
-modnames2 = c("intercept", "period", "period + bay", "period*bay", "bay", "period*bay/site")
+#drop tmb5 & 6 bc of convergence (w/ either optimizer)
+cand.set2 = list(tmb0,tmb1,tmb2,tmb3,tmb4)
+modnames2 = c("intercept", "period", "period + bay", "period*bay", "bay")
 names(cand.set2) <- modnames2
 
 
