@@ -17,13 +17,13 @@ p1<-ggplot(data, aes(x=start, xend=end, y=name, yend=name, color=action)) +
 
 #make geo points or short segments for the sampling of each project
 data1 <- data.frame(name = c('AB NRDA-4044'), 
-                   start = c(3, 5, 6, 7, 9, 10, 12, 13),
-                   end = c(3, 5, 6, 7, 9, 10, 12, 13),
+                   start = c(3, 5, 6, 7, 9, 10, 12, 13, 14),
+                   end = c(3, 5, 6, 7, 9, 10, 12, 13, 14),
                    action = c('Monitoring'))
 
 data2 <- data.frame(name = c('AB GEBF-5007'), 
-                    start = c(7,9,11,12),
-                    end = c(7,9,11,12),
+                    start = c(7,9,12,13),
+                    end = c(7,9,12,13),
                     action = c('Monitoring'))
 
 data3 <- data.frame(name = c('AB NFWF-1'), 
