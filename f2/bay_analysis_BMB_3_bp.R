@@ -25,6 +25,7 @@ library(jtools)
 d5 <- read_csv("d5.csv")
 
 d5$Bay <- as.factor(d5$Bay)
+str(d5)
 
 #############################
 #Approach 1
