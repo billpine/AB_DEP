@@ -494,7 +494,7 @@ library(bbmle)
 names(d5)
 
 as.factor(d5$Bay)
-write.table(d5, file = "~/Fred/d5.csv", row.names = FALSE,col.names = TRUE,sep = ",")
+write.table(d5, file = "C:\\Users\\billpine\\Documents\\Git\\AB_DEP\\f2\\d5.csv", row.names = FALSE,col.names = TRUE,sep = ",")
 
 
 
