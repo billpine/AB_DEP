@@ -166,6 +166,9 @@ d3$Roundwt<-round(d3$Wt_sum,0)
 
 as.integer(d3$Roundwt)
 
+write.table(d3, file = "C:\\Users\\billpine\\Documents\\Git\\AB_DEP\\f2\\d3_rock_spat.csv", row.names = FALSE,col.names = TRUE,sep = ",")
+
+
 ## BMB: the same but 'looks' like an interaction
 d3$SP <- with(d3, interaction(Site, Project, sep = "_", drop = TRUE))
 
