@@ -28,7 +28,7 @@ dis$year    = as.numeric(strftime(dis$dates,format="%Y"))
 dis$month   = as.numeric(strftime(dis$dates,format="%m")) 
 
 #make dataset from epochs, 
-disE  = dis[dis$dates>='1930-10-01' & dis$dates<='2021-12-31',]  
+disE  = dis[dis$dates>='1930-10-01' & dis$dates<='2022-09-30',]  
 
 #get monthly sum, mean, sd, and var
 #discharge
@@ -78,37 +78,37 @@ col3 <- brewer.pal(11, "RdBu") #red is - blue is +
 colAll <- c(col3[1], col3[2], col3[3], col3[6], col2[4:7], col3[10],col2[8:9], col3[11], "#042333ff") 
 par(oma=c(0.5,0.5,0.5,3))
 plot(dis_per2, xlab = "Month", ylab = "Year",
-     breaks = c(-100, -50, -25, -10, 10, 50, 100, 150, 200, 250, 300, 350, 400, 450),
+     breaks = c(-100, -50, -25, -10, 10, 25, 50, 100, 150, 200, 250, 300, 350, 400, 450),
      main = "Deviations in Discharge from Period of Record",
      axis.row = list(las = 2),
      col = colAll, na.col = "black")
 
-#subset for just the year 2005-2020
-include_years <- as.character(as.numeric(2005:2021))
+#subset for just the year 2005-2022
+include_years <- as.character(as.numeric(2005:2022))
 a_dis_per20052020 <- dis_per2[include_years, ]
 plot(a_dis_per20052020, xlab = "Month", ylab = "Year",
-     breaks = c(-100, -50, -25, -10, 10, 50, 100, 150, 200, 250, 300, 350, 400, 450),
+     breaks = c(-100, -50, -25, -10, 10,25, 50, 100, 150, 200, 250, 300, 350, 400, 450),
      main = "Apalachicola Deviation in Discharge",
      axis.row = list(las = 2),
      col = colAll, na.col = "black")
 
 
-par(mfcol = c(2, 2))
+par(mfcol = c(1, 1))
 
 #subset for just the year 2005-2012
 include_years <- as.character(as.numeric(2005:2012))
 dis_per2005 <- dis_per2[include_years, ]
 plot(dis_per2005, xlab = "Month", ylab = "Year",
-     breaks = c(-100, -50, -25, -10, 10, 50, 100, 150, 200, 250, 300, 350, 400, 450),
+     breaks = c(-100, -50, -25, -10, 10, 25, 50, 100, 150, 200, 250, 300, 350, 400, 450),
      main = "Deviations in Discharge from Period of Record",
      axis.row = list(las = 2),
      col = colAll, na.col = "black")
 
 #subset for just the years 2013-2020
-include_years <- as.character(as.numeric(2013:2020))
+include_years <- as.character(as.numeric(2013:2022))
 dis_per2013 <- dis_per2[include_years, ]
 plot(dis_per2013, xlab = "Month", ylab = "Year",
-     breaks = c(-100, -50, -25, -10, 10, 50, 100, 150, 200, 250, 300, 350, 400),
+     breaks = c(-100, -50, -25, -10, 10,25,50, 100, 150, 200, 250, 300, 350, 400),
      main = "Deviations in Discharge from Period of Record",
      axis.row = list(las = 2),
      col = colAll, na.col = "black")
