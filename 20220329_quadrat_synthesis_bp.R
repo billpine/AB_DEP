@@ -407,6 +407,30 @@ plot_grid(spat_study3,seed_study4,spat_study4,seed_study3)
 
 #ggsave("spat_seed_declines.png", width = 10, height = 10)
 
+#carl plot (just to look at spat on x and seed on y)
+spat_seed_study3<-ggplot(dp3.2x[dp3.2$Site == "Lighthouse Bar",], aes(CPUE_Spat, CPUE_Seed,color=Project)) +
+  geom_point(size=4) +
+  ggtitle("Lighthouse Bar") +
+  xlab("Spat CPUE") +
+  ylab("Seed CPUE") +
+  #scale_x_continuous(limits=c(2,15),breaks=seq(2,15,2))
+
+spat_seed_study4<-ggplot(dp3.2x[dp3.2$Site == "East Lumps",], aes(CPUE_Spat, CPUE_Seed,color=Project)) +
+  geom_point(size=4) +
+  ggtitle("East Lumps") +
+  xlab("Spat CPUE") +
+  ylab("Seed CPUE") +
+  #scale_x_continuous(limits=c(2,15),breaks=seq(2,15,2))
+  
+
+spat_seed_study5<-ggplot(dp3.2x[dp3.2$Site == "East Lumps",], aes(CPUE_Spat, CPUE_Seed,color=Period)) +
+  geom_point(size=4) +
+  ggtitle("East Lumps") +
+  xlab("Spat CPUE") +
+  ylab("Seed CPUE") +
+  #scale_x_continuous(limits=c(2,15),breaks=seq(2,15,2))
+  
+  
 ###########
 
 legal_study<-ggplot(dp3.2x, aes(Period, CPUE_Legal)) +
