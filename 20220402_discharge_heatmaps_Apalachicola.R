@@ -84,7 +84,7 @@ plot(dis_per2, xlab = "Month", ylab = "Year",
      col = colAll, na.col = "black")
 
 #subset for just the year 2005-2022
-include_years <- as.character(as.numeric(2005:2022))
+include_years <- as.character(as.numeric(2002:2022))
 a_dis_per20052020 <- dis_per2[include_years, ]
 plot(a_dis_per20052020, xlab = "Month", ylab = "Year",
      breaks = c(-100, -50, -25, -10, 10,25, 50, 100, 150, 200, 250, 300, 350, 400, 450),
